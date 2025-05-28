@@ -555,6 +555,8 @@ async def startup_event():
     
     # Créer des utilisateurs de test si la base est vide
     user_count = await db.users.count_documents({})
+    disease_count = await db.diseases.count_documents({})
+    
     if user_count == 0:
         test_users = [
             {
