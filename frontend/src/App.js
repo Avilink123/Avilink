@@ -923,7 +923,6 @@ function App() {
   };
 
   const renderCurrentPage = () => {
-    console.log('Current page:', currentPage); // Debug log
     switch (currentPage) {
       case 'marketplace':
         return <Marketplace currentUser={currentUser} />;
