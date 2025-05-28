@@ -124,6 +124,104 @@ class ProductUpdate(BaseModel):
     type_amendement: Optional[str] = None
     composition: Optional[str] = None
 
+# Nouveaux modèles pour les modules additionnels
+
+# Modèles pour Price Monitoring
+class PriceCategory(str, Enum):
+    INTRANTS = "intrants"
+    PRODUITS = "produits"
+
+class PriceType(str, Enum):
+    # Intrants
+    ALIMENT_PONTE = "aliment_ponte"
+    ALIMENT_CHAIR = "aliment_chair"
+    POUSSIN_PONTE = "poussin_ponte"
+    POUSSIN_CHAIR = "poussin_chair"
+    MEDICAMENT = "medicament"
+    VACCIN = "vaccin"
+    # Produits
+    POULET_VIF = "poulet_vif"
+    POULET_VIDE = "poulet_vide"
+    OEUF_CONSO = "oeuf_conso"
+    FUMIER = "fumier"
+
+class PriceMonitoring(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    categorie: PriceCategory
+    type_produit: PriceType
+    prix_moyen: float
+    prix_min: float
+    prix_max: float
+    unite: str
+    localisation: str
+    source: str = "Marché local"
+    date_maj: datetime = Field(default_factory=datetime.utcnow)
+    tendance: Optional[str] = None  # "hausse", "baisse", "stable"
+
+# Modèles pour Animal Health
+class Maladie(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    nom: str
+    symptomes: List[str]
+    prevention: List[str]
+    traitement: str
+    gravite: str  # "legere", "moderee", "grave"
+    contagieux: bool
+
+class SymptomeReport(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    utilisateur_id: str
+    symptomes_observes: List[str]
+    nombre_animaux_affectes: int
+    date_observation: datetime = Field(default_factory=datetime.utcnow)
+    localisation: str
+    actions_prises: Optional[str] = None
+    status: str = "en_cours"  # "en_cours", "resolu", "aggrave"
+
+class VaccinationRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    utilisateur_id: str
+    type_vaccin: str
+    nombre_animaux: int
+    date_vaccination: datetime
+    prochaine_vaccination: Optional[datetime] = None
+    lot_volaille: Optional[str] = None
+    veterinaire: Optional[str] = None
+
+class Veterinaire(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    nom: str
+    telephone: str
+    localisation: str
+    specialites: List[str]
+    disponible: bool = True
+    tarif_consultation: Optional[float] = None
+
+# Modèles pour Financial Tools
+class TransactionType(str, Enum):
+    REVENU = "revenu"
+    DEPENSE = "depense"
+
+class FinancialTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    utilisateur_id: str
+    type_transaction: TransactionType
+    montant: float
+    description: str
+    categorie: str  # "vente_oeufs", "achat_aliment", "frais_veterinaire", etc.
+    date_transaction: datetime = Field(default_factory=datetime.utcnow)
+    mode_paiement: Optional[str] = None  # "especes", "mobile_money", "cheque"
+    reference: Optional[str] = None
+
+class FinancialSummary(BaseModel):
+    total_revenus: float
+    total_depenses: float
+    benefice_net: float
+    periode_debut: datetime
+    periode_fin: datetime
+    principales_depenses: List[dict]
+    principales_revenus: List[dict]
+
 # Auth helpers
 async def get_current_user(user_id: str) -> User:
     user_data = await db.users.find_one({"id": user_id})
