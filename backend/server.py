@@ -804,3 +804,115 @@ async def startup_event():
         await db.financial_transactions.insert_many(test_transactions)
 
         logger.info("Toutes les données de test créées pour tous les modules")
+    
+    # Créer les autres données si elles n'existent pas
+    if disease_count == 0:
+        # Créer des données pour Animal Health
+        test_diseases = [
+            {
+                "id": str(uuid.uuid4()),
+                "nom": "Newcastle (Pseudo-peste aviaire)",
+                "symptomes": ["Difficultés respiratoires", "Écoulement nasal", "Diarrhée verdâtre", "Chute de ponte", "Mortalité élevée"],
+                "prevention": ["Vaccination régulière", "Quarantaine des nouveaux animaux", "Désinfection des locaux"],
+                "traitement": "Pas de traitement spécifique. Vaccination préventive obligatoire.",
+                "gravite": "grave",
+                "contagieux": True
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "nom": "Coccidiose",
+                "symptomes": ["Diarrhée sanglante", "Perte d'appétit", "Plumes ébouriffées", "Retard de croissance"],
+                "prevention": ["Propreté des abreuvoirs", "Litière sèche", "Anticoccidiens préventifs"],
+                "traitement": "Anticoccidiens spécifiques selon prescription vétérinaire.",
+                "gravite": "moderee",
+                "contagieux": True
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "nom": "Bronchite infectieuse",
+                "symptomes": ["Toux", "Éternuements", "Râles respiratoires", "Chute de ponte"],
+                "prevention": ["Vaccination", "Ventilation adéquate", "Éviter les stress"],
+                "traitement": "Antibiotiques si surinfection bactérienne. Repos et chaleur.",
+                "gravite": "moderee",
+                "contagieux": True
+            }
+        ]
+        await db.diseases.insert_many(test_diseases)
+
+        # Créer des données de test pour Price Monitoring
+        test_prices = [
+            {
+                "id": str(uuid.uuid4()),
+                "categorie": "intrants",
+                "type_produit": "aliment_ponte",
+                "prix_moyen": 280,
+                "prix_min": 270,
+                "prix_max": 290,
+                "unite": "kg",
+                "localisation": "Bamako",
+                "source": "Marché de Médina",
+                "date_maj": datetime.utcnow(),
+                "tendance": "stable"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "categorie": "intrants",
+                "type_produit": "poussin_chair",
+                "prix_moyen": 450,
+                "prix_min": 400,
+                "prix_max": 500,
+                "unite": "pièce",
+                "localisation": "Sikasso",
+                "source": "Coopérative avicole",
+                "date_maj": datetime.utcnow(),
+                "tendance": "hausse"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "categorie": "produits",
+                "type_produit": "poulet_vif",
+                "prix_moyen": 3200,
+                "prix_min": 3000,
+                "prix_max": 3500,
+                "unite": "kg",
+                "localisation": "Kayes",
+                "source": "Marché hebdomadaire",
+                "date_maj": datetime.utcnow(),
+                "tendance": "baisse"
+            }
+        ]
+        await db.price_monitoring.insert_many(test_prices)
+
+        # Créer des vétérinaires de test
+        test_vets = [
+            {
+                "id": str(uuid.uuid4()),
+                "nom": "Dr. Mamadou Cissé",
+                "telephone": "76234567",
+                "localisation": "Bamako",
+                "specialites": ["Aviculture", "Médecine préventive"],
+                "disponible": True,
+                "tarif_consultation": 15000
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "nom": "Dr. Aïssa Traoré",
+                "telephone": "70345678",
+                "localisation": "Sikasso",
+                "specialites": ["Pathologie aviaire", "Nutrition"],
+                "disponible": True,
+                "tarif_consultation": 12000
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "nom": "Dr. Ibrahim Konaré",
+                "telephone": "65456789",
+                "localisation": "Mopti",
+                "specialites": ["Médecine rurale", "Aviculture familiale"],
+                "disponible": True,
+                "tarif_consultation": 10000
+            }
+        ]
+        await db.veterinaires.insert_many(test_vets)
+
+        logger.info("Données additionnelles créées (maladies, prix, vétérinaires)")
