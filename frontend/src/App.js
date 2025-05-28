@@ -358,12 +358,23 @@ const ProductCard = ({ product, currentUser, onContact, onEdit, onDelete }) => {
             {new Date(product.created_at).toLocaleDateString('fr-FR')}
           </span>
           {!isOwner && (
-            <button
-              onClick={() => onContact(product)}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-semibold"
-            >
-              📞 Contacter
-            </button>
+            <div className="flex space-x-2">
+              <a
+                href={`tel:${product.vendeur_telephone}`}
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-semibold flex items-center space-x-1"
+                title={`Appeler ${product.vendeur_nom}`}
+              >
+                <span>📞</span>
+                <span>{product.vendeur_telephone}</span>
+              </a>
+              <button
+                onClick={() => onContact(product)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-semibold"
+                title="Plus d'infos"
+              >
+                💬 Info
+              </button>
+            </div>
           )}
         </div>
       </div>
