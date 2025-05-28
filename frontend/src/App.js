@@ -27,10 +27,7 @@ const Header = ({ currentUser, onLogin, onLogout, onNavigate, currentPage }) => 
               Accueil
             </button>
             <button 
-              onClick={() => {
-                console.log('Navigating to marketplace'); // Debug log
-                onNavigate('marketplace');
-              }}
+              onClick={() => onNavigate('marketplace')}
               className={`hover:text-yellow-300 ${currentPage === 'marketplace' ? 'text-yellow-300' : ''}`}
             >
               Marché
