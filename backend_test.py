@@ -144,13 +144,11 @@ class AviMarcheAPITester:
 
     def test_delete_product(self, product_id):
         """Test deleting a product"""
-        params = {"vendeur_id": self.user_id}
         return self.run_test(
             "Delete Product",
             "DELETE",
-            f"products/{product_id}",
-            200,
-            params=params
+            f"products/{product_id}?vendeur_id={self.user_id}",
+            200
         )
 
 def main():
