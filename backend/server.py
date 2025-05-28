@@ -365,6 +365,167 @@ async def get_dashboard_stats():
 async def root():
     return {"message": "AviMarché API - Plateforme avicole du Mali"}
 
+# ROUTES POUR PRICE MONITORING
+@api_router.get("/prices", response_model=List[PriceMonitoring])
+async def get_prices(
+    categorie: Optional[PriceCategory] = None,
+    localisation: Optional[str] = None,
+    type_produit: Optional[PriceType] = None
+):
+    query = {}
+    if categorie:
+        query["categorie"] = categorie
+    if localisation:
+        query["localisation"] = {"$regex": localisation, "$options": "i"}
+    if type_produit:
+        query["type_produit"] = type_produit
+    
+    prices = await db.price_monitoring.find(query).sort("date_maj", -1).limit(50).to_list(50)
+    return [PriceMonitoring(**price) for price in prices]
+
+@api_router.post("/prices/report")
+async def report_price(price_data: dict, reporter_id: str = Query(...)):
+    # Simulation de signalement de prix par utilisateur
+    user = await get_current_user(reporter_id)
+    
+    new_price = PriceMonitoring(
+        categorie=price_data["categorie"],
+        type_produit=price_data["type_produit"],
+        prix_moyen=price_data["prix"],
+        prix_min=price_data["prix"] * 0.9,
+        prix_max=price_data["prix"] * 1.1,
+        unite=price_data["unite"],
+        localisation=price_data["localisation"],
+        source=f"Signalé par {user.nom}"
+    )
+    
+    await db.price_monitoring.insert_one(new_price.dict())
+    return {"message": "Prix signalé avec succès", "price": new_price}
+
+# ROUTES POUR ANIMAL HEALTH
+@api_router.get("/diseases", response_model=List[Maladie])
+async def get_diseases():
+    diseases = await db.diseases.find({}).to_list(100)
+    return [Maladie(**disease) for disease in diseases]
+
+@api_router.get("/diseases/{disease_id}", response_model=Maladie)
+async def get_disease(disease_id: str):
+    disease_data = await db.diseases.find_one({"id": disease_id})
+    if not disease_data:
+        raise HTTPException(status_code=404, detail="Maladie non trouvée")
+    return Maladie(**disease_data)
+
+@api_router.post("/symptoms/report", response_model=SymptomeReport)
+async def report_symptoms(symptoms_data: dict, user_id: str = Query(...)):
+    user = await get_current_user(user_id)
+    
+    report = SymptomeReport(
+        utilisateur_id=user.id,
+        symptomes_observes=symptoms_data["symptomes"],
+        nombre_animaux_affectes=symptoms_data["nombre_animaux"],
+        localisation=user.localisation,
+        actions_prises=symptoms_data.get("actions_prises", "")
+    )
+    
+    await db.symptom_reports.insert_one(report.dict())
+    return report
+
+@api_router.get("/symptoms/user/{user_id}", response_model=List[SymptomeReport])
+async def get_user_symptom_reports(user_id: str):
+    reports = await db.symptom_reports.find({"utilisateur_id": user_id}).sort("date_observation", -1).to_list(50)
+    return [SymptomeReport(**report) for report in reports]
+
+@api_router.post("/vaccinations", response_model=VaccinationRecord)
+async def record_vaccination(vaccination_data: dict, user_id: str = Query(...)):
+    user = await get_current_user(user_id)
+    
+    vaccination = VaccinationRecord(
+        utilisateur_id=user.id,
+        type_vaccin=vaccination_data["type_vaccin"],
+        nombre_animaux=vaccination_data["nombre_animaux"],
+        date_vaccination=datetime.fromisoformat(vaccination_data["date_vaccination"]),
+        prochaine_vaccination=datetime.fromisoformat(vaccination_data["prochaine_vaccination"]) if vaccination_data.get("prochaine_vaccination") else None,
+        lot_volaille=vaccination_data.get("lot_volaille"),
+        veterinaire=vaccination_data.get("veterinaire")
+    )
+    
+    await db.vaccinations.insert_one(vaccination.dict())
+    return vaccination
+
+@api_router.get("/vaccinations/user/{user_id}", response_model=List[VaccinationRecord])
+async def get_user_vaccinations(user_id: str):
+    vaccinations = await db.vaccinations.find({"utilisateur_id": user_id}).sort("date_vaccination", -1).to_list(50)
+    return [VaccinationRecord(**vaccination) for vaccination in vaccinations]
+
+@api_router.get("/veterinaires", response_model=List[Veterinaire])
+async def get_veterinaires(localisation: Optional[str] = None):
+    query = {"disponible": True}
+    if localisation:
+        query["localisation"] = {"$regex": localisation, "$options": "i"}
+    
+    vets = await db.veterinaires.find(query).to_list(50)
+    return [Veterinaire(**vet) for vet in vets]
+
+# ROUTES POUR FINANCIAL TOOLS
+@api_router.post("/finances/transaction", response_model=FinancialTransaction)
+async def add_transaction(transaction_data: dict, user_id: str = Query(...)):
+    user = await get_current_user(user_id)
+    
+    transaction = FinancialTransaction(
+        utilisateur_id=user.id,
+        type_transaction=transaction_data["type_transaction"],
+        montant=transaction_data["montant"],
+        description=transaction_data["description"],
+        categorie=transaction_data["categorie"],
+        date_transaction=datetime.fromisoformat(transaction_data["date_transaction"]) if transaction_data.get("date_transaction") else datetime.utcnow(),
+        mode_paiement=transaction_data.get("mode_paiement"),
+        reference=transaction_data.get("reference")
+    )
+    
+    await db.financial_transactions.insert_one(transaction.dict())
+    return transaction
+
+@api_router.get("/finances/transactions/user/{user_id}", response_model=List[FinancialTransaction])
+async def get_user_transactions(user_id: str, limit: int = 50):
+    transactions = await db.financial_transactions.find({"utilisateur_id": user_id}).sort("date_transaction", -1).limit(limit).to_list(limit)
+    return [FinancialTransaction(**transaction) for transaction in transactions]
+
+@api_router.get("/finances/summary/user/{user_id}", response_model=FinancialSummary)
+async def get_financial_summary(user_id: str, days: int = 30):
+    start_date = datetime.utcnow() - timedelta(days=days)
+    
+    # Récupérer les transactions de la période
+    transactions = await db.financial_transactions.find({
+        "utilisateur_id": user_id,
+        "date_transaction": {"$gte": start_date}
+    }).to_list(1000)
+    
+    revenus = [t for t in transactions if t["type_transaction"] == "revenu"]
+    depenses = [t for t in transactions if t["type_transaction"] == "depense"]
+    
+    total_revenus = sum(t["montant"] for t in revenus)
+    total_depenses = sum(t["montant"] for t in depenses)
+    
+    # Principales catégories
+    from collections import defaultdict
+    cat_revenus = defaultdict(float)
+    cat_depenses = defaultdict(float)
+    
+    for t in revenus:
+        cat_revenus[t["categorie"]] += t["montant"]
+    for t in depenses:
+        cat_depenses[t["categorie"]] += t["montant"]
+    
+    return FinancialSummary(
+        total_revenus=total_revenus,
+        total_depenses=total_depenses,
+        benefice_net=total_revenus - total_depenses,
+        periode_debut=start_date,
+        periode_fin=datetime.utcnow(),
+        principales_revenus=sorted([{"categorie": k, "montant": v} for k, v in cat_revenus.items()], key=lambda x: x["montant"], reverse=True)[:5],
+        principales_depenses=sorted([{"categorie": k, "montant": v} for k, v in cat_depenses.items()], key=lambda x: x["montant"], reverse=True)[:5]
+    )
+
 # Include the router in the main app
 app.include_router(api_router)
 
