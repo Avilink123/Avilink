@@ -32,13 +32,33 @@ const Header = ({ currentUser, onLogin, onLogout, onNavigate, currentPage }) => 
             >
               Marché
             </button>
+            <button 
+              onClick={() => onNavigate('prices')}
+              className={`hover:text-yellow-300 ${currentPage === 'prices' ? 'text-yellow-300' : ''}`}
+            >
+              Prix
+            </button>
+            <button 
+              onClick={() => onNavigate('health')}
+              className={`hover:text-yellow-300 ${currentPage === 'health' ? 'text-yellow-300' : ''}`}
+            >
+              Santé
+            </button>
             {currentUser && (
-              <button 
-                onClick={() => onNavigate('myproducts')}
-                className={`hover:text-yellow-300 ${currentPage === 'myproducts' ? 'text-yellow-300' : ''}`}
-              >
-                Mes Annonces
-              </button>
+              <>
+                <button 
+                  onClick={() => onNavigate('finances')}
+                  className={`hover:text-yellow-300 ${currentPage === 'finances' ? 'text-yellow-300' : ''}`}
+                >
+                  Finances
+                </button>
+                <button 
+                  onClick={() => onNavigate('myproducts')}
+                  className={`hover:text-yellow-300 ${currentPage === 'myproducts' ? 'text-yellow-300' : ''}`}
+                >
+                  Mes Annonces
+                </button>
+              </>
             )}
           </nav>
 
