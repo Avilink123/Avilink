@@ -90,6 +90,191 @@ const Header = ({ currentUser, onLogin, onLogout, onNavigate, currentPage }) => 
   );
 };
 
+// Composant Price Monitoring
+const PriceMonitoring = () => {
+  const [prices, setPrices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    categorie: '',
+    localisation: '',
+    type_produit: ''
+  });
+
+  useEffect(() => {
+    loadPrices();
+  }, [filters]);
+
+  const loadPrices = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (filters.categorie) params.append('categorie', filters.categorie);
+      if (filters.localisation) params.append('localisation', filters.localisation);
+      if (filters.type_produit) params.append('type_produit', filters.type_produit);
+      
+      const response = await axios.get(`${API}/prices?${params}`);
+      setPrices(response.data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des prix:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getProductTypeName = (type) => {
+    const types = {
+      'aliment_ponte': 'Aliment ponte',
+      'aliment_chair': 'Aliment chair',
+      'poussin_ponte': 'Poussin ponte',
+      'poussin_chair': 'Poussin chair',
+      'medicament': 'Médicament',
+      'vaccin': 'Vaccin',
+      'poulet_vif': 'Poulet vif',
+      'poulet_vide': 'Poulet vidé',
+      'oeuf_conso': 'Œuf consommation',
+      'fumier': 'Fumier'
+    };
+    return types[type] || type;
+  };
+
+  const getTendanceIcon = (tendance) => {
+    switch (tendance) {
+      case 'hausse': return '📈';
+      case 'baisse': return '📉';
+      default: return '➡️';
+    }
+  };
+
+  const getTendanceColor = (tendance) => {
+    switch (tendance) {
+      case 'hausse': return 'text-red-600';
+      case 'baisse': return 'text-green-600';
+      default: return 'text-gray-600';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-6">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold mb-6">💰 Suivi des Prix - Mali</h1>
+        
+        {/* Filtres */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+          <h2 className="text-lg font-semibold mb-4">Filtres de recherche</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Catégorie</label>
+              <select
+                value={filters.categorie}
+                onChange={(e) => setFilters({...filters, categorie: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+              >
+                <option value="">Toutes les catégories</option>
+                <option value="intrants">Intrants</option>
+                <option value="produits">Produits</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">Localisation</label>
+              <input
+                type="text"
+                value={filters.localisation}
+                onChange={(e) => setFilters({...filters, localisation: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                placeholder="Ville ou région"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">Type de produit</label>
+              <select
+                value={filters.type_produit}
+                onChange={(e) => setFilters({...filters, type_produit: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+              >
+                <option value="">Tous les types</option>
+                <optgroup label="Intrants">
+                  <option value="aliment_ponte">Aliment ponte</option>
+                  <option value="aliment_chair">Aliment chair</option>
+                  <option value="poussin_ponte">Poussin ponte</option>
+                  <option value="poussin_chair">Poussin chair</option>
+                  <option value="medicament">Médicament</option>
+                  <option value="vaccin">Vaccin</option>
+                </optgroup>
+                <optgroup label="Produits">
+                  <option value="poulet_vif">Poulet vif</option>
+                  <option value="poulet_vide">Poulet vidé</option>
+                  <option value="oeuf_conso">Œuf consommation</option>
+                  <option value="fumier">Fumier</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        {/* Liste des prix */}
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="text-gray-600">Chargement des prix...</div>
+          </div>
+        ) : prices.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="text-gray-600">Aucun prix trouvé avec ces critères.</div>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {prices.map(price => (
+              <div key={price.id} className="bg-white rounded-lg shadow-md p-4">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h3 className="font-semibold text-lg">{getProductTypeName(price.type_produit)}</h3>
+                    <span className={`text-sm px-2 py-1 rounded ${price.categorie === 'intrants' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                      {price.categorie === 'intrants' ? '📦 Intrant' : '🐔 Produit'}
+                    </span>
+                  </div>
+                  <div className={`flex items-center space-x-1 ${getTendanceColor(price.tendance)}`}>
+                    <span>{getTendanceIcon(price.tendance)}</span>
+                    <span className="text-sm font-medium">{price.tendance}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2 mb-4">
+                  <div className="text-center bg-gray-50 p-3 rounded">
+                    <div className="text-2xl font-bold text-green-700">
+                      {price.prix_moyen.toLocaleString()} FCFA
+                    </div>
+                    <div className="text-sm text-gray-600">/{price.unite}</div>
+                  </div>
+                  
+                  <div className="flex justify-between text-sm">
+                    <span>Min: <span className="font-medium">{price.prix_min.toLocaleString()} FCFA</span></span>
+                    <span>Max: <span className="font-medium">{price.prix_max.toLocaleString()} FCFA</span></span>
+                  </div>
+                </div>
+                
+                <div className="text-sm text-gray-600 space-y-1">
+                  <div>📍 {price.localisation}</div>
+                  <div>📊 {price.source}</div>
+                  <div>📅 {new Date(price.date_maj).toLocaleDateString('fr-FR')}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 className="font-semibold text-blue-900 mb-2">💡 Information</h3>
+          <p className="text-blue-800 text-sm">
+            Les prix affichés sont collectés auprès des marchés locaux et des coopératives. 
+            Ils peuvent varier selon la qualité et la saison. Contactez directement les fournisseurs pour confirmer.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const HomePage = ({ stats }) => {
   return (
     <div className="min-h-screen bg-gray-50">
