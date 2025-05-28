@@ -121,14 +121,12 @@ class AviMarcheAPITester:
 
     def test_create_product(self, product_data):
         """Test creating a new product"""
-        params = {"vendeur_id": self.user_id}
         success, response = self.run_test(
             "Create Product",
             "POST",
-            "products",
+            f"products?vendeur_id={self.user_id}",
             200,
-            data=product_data,
-            params=params
+            data=product_data
         )
         if success and 'id' in response:
             self.test_product_id = response['id']
