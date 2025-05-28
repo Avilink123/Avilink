@@ -134,14 +134,12 @@ class AviMarcheAPITester:
 
     def test_update_product(self, product_id, update_data):
         """Test updating a product"""
-        params = {"vendeur_id": self.user_id}
         return self.run_test(
             "Update Product",
             "PUT",
-            f"products/{product_id}",
+            f"products/{product_id}?vendeur_id={self.user_id}",
             200,
-            data=update_data,
-            params=params
+            data=update_data
         )
 
     def test_delete_product(self, product_id):
