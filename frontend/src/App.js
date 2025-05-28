@@ -1449,6 +1449,8 @@ function App() {
         return <MyProducts currentUser={currentUser} />;
       case 'prices':
         return <PriceMonitoring />;
+      case 'health':
+        return <AnimalHealth currentUser={currentUser} />;
       default:
         return <HomePage stats={stats} />;
     }
