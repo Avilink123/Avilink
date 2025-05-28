@@ -2,7 +2,7 @@
 import requests
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class AviMarcheAPITester:
     def __init__(self, base_url):
@@ -151,6 +151,124 @@ class AviMarcheAPITester:
             200
         )
 
+    # New methods for Price Monitoring module
+    def test_get_prices(self, filters=None):
+        """Test getting price monitoring data with optional filters"""
+        return self.run_test(
+            "Get Price Monitoring Data",
+            "GET",
+            "prices",
+            200,
+            params=filters
+        )
+
+    def test_report_price(self, price_data):
+        """Test reporting a new price"""
+        return self.run_test(
+            "Report Price",
+            "POST",
+            f"prices/report?reporter_id={self.user_id}",
+            200,
+            data=price_data
+        )
+
+    # New methods for Animal Health module
+    def test_get_diseases(self):
+        """Test getting diseases list"""
+        return self.run_test(
+            "Get Diseases",
+            "GET",
+            "diseases",
+            200
+        )
+
+    def test_get_disease(self, disease_id):
+        """Test getting a specific disease"""
+        return self.run_test(
+            "Get Disease Details",
+            "GET",
+            f"diseases/{disease_id}",
+            200
+        )
+
+    def test_report_symptoms(self, symptoms_data):
+        """Test reporting symptoms"""
+        return self.run_test(
+            "Report Symptoms",
+            "POST",
+            f"symptoms/report?user_id={self.user_id}",
+            200,
+            data=symptoms_data
+        )
+
+    def test_get_user_symptom_reports(self):
+        """Test getting user's symptom reports"""
+        return self.run_test(
+            "Get User Symptom Reports",
+            "GET",
+            f"symptoms/user/{self.user_id}",
+            200
+        )
+
+    def test_get_veterinaires(self, localisation=None):
+        """Test getting veterinarians list"""
+        params = {"localisation": localisation} if localisation else None
+        return self.run_test(
+            "Get Veterinarians",
+            "GET",
+            "veterinaires",
+            200,
+            params=params
+        )
+
+    def test_record_vaccination(self, vaccination_data):
+        """Test recording a vaccination"""
+        return self.run_test(
+            "Record Vaccination",
+            "POST",
+            f"vaccinations?user_id={self.user_id}",
+            200,
+            data=vaccination_data
+        )
+
+    def test_get_user_vaccinations(self):
+        """Test getting user's vaccination records"""
+        return self.run_test(
+            "Get User Vaccinations",
+            "GET",
+            f"vaccinations/user/{self.user_id}",
+            200
+        )
+
+    # New methods for Financial Tools module
+    def test_add_transaction(self, transaction_data):
+        """Test adding a financial transaction"""
+        return self.run_test(
+            "Add Financial Transaction",
+            "POST",
+            f"finances/transaction?user_id={self.user_id}",
+            200,
+            data=transaction_data
+        )
+
+    def test_get_user_transactions(self, limit=50):
+        """Test getting user's financial transactions"""
+        return self.run_test(
+            "Get User Transactions",
+            "GET",
+            f"finances/transactions/user/{self.user_id}?limit={limit}",
+            200
+        )
+
+    def test_get_financial_summary(self, days=30):
+        """Test getting financial summary"""
+        return self.run_test(
+            "Get Financial Summary",
+            "GET",
+            f"finances/summary/user/{self.user_id}?days={days}",
+            200
+        )
+
 def main():
     # Get the backend URL from the frontend .env file
     backend_url = "https://0bb20f80-d827-4ef9-9415-c8ae287826b9.preview.emergentagent.com"
@@ -169,6 +287,8 @@ def main():
     if not success:
         print("❌ Login failed, stopping tests")
         return 1
+    
+    print("\n===== TESTING ORIGINAL MARKETPLACE MODULE =====")
     
     # Test getting products
     success, products = tester.test_get_products()
@@ -218,6 +338,122 @@ def main():
             success, _ = tester.test_delete_product(tester.test_product_id)
             if success:
                 print("✅ Deleted test product")
+    
+    print("\n===== TESTING PRICE MONITORING MODULE =====")
+    
+    # Test getting price monitoring data
+    success, prices = tester.test_get_prices()
+    if success:
+        print(f"💰 Found {len(prices)} price records")
+        
+        # Test filters
+        filters = {"categorie": "intrants"}
+        success, filtered_prices = tester.test_get_prices(filters)
+        if success:
+            print(f"🔍 Found {len(filtered_prices)} intrants price records")
+    
+    # Test reporting a new price
+    new_price = {
+        "categorie": "produits",
+        "type_produit": "oeuf_conso",
+        "prix": 125,
+        "unite": "pièce",
+        "localisation": "Bamako"
+    }
+    success, reported_price = tester.test_report_price(new_price)
+    if success:
+        print(f"✅ Reported new price: {reported_price['price']['type_produit']} at {reported_price['price']['prix_moyen']} FCFA/{reported_price['price']['unite']}")
+    
+    print("\n===== TESTING ANIMAL HEALTH MODULE =====")
+    
+    # Test getting diseases
+    success, diseases = tester.test_get_diseases()
+    if success:
+        print(f"🦠 Found {len(diseases)} diseases")
+        
+        if len(diseases) > 0:
+            # Test getting a specific disease
+            disease_id = diseases[0]['id']
+            success, disease = tester.test_get_disease(disease_id)
+            if success:
+                print(f"✅ Got details for disease: {disease['nom']}")
+                print(f"   Gravité: {disease['gravite']}")
+                print(f"   Symptômes: {', '.join(disease['symptomes'][:3])}...")
+    
+    # Test getting veterinarians
+    success, vets = tester.test_get_veterinaires()
+    if success:
+        print(f"👨‍⚕️ Found {len(vets)} veterinarians")
+        
+        # Test filtering by location
+        success, local_vets = tester.test_get_veterinaires("Bamako")
+        if success:
+            print(f"🔍 Found {len(local_vets)} veterinarians in Bamako")
+    
+    # Test reporting symptoms
+    symptoms_data = {
+        "symptomes": ["Toux", "Perte d'appétit"],
+        "nombre_animaux": 5,
+        "actions_prises": "Isolation des animaux malades"
+    }
+    success, report = tester.test_report_symptoms(symptoms_data)
+    if success:
+        print(f"✅ Reported symptoms for {report['nombre_animaux_affectes']} animals")
+    
+    # Test getting user's symptom reports
+    success, reports = tester.test_get_user_symptom_reports()
+    if success:
+        print(f"📋 User has {len(reports)} symptom reports")
+    
+    # Test recording a vaccination
+    vaccination_data = {
+        "type_vaccin": "Newcastle",
+        "nombre_animaux": 100,
+        "date_vaccination": datetime.utcnow().isoformat(),
+        "prochaine_vaccination": (datetime.utcnow() + timedelta(days=90)).isoformat(),
+        "lot_volaille": "Lot A-2023"
+    }
+    success, vaccination = tester.test_record_vaccination(vaccination_data)
+    if success:
+        print(f"✅ Recorded vaccination of {vaccination['nombre_animaux']} animals against {vaccination['type_vaccin']}")
+    
+    # Test getting user's vaccination records
+    success, vaccinations = tester.test_get_user_vaccinations()
+    if success:
+        print(f"💉 User has {len(vaccinations)} vaccination records")
+    
+    print("\n===== TESTING FINANCIAL TOOLS MODULE =====")
+    
+    # Test getting financial summary
+    success, summary = tester.test_get_financial_summary()
+    if success:
+        print(f"💰 Financial Summary:")
+        print(f"   Total Revenus: {summary['total_revenus']} FCFA")
+        print(f"   Total Dépenses: {summary['total_depenses']} FCFA")
+        print(f"   Bénéfice Net: {summary['benefice_net']} FCFA")
+    
+    # Test getting user's transactions
+    success, transactions = tester.test_get_user_transactions()
+    if success:
+        print(f"📊 User has {len(transactions)} financial transactions")
+        
+        # Count by type
+        revenus = [t for t in transactions if t['type_transaction'] == 'revenu']
+        depenses = [t for t in transactions if t['type_transaction'] == 'depense']
+        print(f"   Revenus: {len(revenus)}, Dépenses: {len(depenses)}")
+    
+    # Test adding a new transaction
+    transaction_data = {
+        "type_transaction": "revenu",
+        "montant": 25000,
+        "description": "Vente de poulets de chair",
+        "categorie": "vente_volaille",
+        "date_transaction": datetime.utcnow().isoformat(),
+        "mode_paiement": "especes"
+    }
+    success, transaction = tester.test_add_transaction(transaction_data)
+    if success:
+        print(f"✅ Added new transaction: {transaction['description']} for {transaction['montant']} FCFA")
     
     # Test user registration
     new_user = {
