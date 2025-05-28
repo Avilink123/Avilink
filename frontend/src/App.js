@@ -1130,6 +1130,8 @@ function App() {
         return <Marketplace currentUser={currentUser} />;
       case 'myproducts':
         return <MyProducts currentUser={currentUser} />;
+      case 'prices':
+        return <PriceMonitoring />;
       default:
         return <HomePage stats={stats} />;
     }
