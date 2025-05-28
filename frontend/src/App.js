@@ -404,8 +404,10 @@ const Marketplace = ({ currentUser }) => {
   }, [filters]);
 
   const handleContact = (product) => {
-    if (window.confirm(`Appeler ${product.vendeur_nom} au ${product.vendeur_telephone} ?`)) {
-      window.location.href = `tel:${product.vendeur_telephone}`;
+    const phoneNumber = product.vendeur_telephone;
+    if (window.confirm(`Appeler ${product.vendeur_nom} au ${phoneNumber} ?`)) {
+      // Try to open phone dialer
+      window.open(`tel:${phoneNumber}`, '_self');
     }
   };
 
