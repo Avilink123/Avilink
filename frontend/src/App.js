@@ -1451,6 +1451,8 @@ function App() {
         return <PriceMonitoring />;
       case 'health':
         return <AnimalHealth currentUser={currentUser} />;
+      case 'finances':
+        return <FinancialTools currentUser={currentUser} />;
       default:
         return <HomePage stats={stats} />;
     }
