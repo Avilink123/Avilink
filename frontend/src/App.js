@@ -90,6 +90,323 @@ const Header = ({ currentUser, onLogin, onLogout, onNavigate, currentPage }) => 
   );
 };
 
+// Composant Animal Health
+const AnimalHealth = ({ currentUser }) => {
+  const [diseases, setDiseases] = useState([]);
+  const [veterinaires, setVeterinaires] = useState([]);
+  const [selectedDisease, setSelectedDisease] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('diseases'); // diseases, symptoms, vets
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [diseasesRes, vetsRes] = await Promise.all([
+        axios.get(`${API}/diseases`),
+        axios.get(`${API}/veterinaires`)
+      ]);
+      setDiseases(diseasesRes.data);
+      setVeterinaires(vetsRes.data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSeverityColor = (gravite) => {
+    switch (gravite) {
+      case 'grave': return 'bg-red-100 text-red-800 border-red-300';
+      case 'moderee': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'legere': return 'bg-green-100 text-green-800 border-green-300';
+      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+    }
+  };
+
+  const getSeverityIcon = (gravite) => {
+    switch (gravite) {
+      case 'grave': return '🚨';
+      case 'moderee': return '⚠️';
+      case 'legere': return '💛';
+      default: return '❓';
+    }
+  };
+
+  const DiseaseCard = ({ disease }) => (
+    <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="font-semibold text-lg">{disease.nom}</h3>
+        <div className="flex items-center space-x-2">
+          <span className={`px-2 py-1 rounded text-xs border ${getSeverityColor(disease.gravite)}`}>
+            {getSeverityIcon(disease.gravite)} {disease.gravite}
+          </span>
+          {disease.contagieux && (
+            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
+              🦠 Contagieux
+            </span>
+          )}
+        </div>
+      </div>
+      
+      <div className="space-y-3">
+        <div>
+          <h4 className="font-medium text-red-700 mb-1">🩺 Symptômes:</h4>
+          <ul className="text-sm text-gray-700 list-disc list-inside">
+            {disease.symptomes.map((symptome, index) => (
+              <li key={index}>{symptome}</li>
+            ))}
+          </ul>
+        </div>
+        
+        <div>
+          <h4 className="font-medium text-blue-700 mb-1">🛡️ Prévention:</h4>
+          <ul className="text-sm text-gray-700 list-disc list-inside">
+            {disease.prevention.map((prev, index) => (
+              <li key={index}>{prev}</li>
+            ))}
+          </ul>
+        </div>
+        
+        <div>
+          <h4 className="font-medium text-green-700 mb-1">💊 Traitement:</h4>
+          <p className="text-sm text-gray-700">{disease.traitement}</p>
+        </div>
+      </div>
+      
+      <button
+        onClick={() => setSelectedDisease(disease)}
+        className="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium"
+      >
+        📋 Voir détails complets
+      </button>
+    </div>
+  );
+
+  const VetCard = ({ vet }) => (
+    <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <h3 className="font-semibold text-lg">{vet.nom}</h3>
+          <p className="text-gray-600">📍 {vet.localisation}</p>
+        </div>
+        <div className={`px-2 py-1 rounded text-xs ${vet.disponible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+          {vet.disponible ? '✅ Disponible' : '❌ Indisponible'}
+        </div>
+      </div>
+      
+      <div className="space-y-2 mb-4">
+        <div>
+          <span className="font-medium text-blue-700">Spécialités:</span>
+          <div className="flex flex-wrap gap-1 mt-1">
+            {vet.specialites.map((spec, index) => (
+              <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                {spec}
+              </span>
+            ))}
+          </div>
+        </div>
+        
+        {vet.tarif_consultation && (
+          <div className="text-sm">
+            <span className="font-medium">Tarif consultation:</span> {vet.tarif_consultation.toLocaleString()} FCFA
+          </div>
+        )}
+      </div>
+      
+      <a
+        href={`tel:${vet.telephone}`}
+        className="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-2 px-4 rounded font-semibold"
+      >
+        📞 {vet.telephone}
+      </a>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-6">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold mb-6">🩺 Santé Animale</h1>
+        
+        {/* Tabs */}
+        <div className="bg-white rounded-lg shadow-md mb-6">
+          <div className="flex border-b">
+            <button
+              onClick={() => setActiveTab('diseases')}
+              className={`flex-1 py-3 px-4 text-center font-medium ${activeTab === 'diseases' ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-50'}`}
+            >
+              🦠 Guide des Maladies
+            </button>
+            <button
+              onClick={() => setActiveTab('vets')}
+              className={`flex-1 py-3 px-4 text-center font-medium ${activeTab === 'vets' ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-50'}`}
+            >
+              👨‍⚕️ Vétérinaires
+            </button>
+            {currentUser && (
+              <button
+                onClick={() => setActiveTab('symptoms')}
+                className={`flex-1 py-3 px-4 text-center font-medium ${activeTab === 'symptoms' ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-50'}`}
+              >
+                📝 Signaler Symptômes
+              </button>
+            )}
+          </div>
+        </div>
+        
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="text-gray-600">Chargement...</div>
+          </div>
+        ) : (
+          <>
+            {/* Guide des maladies */}
+            {activeTab === 'diseases' && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold mb-2">Guide des maladies communes en aviculture</h2>
+                  <p className="text-gray-600">
+                    Consultez ce guide pour identifier et traiter les maladies les plus courantes chez la volaille.
+                  </p>
+                </div>
+                
+                <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
+                  {diseases.map(disease => (
+                    <DiseaseCard key={disease.id} disease={disease} />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Annuaire vétérinaires */}
+            {activeTab === 'vets' && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold mb-2">Annuaire des vétérinaires</h2>
+                  <p className="text-gray-600">
+                    Trouvez un vétérinaire spécialisé en aviculture près de chez vous.
+                  </p>
+                </div>
+                
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {veterinaires.map(vet => (
+                    <VetCard key={vet.id} vet={vet} />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Signalement de symptômes */}
+            {activeTab === 'symptoms' && currentUser && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold mb-2">Signaler des symptômes</h2>
+                  <p className="text-gray-600">
+                    Décrivez les symptômes observés chez vos volailles pour obtenir des conseils.
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <h3 className="font-semibold text-yellow-900 mb-2">⚠️ Attention</h3>
+                    <p className="text-yellow-800 text-sm">
+                      En cas de mortalité importante ou de symptômes graves, contactez immédiatement un vétérinaire. 
+                      Ce formulaire ne remplace pas une consultation professionnelle.
+                    </p>
+                  </div>
+                  
+                  <div className="text-center py-8">
+                    <div className="text-gray-500 mb-4">🚧</div>
+                    <p className="text-gray-600">
+                      Fonctionnalité de signalement en cours de développement.
+                      <br />
+                      Contactez directement un vétérinaire depuis l'annuaire pour le moment.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+        
+        {/* Modal détails maladie */}
+        {selectedDisease && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-screen overflow-y-auto">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-xl font-bold">{selectedDisease.nom}</h2>
+                <button 
+                  onClick={() => setSelectedDisease(null)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <span className={`px-3 py-1 rounded border ${getSeverityColor(selectedDisease.gravite)}`}>
+                    {getSeverityIcon(selectedDisease.gravite)} Gravité: {selectedDisease.gravite}
+                  </span>
+                  {selectedDisease.contagieux && (
+                    <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded">
+                      🦠 Maladie contagieuse
+                    </span>
+                  )}
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-red-700 mb-2">🩺 Symptômes à surveiller:</h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedDisease.symptomes.map((symptome, index) => (
+                      <li key={index} className="text-gray-700">{symptome}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-blue-700 mb-2">🛡️ Mesures de prévention:</h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedDisease.prevention.map((prev, index) => (
+                      <li key={index} className="text-gray-700">{prev}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-green-700 mb-2">💊 Traitement:</h3>
+                  <p className="text-gray-700 bg-green-50 p-3 rounded">{selectedDisease.traitement}</p>
+                </div>
+                
+                <div className="bg-red-50 border border-red-200 rounded p-3">
+                  <p className="text-red-800 text-sm">
+                    <strong>⚕️ Important:</strong> Consultez toujours un vétérinaire pour un diagnostic précis et un traitement adapté. 
+                    Ne tentez pas d'automédicamenter vos volailles.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        <div className="mt-8 bg-green-50 border border-green-200 rounded-lg p-4">
+          <h3 className="font-semibold text-green-900 mb-2">💡 Conseils généraux</h3>
+          <ul className="text-green-800 text-sm space-y-1">
+            <li>• Maintenez une hygiène rigoureuse dans vos poulaillers</li>
+            <li>• Respectez le calendrier de vaccination</li>
+            <li>• Isolez immédiatement tout animal malade</li>
+            <li>• Surveillez quotidiennement l'état de vos volailles</li>
+            <li>• Gardez un registre des traitements et vaccinations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Composant Price Monitoring
 const PriceMonitoring = () => {
   const [prices, setPrices] = useState([]);
