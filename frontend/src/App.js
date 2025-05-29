@@ -1473,6 +1473,8 @@ function App() {
         return <FinancialTools currentUser={currentUser} />;
       case 'admin':
         return <AdminDashboard />;
+      case 'download':
+        return <DownloadPage />;
       default:
         return <HomePage stats={stats} />;
     }
