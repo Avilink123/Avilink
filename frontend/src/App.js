@@ -45,7 +45,7 @@ const Header = ({ currentUser, onLogin, onLogout, onNavigate, currentPage }) => 
             >
               Santé
             </button>
-            {currentUser && (
+            {currentUser && currentUser.role === 'aviculteur' && (
               <>
                 <button 
                   onClick={() => onNavigate('finances')}
