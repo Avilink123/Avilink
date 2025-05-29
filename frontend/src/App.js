@@ -604,7 +604,7 @@ const HomePage = ({ stats }) => {
           </h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             La première plateforme numérique dédiée à l'aviculture au Mali. 
-            Connectez-vous avec des aviculteurs, acheteurs et fournisseurs dans tout le pays.
+            Connectez-vous avec des aviculteurs et acheteurs dans tout le pays.
           </p>
           <div className="bg-white/10 rounded-lg p-6 inline-block">
             <div className="grid grid-cols-3 gap-8 text-center">
