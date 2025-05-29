@@ -269,6 +269,43 @@ class AviMarcheAPITester:
             200
         )
 
+def test_admin_endpoints(tester):
+    """Test admin-specific endpoints"""
+    print("\n===== TESTING ADMIN ENDPOINTS =====")
+    
+    # Test admin stats endpoint
+    success_stats, stats_data = tester.run_test(
+        "Admin Stats",
+        "GET",
+        "admin/stats",
+        200
+    )
+    
+    if success_stats:
+        print("✅ Admin stats endpoint working")
+        print(f"  - Total users: {stats_data['general_stats']['total_users']}")
+        print(f"  - Total products: {stats_data['general_stats']['total_products']}")
+        print(f"  - Active products: {stats_data['general_stats']['active_products']}")
+        print(f"  - Users by role: {stats_data['users_by_role']}")
+    else:
+        print("❌ Admin stats endpoint failed")
+    
+    # Test admin export endpoint
+    success_export, export_data = tester.run_test(
+        "Admin Export",
+        "GET",
+        "admin/export",
+        200
+    )
+    
+    if success_export:
+        print("✅ Admin export endpoint working")
+        print(f"  - Export summary: {export_data['summary']}")
+    else:
+        print("❌ Admin export endpoint failed")
+    
+    return success_stats and success_export
+
 def main():
     # Get the backend URL from the frontend .env file
     backend_url = "https://0bb20f80-d827-4ef9-9415-c8ae287826b9.preview.emergentagent.com"
