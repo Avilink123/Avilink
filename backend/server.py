@@ -32,7 +32,6 @@ security = HTTPBearer()
 # Enums for French interface
 class UserRole(str, Enum):
     AVICULTEUR = "aviculteur"
-    FOURNISSEUR = "fournisseur"
     ACHETEUR = "acheteur"
 
 class ProductType(str, Enum):
