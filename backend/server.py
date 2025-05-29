@@ -618,7 +618,7 @@ async def startup_event():
                 "unite": "pièce",
                 "quantite_disponible": 200,
                 "localisation": "Sikasso",
-                "vendeur_id": test_users[1]["id"],
+                "vendeur_id": test_users[2]["id"],  # Fatoumata (maintenant avicultrice)
                 "vendeur_nom": "Fatoumata Diallo",
                 "vendeur_telephone": "70987654",
                 "status": "disponible",
