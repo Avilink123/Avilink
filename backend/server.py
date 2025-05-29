@@ -569,19 +569,19 @@ async def startup_event():
             },
             {
                 "id": str(uuid.uuid4()),
-                "nom": "Fatoumata Diallo",
-                "telephone": "70987654",
-                "role": "fournisseur",
-                "localisation": "Sikasso", 
+                "nom": "Ibrahim Koné",
+                "telephone": "65432189",
+                "role": "acheteur",
+                "localisation": "Kayes",
                 "created_at": datetime.utcnow(),
                 "is_active": True
             },
             {
                 "id": str(uuid.uuid4()),
-                "nom": "Ibrahim Koné",
-                "telephone": "65432189",
-                "role": "acheteur",
-                "localisation": "Kayes",
+                "nom": "Fatoumata Diallo",
+                "telephone": "70987654",
+                "role": "aviculteur",
+                "localisation": "Sikasso", 
                 "created_at": datetime.utcnow(),
                 "is_active": True
             }
