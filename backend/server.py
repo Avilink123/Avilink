@@ -381,6 +381,19 @@ async def download_frontend():
     else:
         raise HTTPException(status_code=404, detail="Fichier frontend non trouvé")
 
+@api_router.get("/download/backend-fixed")
+async def download_backend_fixed():
+    """Télécharger le ZIP du backend CORRIGÉ pour Render"""
+    file_path = "/app/avimarche-backend-fixed.zip"
+    if os.path.exists(file_path):
+        return FileResponse(
+            path=file_path,
+            filename="avimarche-backend-fixed.zip",
+            media_type="application/zip"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Fichier backend corrigé non trouvé")
+
 @api_router.get("/download/backend")
 async def download_backend():
     """Télécharger le ZIP du backend pour Railway"""
