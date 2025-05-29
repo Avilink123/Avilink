@@ -3,6 +3,7 @@ import "./App.css";
 import axios from "axios";
 import FinancialTools from "./FinancialTools";
 import AdminDashboard from "./AdminDashboard";
+import DownloadPage from "./DownloadPage";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
