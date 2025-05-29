@@ -364,6 +364,71 @@ async def get_dashboard_stats():
 async def root():
     return {"message": "AviMarché API - Plateforme avicole du Mali"}
 
+# ROUTES DE TÉLÉCHARGEMENT DES FICHIERS DE DÉPLOIEMENT
+from fastapi.responses import FileResponse
+import os
+
+@api_router.get("/download/frontend")
+async def download_frontend():
+    """Télécharger le ZIP du frontend pour Netlify"""
+    file_path = "/app/avimarche-frontend.zip"
+    if os.path.exists(file_path):
+        return FileResponse(
+            path=file_path,
+            filename="avimarche-frontend.zip",
+            media_type="application/zip"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Fichier frontend non trouvé")
+
+@api_router.get("/download/backend")
+async def download_backend():
+    """Télécharger le ZIP du backend pour Railway"""
+    file_path = "/app/avimarche-backend.zip"
+    if os.path.exists(file_path):
+        return FileResponse(
+            path=file_path,
+            filename="avimarche-backend.zip",
+            media_type="application/zip"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Fichier backend non trouvé")
+
+@api_router.get("/download/")
+async def download_info():
+    """Informations sur les fichiers disponibles"""
+    frontend_exists = os.path.exists("/app/avimarche-frontend.zip")
+    backend_exists = os.path.exists("/app/avimarche-backend.zip")
+    
+    frontend_size = os.path.getsize("/app/avimarche-frontend.zip") if frontend_exists else 0
+    backend_size = os.path.getsize("/app/avimarche-backend.zip") if backend_exists else 0
+    
+    return {
+        "message": "Endpoints de téléchargement AviMarché",
+        "files": {
+            "frontend": {
+                "available": frontend_exists,
+                "size_bytes": frontend_size,
+                "size_kb": round(frontend_size / 1024, 1),
+                "download_url": "/api/download/frontend",
+                "description": "ZIP du frontend React pour déploiement Netlify"
+            },
+            "backend": {
+                "available": backend_exists,
+                "size_bytes": backend_size,
+                "size_kb": round(backend_size / 1024, 1),
+                "download_url": "/api/download/backend",
+                "description": "ZIP du backend FastAPI pour déploiement Railway"
+            }
+        },
+        "instructions": [
+            "1. Clique sur les URLs de téléchargement ci-dessous",
+            "2. Ton navigateur téléchargera automatiquement les fichiers",
+            "3. Utilise le frontend ZIP sur Netlify.com",
+            "4. Utilise le backend ZIP sur Railway.app"
+        ]
+    }
+
 # ROUTE D'ADMINISTRATION - EXPORT DE DONNÉES
 @api_router.get("/admin/export")
 async def export_all_data():
