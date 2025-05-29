@@ -1152,12 +1152,12 @@ const MyProducts = ({ currentUser }) => {
     );
   }
 
-  if (!['aviculteur', 'fournisseur'].includes(currentUser.role)) {
+  if (!['aviculteur'].includes(currentUser.role)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Accès non autorisé</h2>
-          <p className="text-gray-600">Seuls les aviculteurs et fournisseurs peuvent créer des annonces.</p>
+          <p className="text-gray-600">Seuls les aviculteurs peuvent créer des annonces.</p>
         </div>
       </div>
     );
