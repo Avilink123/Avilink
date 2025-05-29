@@ -68,7 +68,7 @@ const DownloadPage = () => {
         </div>
 
         {/* Cards de téléchargement */}
-        <div className="grid md:grid-cols-2 gap-8 mb-8">
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
           {/* Frontend Card */}
           <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-blue-500">
             <div className="flex items-center mb-6">
@@ -111,19 +111,67 @@ const DownloadPage = () => {
             </p>
           </div>
 
-          {/* Backend Card */}
+          {/* Backend Fixed Card (RECOMMANDÉ) */}
           <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-green-500">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
                 <span className="text-2xl">⚙️</span>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Backend</h2>
-                <p className="text-green-600 font-medium">Pour Railway.app</p>
+                <h2 className="text-2xl font-bold text-gray-900">Backend Corrigé</h2>
+                <p className="text-green-600 font-medium">Pour Render.com ⭐</p>
               </div>
             </div>
             
             <div className="space-y-4 mb-6">
+              <div className="bg-green-50 border border-green-200 rounded p-2 mb-4">
+                <span className="text-green-800 font-medium text-sm">⭐ RECOMMANDÉ</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Taille:</span>
+                <span className="font-medium">{downloadInfo?.files?.backend_fixed?.size_kb} KB</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Contenu:</span>
+                <span className="font-medium">API FastAPI</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Status:</span>
+                <span className={`font-medium ${downloadInfo?.files?.backend_fixed?.available ? 'text-green-600' : 'text-red-600'}`}>
+                  {downloadInfo?.files?.backend_fixed?.available ? '✅ Prêt' : '❌ Indisponible'}
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => downloadFile('backend-fixed')}
+              disabled={!downloadInfo?.files?.backend_fixed?.available}
+              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold text-lg transition-colors"
+            >
+              📥 Télécharger Backend Corrigé
+            </button>
+            
+            <p className="text-sm text-gray-500 mt-3">
+              {downloadInfo?.files?.backend_fixed?.description}
+            </p>
+          </div>
+
+          {/* Backend Original Card */}
+          <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-gray-400 opacity-75">
+            <div className="flex items-center mb-6">
+              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                <span className="text-2xl">⚙️</span>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Backend Original</h2>
+                <p className="text-gray-600 font-medium">Pour Railway.app</p>
+              </div>
+            </div>
+            
+            <div className="space-y-4 mb-6">
+              <div className="bg-yellow-50 border border-yellow-200 rounded p-2 mb-4">
+                <span className="text-yellow-800 font-medium text-sm">⚠️ Problèmes sur Render</span>
+              </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Taille:</span>
                 <span className="font-medium">{downloadInfo?.files?.backend?.size_kb} KB</span>
@@ -143,9 +191,9 @@ const DownloadPage = () => {
             <button
               onClick={() => downloadFile('backend')}
               disabled={!downloadInfo?.files?.backend?.available}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold text-lg transition-colors"
+              className="w-full bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold text-lg transition-colors"
             >
-              📥 Télécharger Backend
+              📥 Télécharger Backend Original
             </button>
             
             <p className="text-sm text-gray-500 mt-3">
