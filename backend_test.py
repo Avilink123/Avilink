@@ -455,6 +455,22 @@ def main():
     else:
         print("❌ Login as Fatoumata Diallo failed")
     
+    # Test admin endpoints with Amadou Traoré (admin user)
+    print("\n===== TESTING ADMIN USER =====")
+    tester = AviMarcheAPITester(backend_url)  # Reset tester
+    success_amadou, user_amadou = tester.test_login("76123456")
+    if success_amadou:
+        print(f"✅ Logged in as Amadou Traoré (Role: {user_amadou['role']})")
+        
+        # Test admin endpoints
+        admin_success = test_admin_endpoints(tester)
+        if admin_success:
+            print("✅ Admin endpoints working correctly")
+        else:
+            print("❌ Some admin endpoints failed")
+    else:
+        print("❌ Login as Amadou Traoré failed")
+    
     # Print results
     print(f"\n📊 Tests passed: {tester.tests_passed}/{tester.tests_run}")
     return 0 if tester.tests_passed == tester.tests_run else 1
