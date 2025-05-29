@@ -745,7 +745,6 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                 >
                   <option value="acheteur">Acheteur</option>
                   <option value="aviculteur">Aviculteur</option>
-                  <option value="fournisseur">Fournisseur</option>
                 </select>
               </div>
               
