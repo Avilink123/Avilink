@@ -1462,6 +1462,8 @@ function App() {
         return <AnimalHealth currentUser={currentUser} />;
       case 'finances':
         return <FinancialTools currentUser={currentUser} />;
+      case 'admin':
+        return <AdminDashboard />;
       default:
         return <HomePage stats={stats} />;
     }
