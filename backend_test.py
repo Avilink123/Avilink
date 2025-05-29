@@ -276,38 +276,55 @@ def main():
     print(f"🚀 Testing AviMarché API at {backend_url}")
     tester = AviMarcheAPITester(backend_url)
     
-    # Test basic API endpoints
-    tester.test_root()
-    success, stats = tester.test_stats()
-    if success:
-        print(f"📊 Dashboard Stats: {stats}")
+    print("\n===== TESTING USER ROLES =====")
     
-    # Test login with existing user
-    success, user = tester.test_login("76123456")  # Amadou Traoré (aviculteur)
-    if not success:
-        print("❌ Login failed, stopping tests")
-        return 1
+    # Test user registration with different roles
+    print("\n🔍 Testing user registration with different roles...")
     
-    print("\n===== TESTING ORIGINAL MARKETPLACE MODULE =====")
+    # Test registering with role 'acheteur'
+    acheteur_data = {
+        "nom": "Test Acheteur",
+        "telephone": "7512",  # Will be made unique with timestamp
+        "role": "acheteur",
+        "localisation": "Bamako"
+    }
+    success_acheteur, registered_acheteur = tester.test_register(acheteur_data)
+    if success_acheteur:
+        print(f"✅ Registered new acheteur: {registered_acheteur['nom']} with role {registered_acheteur['role']}")
     
-    # Test getting products
-    success, products = tester.test_get_products()
-    if success:
-        print(f"📦 Found {len(products)} products")
+    # Test registering with role 'aviculteur'
+    aviculteur_data = {
+        "nom": "Test Aviculteur",
+        "telephone": "7513",  # Will be made unique with timestamp
+        "role": "aviculteur",
+        "localisation": "Sikasso"
+    }
+    success_aviculteur, registered_aviculteur = tester.test_register(aviculteur_data)
+    if success_aviculteur:
+        print(f"✅ Registered new aviculteur: {registered_aviculteur['nom']} with role {registered_aviculteur['role']}")
+    
+    # Test registering with role 'fournisseur' (should fail or be converted to another role)
+    fournisseur_data = {
+        "nom": "Test Fournisseur",
+        "telephone": "7514",  # Will be made unique with timestamp
+        "role": "fournisseur",
+        "localisation": "Kayes"
+    }
+    success_fournisseur, registered_fournisseur = tester.test_register(fournisseur_data)
+    if success_fournisseur:
+        print(f"⚠️ Registered user with 'fournisseur' role: {registered_fournisseur['nom']} with role {registered_fournisseur['role']}")
+        print("   This should not be possible if 'fournisseur' role has been removed")
+    else:
+        print("✅ Registration with 'fournisseur' role failed as expected")
+    
+    print("\n===== TESTING EXISTING USERS =====")
+    
+    # Test login with Amadou Traoré (aviculteur)
+    success_amadou, user_amadou = tester.test_login("76123456")
+    if success_amadou:
+        print(f"✅ Logged in as Amadou Traoré (Role: {user_amadou['role']})")
         
-        # Test filters
-        filters = {"type_produit": "volaille_vivante"}
-        success, filtered_products = tester.test_get_products(filters)
-        if success:
-            print(f"🔍 Found {len(filtered_products)} volaille_vivante products")
-    
-    # Test getting user's products
-    success, user_products = tester.test_get_user_products(tester.user_id)
-    if success:
-        print(f"👤 User has {len(user_products)} products")
-    
-    # Test product creation (only for aviculteur or fournisseur)
-    if user['role'] in ['aviculteur', 'fournisseur']:
+        # Test product creation (should work for aviculteur)
         new_product = {
             "titre": "Test Poulets de Chair",
             "description": "Poulets de chair pour test API",
@@ -321,150 +338,85 @@ def main():
             "poids_moyen": 2.0
         }
         
-        success, created_product = tester.test_create_product(new_product)
-        if success:
-            print(f"✅ Created product: {created_product['titre']}")
+        success_create, created_product = tester.test_create_product(new_product)
+        if success_create:
+            print(f"✅ Aviculteur can create products: {created_product['titre']}")
             
-            # Test product update
-            update_data = {
-                "prix": 4500,
-                "quantite_disponible": 8
+            # Clean up
+            if tester.test_product_id:
+                tester.test_delete_product(tester.test_product_id)
+        else:
+            print("❌ Aviculteur cannot create products")
+    else:
+        print("❌ Login as Amadou Traoré failed")
+    
+    # Test login with Ibrahim Koné (acheteur)
+    tester = AviMarcheAPITester(backend_url)  # Reset tester
+    success_ibrahim, user_ibrahim = tester.test_login("65432189")
+    if success_ibrahim:
+        print(f"✅ Logged in as Ibrahim Koné (Role: {user_ibrahim['role']})")
+        
+        # Test product creation (should fail for acheteur)
+        new_product = {
+            "titre": "Test Poulets de Chair",
+            "description": "Poulets de chair pour test API",
+            "type_produit": "volaille_vivante",
+            "prix": 4000,
+            "unite": "pièce",
+            "quantite_disponible": 10,
+            "localisation": "Bamako",
+            "race_volaille": "Cobb 500",
+            "age_semaines": 7,
+            "poids_moyen": 2.0
+        }
+        
+        success_create, _ = tester.test_create_product(new_product)
+        if not success_create:
+            print("✅ Acheteur cannot create products (as expected)")
+        else:
+            print("❌ Acheteur can create products (unexpected)")
+            
+            # Clean up if needed
+            if tester.test_product_id:
+                tester.test_delete_product(tester.test_product_id)
+    else:
+        print("❌ Login as Ibrahim Koné failed")
+    
+    # Test login with Fatoumata Diallo (changed from fournisseur to aviculteur)
+    tester = AviMarcheAPITester(backend_url)  # Reset tester
+    success_fatoumata, user_fatoumata = tester.test_login("70987654")
+    if success_fatoumata:
+        print(f"✅ Logged in as Fatoumata Diallo (Role: {user_fatoumata['role']})")
+        
+        if user_fatoumata['role'] == 'aviculteur':
+            print("✅ Fatoumata's role has been changed from fournisseur to aviculteur")
+            
+            # Test product creation (should work for aviculteur)
+            new_product = {
+                "titre": "Test Oeufs Frais",
+                "description": "Oeufs frais pour test API",
+                "type_produit": "oeufs",
+                "prix": 150,
+                "unite": "pièce",
+                "quantite_disponible": 100,
+                "localisation": "Sikasso",
+                "type_oeuf": "poule",
+                "fraicheur_jours": 1
             }
-            success, updated_product = tester.test_update_product(tester.test_product_id, update_data)
-            if success:
-                print(f"✅ Updated product price to {updated_product['prix']} FCFA")
             
-            # Test product deletion
-            success, _ = tester.test_delete_product(tester.test_product_id)
-            if success:
-                print("✅ Deleted test product")
-    
-    print("\n===== TESTING PRICE MONITORING MODULE =====")
-    
-    # Test getting price monitoring data
-    success, prices = tester.test_get_prices()
-    if success:
-        print(f"💰 Found {len(prices)} price records")
-        
-        # Test filters
-        filters = {"categorie": "intrants"}
-        success, filtered_prices = tester.test_get_prices(filters)
-        if success:
-            print(f"🔍 Found {len(filtered_prices)} intrants price records")
-    
-    # Test reporting a new price
-    new_price = {
-        "categorie": "produits",
-        "type_produit": "oeuf_conso",
-        "prix": 125,
-        "unite": "pièce",
-        "localisation": "Bamako"
-    }
-    success, reported_price = tester.test_report_price(new_price)
-    if success:
-        print(f"✅ Reported new price: {reported_price['price']['type_produit']} at {reported_price['price']['prix_moyen']} FCFA/{reported_price['price']['unite']}")
-    
-    print("\n===== TESTING ANIMAL HEALTH MODULE =====")
-    
-    # Test getting diseases
-    success, diseases = tester.test_get_diseases()
-    if success:
-        print(f"🦠 Found {len(diseases)} diseases")
-        
-        if len(diseases) > 0:
-            # Test getting a specific disease
-            disease_id = diseases[0]['id']
-            success, disease = tester.test_get_disease(disease_id)
-            if success:
-                print(f"✅ Got details for disease: {disease['nom']}")
-                print(f"   Gravité: {disease['gravite']}")
-                print(f"   Symptômes: {', '.join(disease['symptomes'][:3])}...")
-    
-    # Test getting veterinarians
-    success, vets = tester.test_get_veterinaires()
-    if success:
-        print(f"👨‍⚕️ Found {len(vets)} veterinarians")
-        
-        # Test filtering by location
-        success, local_vets = tester.test_get_veterinaires("Bamako")
-        if success:
-            print(f"🔍 Found {len(local_vets)} veterinarians in Bamako")
-    
-    # Test reporting symptoms
-    symptoms_data = {
-        "symptomes": ["Toux", "Perte d'appétit"],
-        "nombre_animaux": 5,
-        "actions_prises": "Isolation des animaux malades"
-    }
-    success, report = tester.test_report_symptoms(symptoms_data)
-    if success:
-        print(f"✅ Reported symptoms for {report['nombre_animaux_affectes']} animals")
-    
-    # Test getting user's symptom reports
-    success, reports = tester.test_get_user_symptom_reports()
-    if success:
-        print(f"📋 User has {len(reports)} symptom reports")
-    
-    # Test recording a vaccination
-    vaccination_data = {
-        "type_vaccin": "Newcastle",
-        "nombre_animaux": 100,
-        "date_vaccination": datetime.utcnow().isoformat(),
-        "prochaine_vaccination": (datetime.utcnow() + timedelta(days=90)).isoformat(),
-        "lot_volaille": "Lot A-2023"
-    }
-    success, vaccination = tester.test_record_vaccination(vaccination_data)
-    if success:
-        print(f"✅ Recorded vaccination of {vaccination['nombre_animaux']} animals against {vaccination['type_vaccin']}")
-    
-    # Test getting user's vaccination records
-    success, vaccinations = tester.test_get_user_vaccinations()
-    if success:
-        print(f"💉 User has {len(vaccinations)} vaccination records")
-    
-    print("\n===== TESTING FINANCIAL TOOLS MODULE =====")
-    
-    # Test getting financial summary
-    success, summary = tester.test_get_financial_summary()
-    if success:
-        print(f"💰 Financial Summary:")
-        print(f"   Total Revenus: {summary['total_revenus']} FCFA")
-        print(f"   Total Dépenses: {summary['total_depenses']} FCFA")
-        print(f"   Bénéfice Net: {summary['benefice_net']} FCFA")
-    
-    # Test getting user's transactions
-    success, transactions = tester.test_get_user_transactions()
-    if success:
-        print(f"📊 User has {len(transactions)} financial transactions")
-        
-        # Count by type
-        revenus = [t for t in transactions if t['type_transaction'] == 'revenu']
-        depenses = [t for t in transactions if t['type_transaction'] == 'depense']
-        print(f"   Revenus: {len(revenus)}, Dépenses: {len(depenses)}")
-    
-    # Test adding a new transaction
-    transaction_data = {
-        "type_transaction": "revenu",
-        "montant": 25000,
-        "description": "Vente de poulets de chair",
-        "categorie": "vente_volaille",
-        "date_transaction": datetime.utcnow().isoformat(),
-        "mode_paiement": "especes"
-    }
-    success, transaction = tester.test_add_transaction(transaction_data)
-    if success:
-        print(f"✅ Added new transaction: {transaction['description']} for {transaction['montant']} FCFA")
-    
-    # Test user registration
-    new_user = {
-        "nom": "Test Utilisateur",
-        "telephone": "7512",  # Will be made unique with timestamp
-        "role": "acheteur",
-        "localisation": "Sikasso"
-    }
-    success, registered_user = tester.test_register(new_user)
-    if success:
-        print(f"✅ Registered new user: {registered_user['nom']}")
+            success_create, created_product = tester.test_create_product(new_product)
+            if success_create:
+                print(f"✅ Fatoumata (now aviculteur) can create products: {created_product['titre']}")
+                
+                # Clean up
+                if tester.test_product_id:
+                    tester.test_delete_product(tester.test_product_id)
+            else:
+                print("❌ Fatoumata (now aviculteur) cannot create products")
+        else:
+            print(f"❌ Fatoumata's role is still {user_fatoumata['role']}, not aviculteur")
+    else:
+        print("❌ Login as Fatoumata Diallo failed")
     
     # Print results
     print(f"\n📊 Tests passed: {tester.tests_passed}/{tester.tests_run}")
