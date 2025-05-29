@@ -412,9 +412,11 @@ async def download_info():
     """Informations sur les fichiers disponibles"""
     frontend_exists = os.path.exists("/app/avimarche-frontend.zip")
     backend_exists = os.path.exists("/app/avimarche-backend.zip")
+    backend_fixed_exists = os.path.exists("/app/avimarche-backend-fixed.zip")
     
     frontend_size = os.path.getsize("/app/avimarche-frontend.zip") if frontend_exists else 0
     backend_size = os.path.getsize("/app/avimarche-backend.zip") if backend_exists else 0
+    backend_fixed_size = os.path.getsize("/app/avimarche-backend-fixed.zip") if backend_fixed_exists else 0
     
     return {
         "message": "Endpoints de téléchargement AviMarché",
@@ -432,13 +434,21 @@ async def download_info():
                 "size_kb": round(backend_size / 1024, 1),
                 "download_url": "/api/download/backend",
                 "description": "ZIP du backend FastAPI pour déploiement Railway"
+            },
+            "backend_fixed": {
+                "available": backend_fixed_exists,
+                "size_bytes": backend_fixed_size,
+                "size_kb": round(backend_fixed_size / 1024, 1),
+                "download_url": "/api/download/backend-fixed",
+                "description": "ZIP du backend CORRIGÉ pour Render.com (structure de fichiers fixée)"
             }
         },
         "instructions": [
             "1. Clique sur les URLs de téléchargement ci-dessous",
             "2. Ton navigateur téléchargera automatiquement les fichiers",
             "3. Utilise le frontend ZIP sur Netlify.com",
-            "4. Utilise le backend ZIP sur Railway.app"
+            "4. Utilise le backend-fixed ZIP sur Render.com (RECOMMANDÉ)",
+            "5. Utilise le backend ZIP sur Railway.app"
         ]
     }
 
