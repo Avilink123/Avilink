@@ -1,0 +1,4 @@
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+127.0.0.1 - - [29/May/2025 02:56:58] "HEAD / HTTP/1.1" 200 -
+127.0.0.1 - - [29/May/2025 02:56:58] "HEAD /avimarche-frontend.zip HTTP/1.1" 200 -
+127.0.0.1 - - [29/May/2025 02:56:58] "HEAD /avimarche-backend.zip HTTP/1.1" 200 -
