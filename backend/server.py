@@ -364,6 +364,108 @@ async def get_dashboard_stats():
 async def root():
     return {"message": "AviMarché API - Plateforme avicole du Mali"}
 
+# ROUTE D'ADMINISTRATION - EXPORT DE DONNÉES
+@api_router.get("/admin/export")
+async def export_all_data():
+    """Export de toutes les données pour administration/backup"""
+    try:
+        # Récupérer toutes les données
+        users = await db.users.find({}).to_list(1000)
+        products = await db.products.find({}).to_list(1000)
+        prices = await db.price_monitoring.find({}).to_list(1000)
+        diseases = await db.diseases.find({}).to_list(1000)
+        vets = await db.veterinaires.find({}).to_list(1000)
+        transactions = await db.financial_transactions.find({}).to_list(1000)
+        vaccinations = await db.vaccinations.find({}).to_list(1000)
+        symptom_reports = await db.symptom_reports.find({}).to_list(1000)
+        
+        # Nettoyer les ObjectId pour JSON
+        for collection in [users, products, prices, diseases, vets, transactions, vaccinations, symptom_reports]:
+            for item in collection:
+                if '_id' in item:
+                    del item['_id']
+        
+        return {
+            "export_date": datetime.utcnow(),
+            "summary": {
+                "total_users": len(users),
+                "total_products": len(products),
+                "total_prices": len(prices),
+                "total_diseases": len(diseases),
+                "total_veterinaires": len(vets),
+                "total_transactions": len(transactions),
+                "total_vaccinations": len(vaccinations),
+                "total_symptom_reports": len(symptom_reports)
+            },
+            "data": {
+                "users": users,
+                "products": products,
+                "price_monitoring": prices,
+                "diseases": diseases,
+                "veterinaires": vets,
+                "financial_transactions": transactions,
+                "vaccinations": vaccinations,
+                "symptom_reports": symptom_reports
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur d'export: {str(e)}")
+
+@api_router.get("/admin/stats")
+async def admin_stats():
+    """Statistiques détaillées pour administration"""
+    try:
+        # Stats générales
+        total_users = await db.users.count_documents({})
+        total_products = await db.products.count_documents({})
+        active_products = await db.products.count_documents({"status": "disponible"})
+        
+        # Stats par rôle
+        users_by_role = {}
+        for role in ["aviculteur", "acheteur"]:
+            count = await db.users.count_documents({"role": role})
+            users_by_role[role] = count
+        
+        # Stats par localisation
+        pipeline = [{"$group": {"_id": "$localisation", "count": {"$sum": 1}}}]
+        users_by_location = await db.users.aggregate(pipeline).to_list(100)
+        products_by_location = await db.products.aggregate(pipeline).to_list(100)
+        
+        # Stats financières
+        revenue_pipeline = [
+            {"$match": {"type_transaction": "revenu"}},
+            {"$group": {"_id": None, "total": {"$sum": "$montant"}}}
+        ]
+        expense_pipeline = [
+            {"$match": {"type_transaction": "depense"}},
+            {"$group": {"_id": None, "total": {"$sum": "$montant"}}}
+        ]
+        
+        total_revenue = await db.financial_transactions.aggregate(revenue_pipeline).to_list(1)
+        total_expenses = await db.financial_transactions.aggregate(expense_pipeline).to_list(1)
+        
+        return {
+            "timestamp": datetime.utcnow(),
+            "general_stats": {
+                "total_users": total_users,
+                "total_products": total_products,
+                "active_products": active_products,
+                "total_transactions": await db.financial_transactions.count_documents({}),
+                "total_diseases": await db.diseases.count_documents({}),
+                "total_veterinaires": await db.veterinaires.count_documents({})
+            },
+            "users_by_role": users_by_role,
+            "users_by_location": {item["_id"]: item["count"] for item in users_by_location},
+            "products_by_location": {item["_id"]: item["count"] for item in products_by_location},
+            "financial_summary": {
+                "total_revenue": total_revenue[0]["total"] if total_revenue else 0,
+                "total_expenses": total_expenses[0]["total"] if total_expenses else 0,
+                "net_profit": (total_revenue[0]["total"] if total_revenue else 0) - (total_expenses[0]["total"] if total_expenses else 0)
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur de stats: {str(e)}")
+
 # ROUTES POUR PRICE MONITORING
 @api_router.get("/prices", response_model=List[PriceMonitoring])
 async def get_prices(
