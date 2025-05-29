@@ -46,6 +46,14 @@ const Header = ({ currentUser, onLogin, onLogout, onNavigate, currentPage }) => 
             >
               Santé
             </button>
+            {currentUser && currentUser.role === 'aviculteur' && currentUser.nom === 'Amadou Traoré' && (
+              <button 
+                onClick={() => onNavigate('admin')}
+                className={`hover:text-yellow-300 ${currentPage === 'admin' ? 'text-yellow-300' : ''}`}
+              >
+                🛠️ Admin
+              </button>
+            )}
             {currentUser && currentUser.role === 'aviculteur' && (
               <>
                 <button 
