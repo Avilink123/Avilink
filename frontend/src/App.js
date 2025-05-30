@@ -719,50 +719,50 @@ const PriceMonitoring = () => {
 const HomePage = ({ stats }) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Section Hero */}
-      <section className="bg-gradient-to-r from-green-600 to-green-800 text-white py-16">
+      {/* Section Hero - Optimisée Mobile */}
+      <section className="bg-gradient-to-r from-green-600 to-green-800 text-white py-8 md:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">
             Bienvenue sur AviMarché
           </h1>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl mb-6 md:mb-8 max-w-2xl mx-auto px-4">
             La première plateforme numérique dédiée à l'aviculture au Mali. 
             Connectez-vous avec des aviculteurs et acheteurs dans tout le pays.
           </p>
-          <div className="bg-white/10 rounded-lg p-6 inline-block">
-            <div className="grid grid-cols-3 gap-8 text-center">
+          <div className="bg-white/10 rounded-lg p-4 md:p-6 inline-block">
+            <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
               <div>
-                <div className="text-3xl font-bold text-yellow-300">{stats.total_produits || 0}</div>
-                <div className="text-sm">Annonces Actives</div>
+                <div className="text-2xl md:text-3xl font-bold text-yellow-300">{stats.total_produits || 0}</div>
+                <div className="text-xs md:text-sm">Annonces Actives</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-yellow-300">{stats.total_utilisateurs || 0}</div>
-                <div className="text-sm">Utilisateurs</div>
+                <div className="text-2xl md:text-3xl font-bold text-yellow-300">{stats.total_utilisateurs || 0}</div>
+                <div className="text-xs md:text-sm">Utilisateurs</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-yellow-300">
+                <div className="text-2xl md:text-3xl font-bold text-yellow-300">
                   {Object.keys(stats.stats_par_type || {}).length}
                 </div>
-                <div className="text-sm">Catégories</div>
+                <div className="text-xs md:text-sm">Catégories</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section Fonctionnalités */}
-      <section className="py-16">
+      {/* Section Fonctionnalités - Optimisée Mobile */}
+      <section className="py-8 md:py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-12 text-gray-800">
             Que pouvez-vous faire sur AviMarché ?
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div className="bg-white rounded-lg shadow-lg p-6 text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🐔</span>
+                <span className="text-3xl">🐔</span>
               </div>
-              <h3 className="text-xl font-semibold mb-4">Vendre vos Produits</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold mb-4">Vendre vos Produits</h3>
+              <p className="text-gray-600 text-sm md:text-base">
                 Créez des annonces pour vos volailles, œufs et produits dérivés. 
                 Atteignez des acheteurs dans tout le Mali.
               </p>
@@ -770,10 +770,10 @@ const HomePage = ({ stats }) => {
             
             <div className="bg-white rounded-lg shadow-lg p-6 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🛒</span>
+                <span className="text-3xl">🛒</span>
               </div>
-              <h3 className="text-xl font-semibold mb-4">Acheter Facilement</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold mb-4">Acheter Facilement</h3>
+              <p className="text-gray-600 text-sm md:text-base">
                 Trouvez les meilleurs produits avicoles près de chez vous. 
                 Contactez directement les vendeurs.
               </p>
@@ -781,10 +781,10 @@ const HomePage = ({ stats }) => {
             
             <div className="bg-white rounded-lg shadow-lg p-6 text-center">
               <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🤝</span>
+                <span className="text-3xl">🤝</span>
               </div>
-              <h3 className="text-xl font-semibold mb-4">Réseau Professionnel</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold mb-4">Réseau Professionnel</h3>
+              <p className="text-gray-600 text-sm md:text-base">
                 Connectez-vous avec d'autres professionnels de l'aviculture 
                 et développez votre réseau.
               </p>
