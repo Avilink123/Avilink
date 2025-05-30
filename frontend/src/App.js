@@ -946,25 +946,25 @@ const ProductCard = ({ product, currentUser, onContact, onEdit, onDelete }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl">{getProductIcon(product.type_produit)}</span>
-            <div>
-              <h3 className="font-semibold text-lg">{product.titre}</h3>
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center space-x-2 flex-1">
+            <span className="text-3xl">{getProductIcon(product.type_produit)}</span>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-lg md:text-xl truncate">{product.titre}</h3>
               <span className="text-sm text-gray-500">{getProductTypeName(product.type_produit)}</span>
             </div>
           </div>
           {isOwner && (
-            <div className="flex space-x-1">
+            <div className="flex space-x-2">
               <button
                 onClick={() => onEdit(product)}
-                className="text-blue-600 hover:text-blue-800 text-sm"
+                className="text-blue-600 hover:text-blue-800 text-lg p-1"
               >
                 ✏️
               </button>
               <button
                 onClick={() => onDelete(product.id)}
-                className="text-red-600 hover:text-red-800 text-sm"
+                className="text-red-600 hover:text-red-800 text-lg p-1"
               >
                 🗑️
               </button>
@@ -972,49 +972,50 @@ const ProductCard = ({ product, currentUser, onContact, onEdit, onDelete }) => {
           )}
         </div>
         
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
         
-        <div className="grid grid-cols-2 gap-2 text-sm mb-3">
-          <div>
-            <span className="font-medium text-green-700">{product.prix.toLocaleString()} FCFA</span>
+        <div className="grid grid-cols-2 gap-3 text-sm mb-4">
+          <div className="col-span-2 md:col-span-1">
+            <span className="font-bold text-lg text-green-700">{product.prix.toLocaleString()} FCFA</span>
             <span className="text-gray-500">/{product.unite}</span>
           </div>
           <div className="text-gray-600">
             Stock: {product.quantite_disponible} {product.unite}
           </div>
-          <div className="text-gray-600">📍 {product.localisation}</div>
-          <div className="text-gray-600">👤 {product.vendeur_nom}</div>
+          <div className="text-gray-600 truncate">📍 {product.localisation}</div>
+          <div className="text-gray-600 truncate">👤 {product.vendeur_nom}</div>
         </div>
         
         {/* Détails spécifiques selon le type */}
         {product.race_volaille && (
-          <div className="text-sm text-gray-600 mb-2">
-            Race: {product.race_volaille} • {product.age_semaines} semaines • {product.poids_moyen}kg
+          <div className="text-xs md:text-sm text-gray-600 mb-3 p-2 bg-gray-50 rounded">
+            Race: {product.race_volaille} • {product.age_semaines} sem • {product.poids_moyen}kg
           </div>
         )}
         {product.type_oeuf && (
-          <div className="text-sm text-gray-600 mb-2">
+          <div className="text-xs md:text-sm text-gray-600 mb-3 p-2 bg-gray-50 rounded">
             Type: {product.type_oeuf} • Fraîcheur: {product.fraicheur_jours} jour(s)
           </div>
         )}
         
-        <div className="flex justify-between items-center pt-3 border-t">
+        <div className="flex flex-col md:flex-row justify-between items-center pt-3 border-t space-y-2 md:space-y-0">
           <span className="text-xs text-gray-500">
             {new Date(product.created_at).toLocaleDateString('fr-FR')}
           </span>
           {!isOwner && (
-            <div className="flex space-x-2">
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
               <a
                 href={`tel:${product.vendeur_telephone}`}
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-semibold flex items-center space-x-1"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-semibold text-center flex items-center justify-center space-x-1"
                 title={`Appeler ${product.vendeur_nom}`}
               >
                 <span>📞</span>
-                <span>{product.vendeur_telephone}</span>
+                <span className="hidden md:inline">{product.vendeur_telephone}</span>
+                <span className="md:hidden">Appeler</span>
               </a>
               <button
                 onClick={() => onContact(product)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-semibold"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold"
                 title="Plus d'infos"
               >
                 💬 Info
