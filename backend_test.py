@@ -308,7 +308,7 @@ def test_admin_endpoints(tester):
 
 def main():
     # Get the backend URL from the frontend .env file
-    backend_url = "https://0bb20f80-d827-4ef9-9415-c8ae287826b9.preview.emergentagent.com"
+    backend_url = "https://4607c034-b2c9-4ffb-b5f7-9bc6e2d3e5ad.preview.emergentagent.com"
     
     print(f"🚀 Testing AviMarché API at {backend_url}")
     tester = AviMarcheAPITester(backend_url)
