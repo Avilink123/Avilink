@@ -10,102 +10,207 @@ const API = `${BACKEND_URL}/api`;
 
 // Composants principaux
 const Header = ({ currentUser, onLogin, onLogout, onNavigate, currentPage }) => {
-  return (
-    <header className="bg-green-700 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-              <span className="text-green-900 font-bold text-xl">🐔</span>
-            </div>
-            <h1 className="text-2xl font-bold">AviMarché</h1>
-            <span className="text-green-200 text-sm">Mali</span>
-          </div>
-          
-          <nav className="hidden md:flex space-x-6">
-            <button 
-              onClick={() => onNavigate('home')}
-              className={`hover:text-yellow-300 ${currentPage === 'home' ? 'text-yellow-300' : ''}`}
-            >
-              Accueil
-            </button>
-            <button 
-              onClick={() => onNavigate('marketplace')}
-              className={`hover:text-yellow-300 ${currentPage === 'marketplace' ? 'text-yellow-300' : ''}`}
-            >
-              Marché
-            </button>
-            <button 
-              onClick={() => onNavigate('prices')}
-              className={`hover:text-yellow-300 ${currentPage === 'prices' ? 'text-yellow-300' : ''}`}
-            >
-              Prix
-            </button>
-            <button 
-              onClick={() => onNavigate('health')}
-              className={`hover:text-yellow-300 ${currentPage === 'health' ? 'text-yellow-300' : ''}`}
-            >
-              Santé
-            </button>
-            {currentUser && currentUser.role === 'aviculteur' && currentUser.nom === 'Amadou Traoré' && (
-              <>
-                <button 
-                  onClick={() => onNavigate('admin')}
-                  className={`hover:text-yellow-300 ${currentPage === 'admin' ? 'text-yellow-300' : ''}`}
-                >
-                  🛠️ Admin
-                </button>
-                <button 
-                  onClick={() => onNavigate('download')}
-                  className={`hover:text-yellow-300 ${currentPage === 'download' ? 'text-yellow-300' : ''}`}
-                >
-                  📦 Télécharger
-                </button>
-              </>
-            )}
-            {currentUser && currentUser.role === 'aviculteur' && (
-              <>
-                <button 
-                  onClick={() => onNavigate('finances')}
-                  className={`hover:text-yellow-300 ${currentPage === 'finances' ? 'text-yellow-300' : ''}`}
-                >
-                  Finances
-                </button>
-                <button 
-                  onClick={() => onNavigate('myproducts')}
-                  className={`hover:text-yellow-300 ${currentPage === 'myproducts' ? 'text-yellow-300' : ''}`}
-                >
-                  Mes Annonces
-                </button>
-              </>
-            )}
-          </nav>
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-          <div>
-            {currentUser ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm">
-                  Bonjour, <span className="font-semibold">{currentUser.nom}</span>
-                </span>
-                <button 
-                  onClick={onLogout}
-                  className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
-                >
-                  Déconnexion
-                </button>
+  return (
+    <>
+      <header className="bg-green-700 text-white shadow-lg">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                <span className="text-green-900 font-bold text-xl">🐔</span>
               </div>
-            ) : (
+              <div>
+                <h1 className="text-xl md:text-2xl font-bold">AviMarché</h1>
+                <span className="text-green-200 text-xs md:text-sm">Mali</span>
+              </div>
+            </div>
+            
+            {/* Navigation Desktop */}
+            <nav className="hidden md:flex space-x-6">
               <button 
-                onClick={() => onLogin()}
-                className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded font-semibold text-green-900"
+                onClick={() => onNavigate('home')}
+                className={`hover:text-yellow-300 ${currentPage === 'home' ? 'text-yellow-300' : ''}`}
               >
-                Connexion
+                Accueil
               </button>
-            )}
+              <button 
+                onClick={() => onNavigate('marketplace')}
+                className={`hover:text-yellow-300 ${currentPage === 'marketplace' ? 'text-yellow-300' : ''}`}
+              >
+                Marché
+              </button>
+              <button 
+                onClick={() => onNavigate('prices')}
+                className={`hover:text-yellow-300 ${currentPage === 'prices' ? 'text-yellow-300' : ''}`}
+              >
+                Prix
+              </button>
+              <button 
+                onClick={() => onNavigate('health')}
+                className={`hover:text-yellow-300 ${currentPage === 'health' ? 'text-yellow-300' : ''}`}
+              >
+                Santé
+              </button>
+              {currentUser && currentUser.role === 'aviculteur' && currentUser.nom === 'Amadou Traoré' && (
+                <>
+                  <button 
+                    onClick={() => onNavigate('admin')}
+                    className={`hover:text-yellow-300 ${currentPage === 'admin' ? 'text-yellow-300' : ''}`}
+                  >
+                    🛠️ Admin
+                  </button>
+                  <button 
+                    onClick={() => onNavigate('download')}
+                    className={`hover:text-yellow-300 ${currentPage === 'download' ? 'text-yellow-300' : ''}`}
+                  >
+                    📦 Télécharger
+                  </button>
+                </>
+              )}
+              {currentUser && currentUser.role === 'aviculteur' && (
+                <>
+                  <button 
+                    onClick={() => onNavigate('finances')}
+                    className={`hover:text-yellow-300 ${currentPage === 'finances' ? 'text-yellow-300' : ''}`}
+                  >
+                    Finances
+                  </button>
+                  <button 
+                    onClick={() => onNavigate('myproducts')}
+                    className={`hover:text-yellow-300 ${currentPage === 'myproducts' ? 'text-yellow-300' : ''}`}
+                  >
+                    Mes Annonces
+                  </button>
+                </>
+              )}
+            </nav>
+
+            {/* Menu Mobile Toggle */}
+            <div className="md:hidden flex items-center space-x-2">
+              {currentUser && (
+                <span className="text-xs">👋 {currentUser.nom.split(' ')[0]}</span>
+              )}
+              <button 
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="text-white p-2"
+              >
+                {showMobileMenu ? '✕' : '☰'}
+              </button>
+            </div>
+
+            {/* Auth Desktop */}
+            <div className="hidden md:block">
+              {currentUser ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm">
+                    Bonjour, <span className="font-semibold">{currentUser.nom}</span>
+                  </span>
+                  <button 
+                    onClick={onLogout}
+                    className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
+                  >
+                    Déconnexion
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => onLogin()}
+                  className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded font-semibold text-green-900"
+                >
+                  Connexion
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+
+        {/* Menu Mobile Dropdown */}
+        {showMobileMenu && (
+          <div className="md:hidden bg-green-800 border-t border-green-600">
+            <div className="px-4 py-2 space-y-1">
+              <button 
+                onClick={() => { onNavigate('home'); setShowMobileMenu(false); }}
+                className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'home' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+              >
+                🏠 Accueil
+              </button>
+              <button 
+                onClick={() => { onNavigate('marketplace'); setShowMobileMenu(false); }}
+                className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'marketplace' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+              >
+                🛍️ Marché
+              </button>
+              <button 
+                onClick={() => { onNavigate('prices'); setShowMobileMenu(false); }}
+                className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'prices' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+              >
+                💰 Prix
+              </button>
+              <button 
+                onClick={() => { onNavigate('health'); setShowMobileMenu(false); }}
+                className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'health' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+              >
+                🩺 Santé
+              </button>
+              
+              {currentUser && currentUser.role === 'aviculteur' && (
+                <>
+                  <button 
+                    onClick={() => { onNavigate('finances'); setShowMobileMenu(false); }}
+                    className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'finances' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+                  >
+                    📊 Finances
+                  </button>
+                  <button 
+                    onClick={() => { onNavigate('myproducts'); setShowMobileMenu(false); }}
+                    className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'myproducts' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+                  >
+                    📦 Mes Annonces
+                  </button>
+                </>
+              )}
+
+              {currentUser && currentUser.role === 'aviculteur' && currentUser.nom === 'Amadou Traoré' && (
+                <>
+                  <button 
+                    onClick={() => { onNavigate('admin'); setShowMobileMenu(false); }}
+                    className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'admin' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+                  >
+                    🛠️ Admin
+                  </button>
+                  <button 
+                    onClick={() => { onNavigate('download'); setShowMobileMenu(false); }}
+                    className={`block w-full text-left py-3 px-2 rounded ${currentPage === 'download' ? 'bg-green-600' : 'hover:bg-green-600'}`}
+                  >
+                    📥 Télécharger
+                  </button>
+                </>
+              )}
+
+              <div className="border-t border-green-600 pt-2 mt-2">
+                {currentUser ? (
+                  <button 
+                    onClick={() => { onLogout(); setShowMobileMenu(false); }}
+                    className="block w-full text-left py-3 px-2 rounded bg-red-600 hover:bg-red-700"
+                  >
+                    🚪 Déconnexion
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => { onLogin(); setShowMobileMenu(false); }}
+                    className="block w-full text-left py-3 px-2 rounded bg-yellow-600 hover:bg-yellow-700 text-green-900 font-semibold"
+                  >
+                    🔑 Connexion
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
+    </>
   );
 };
 
