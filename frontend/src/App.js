@@ -1069,27 +1069,27 @@ const Marketplace = ({ currentUser }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6">
+    <div className="min-h-screen bg-gray-50 py-4 md:py-6">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold mb-6">🛍️ AviMarché - Trouvez vos Produits</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">🛍️ AviMarché - Trouvez vos Produits</h1>
         
-        {/* Filtres */}
+        {/* Filtres - Optimisés Mobile */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <h2 className="text-lg font-semibold mb-4">Filtres de recherche</h2>
-          <div className="grid md:grid-cols-4 gap-4">
+          <h2 className="text-lg font-semibold mb-4">🔍 Rechercher</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Type de produit</label>
               <select
                 value={filters.type_produit}
                 onChange={(e) => setFilters({...filters, type_produit: e.target.value})}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-3 text-base"
               >
                 <option value="">Tous les types</option>
-                <option value="volaille_vivante">Volaille Vivante</option>
-                <option value="oeufs">Œufs</option>
-                <option value="volaille_transformee">Volaille Transformée</option>
-                <option value="fientes">Fientes</option>
-                <option value="amendements">Amendements</option>
+                <option value="volaille_vivante">🐔 Volaille Vivante</option>
+                <option value="oeufs">🥚 Œufs</option>
+                <option value="volaille_transformee">🍗 Volaille Transformée</option>
+                <option value="fientes">🌱 Fientes</option>
+                <option value="amendements">🌱 Amendements</option>
               </select>
             </div>
             
@@ -1099,7 +1099,7 @@ const Marketplace = ({ currentUser }) => {
                 type="text"
                 value={filters.localisation}
                 onChange={(e) => setFilters({...filters, localisation: e.target.value})}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-3 text-base"
                 placeholder="Ville ou région"
               />
             </div>
@@ -1110,7 +1110,7 @@ const Marketplace = ({ currentUser }) => {
                 type="number"
                 value={filters.prix_min}
                 onChange={(e) => setFilters({...filters, prix_min: e.target.value})}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-3 text-base"
                 placeholder="Prix minimum"
               />
             </div>
@@ -1121,33 +1121,40 @@ const Marketplace = ({ currentUser }) => {
                 type="number"
                 value={filters.prix_max}
                 onChange={(e) => setFilters({...filters, prix_max: e.target.value})}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-3 text-base"
                 placeholder="Prix maximum"
               />
             </div>
           </div>
         </div>
         
-        {/* Liste des produits */}
+        {/* Liste des produits - Optimisée Mobile */}
         {loading ? (
           <div className="text-center py-8">
             <div className="text-gray-600">Chargement des produits...</div>
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-8">
-            <div className="text-gray-600">Aucun produit trouvé avec ces critères.</div>
+          <div className="text-center py-8 bg-white rounded-lg shadow-md">
+            <div className="text-6xl mb-4">🔍</div>
+            <div className="text-gray-600 text-lg">Aucun produit trouvé</div>
+            <div className="text-gray-500 text-sm mt-2">Essayez de modifier vos critères de recherche</div>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map(product => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                currentUser={currentUser}
-                onContact={handleContact}
-              />
-            ))}
-          </div>
+          <>
+            <div className="mb-4 text-sm text-gray-600">
+              📊 {products.length} produit{products.length > 1 ? 's' : ''} trouvé{products.length > 1 ? 's' : ''}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {products.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  currentUser={currentUser}
+                  onContact={handleContact}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
