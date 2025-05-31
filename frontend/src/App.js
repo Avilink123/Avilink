@@ -1401,13 +1401,13 @@ function App() {
       case 'download':
         return <DownloadPage />;
       default:
-        return <HomePage stats={stats} />;
+        return <HomePage stats={stats} currentUser={currentUser} onNavigate={setCurrentPage} />;
     }
   };
 
   return (
     <div className="App">
-      <Header
+      <ModernHeader
         currentUser={currentUser}
         onLogin={() => setShowLoginModal(true)}
         onLogout={handleLogout}
