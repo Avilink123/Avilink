@@ -16,47 +16,39 @@ const ModernCard = ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
+    position: 'relative',
   };
 
-  const overlayClasses = gradient 
-    ? "bg-gradient-to-t from-green-700/80 via-green-600/60 to-transparent h-full w-full p-6 flex flex-col justify-end text-white"
+  const overlayClasses = gradient && backgroundImage
+    ? "absolute inset-0 bg-gradient-to-t from-green-700/80 via-green-600/60 to-transparent"
     : backgroundImage 
-      ? "bg-black/20 h-full w-full p-6 flex flex-col justify-end text-white"
-      : "p-6";
+      ? "absolute inset-0 bg-black/20"
+      : "";
 
-  if (onClick) {
-    return (
-      <div 
-        className={`${baseClasses} cursor-pointer hover:scale-105 ${className}`}
-        style={cardStyle}
-        onClick={onClick}
-      >
-        {backgroundImage ? (
-          <div className={overlayClasses}>
-            {children}
-          </div>
-        ) : (
-          <div className={overlayClasses}>
-            {children}
-          </div>
-        )}
-      </div>
-    );
-  }
+  const contentClasses = backgroundImage 
+    ? "relative z-10 p-6 h-full flex flex-col justify-end"
+    : "p-6";
 
-  return (
-    <div className={`${baseClasses} ${className}`} style={cardStyle}>
-      {backgroundImage ? (
-        <div className={overlayClasses}>
-          {children}
-        </div>
-      ) : (
-        <div className={overlayClasses}>
-          {children}
-        </div>
-      )}
-    </div>
-  );
+  const CardComponent = onClick ? 'button' : 'div';
+  const cardProps = onClick ? {
+    onClick,
+    className: `${baseClasses} cursor-pointer hover:scale-105 transition-transform w-full text-left ${className}`,
+    style: cardStyle
+  } : {
+    className: `${baseClasses} ${className}`,
+    style: cardStyle
+  };
+
+  return React.createElement(CardComponent, cardProps, [
+    backgroundImage && React.createElement('div', { 
+      key: 'overlay', 
+      className: overlayClasses 
+    }),
+    React.createElement('div', { 
+      key: 'content', 
+      className: contentClasses 
+    }, children)
+  ]);
 };
 
 export default ModernCard;
