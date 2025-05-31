@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
+
+// Import des nouveaux composants modernes
+import ModernHeader from "./components/ModernHeader";
+import ModernHomePage from "./components/ModernHomePage";
+import ModernLoginModal from "./components/ModernLoginModal";
+
+// Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
 import AdminDashboard from "./AdminDashboard";
 import DownloadPage from "./DownloadPage";
