@@ -1391,13 +1391,13 @@ function App() {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 'marketplace':
-        return <Marketplace currentUser={currentUser} />;
+        return <ModernMarketplace currentUser={currentUser} />;
       case 'myproducts':
-        return <MyProducts currentUser={currentUser} />;
+        return <ModernMyProducts currentUser={currentUser} />;
       case 'prices':
-        return <PriceMonitoring />;
+        return <ModernPriceMonitoring />;
       case 'health':
-        return <AnimalHealth currentUser={currentUser} />;
+        return <ModernAnimalHealth currentUser={currentUser} />;
       case 'finances':
         return <FinancialTools currentUser={currentUser} />;
       case 'admin':
