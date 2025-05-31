@@ -6,6 +6,10 @@ import axios from "axios";
 import ModernHeader from "./components/ModernHeader";
 import ModernHomePage from "./components/ModernHomePage";
 import ModernLoginModal from "./components/ModernLoginModal";
+import ModernMarketplace from "./components/ModernMarketplace";
+import ModernMyProducts from "./components/ModernMyProducts";
+import ModernPriceMonitoring from "./components/ModernPriceMonitoring";
+import ModernAnimalHealth from "./components/ModernAnimalHealth";
 
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
