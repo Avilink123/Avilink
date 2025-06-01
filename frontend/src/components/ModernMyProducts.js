@@ -130,7 +130,7 @@ const ModernMyProducts = ({ currentUser, onNavigate }) => {
           </p>
           <ModernButton
             title="Retour à l'accueil"
-            onClick={() => window.location.href = '#home'}
+            onClick={() => onNavigate('home')}
           />
         </ModernCard>
       </div>
