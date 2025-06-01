@@ -16,6 +16,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import AccessibleHeader from "./components/AccessibleHeader";
 import AccessibleHomePage from "./components/AccessibleHomePage";
 import BottomNavigation from "./components/BottomNavigation";
+import RegistrationPage from "./components/RegistrationPage";
 
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
