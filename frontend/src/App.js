@@ -1406,6 +1406,18 @@ function App() {
     setCurrentUser(null);
     localStorage.removeItem('avimarket_user');
     localStorage.removeItem('avimarket_token');
+    setCurrentPage('register'); // Rediriger vers inscription après déconnexion
+  };
+
+  const handleRegister = (userData) => {
+    // Simulation de l'inscription (à connecter avec l'API plus tard)
+    console.log('Inscription:', userData);
+    const newUser = {
+      ...userData,
+      id: Date.now().toString() // ID temporaire
+    };
+    setCurrentUser(newUser);
+    localStorage.setItem('avimarket_user', JSON.stringify(newUser));
     setCurrentPage('home');
   };
 
