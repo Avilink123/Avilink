@@ -1445,6 +1445,39 @@ function App() {
         return <AdminDashboard />;
       case 'download':
         return <DownloadPage />;
+      case 'login':
+        // Ouvrir le modal de login et retourner à l'accueil
+        setShowLoginModal(true);
+        setCurrentPage('home');
+        return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+      case 'profile':
+        // Si connecté, afficher profil, sinon rediriger vers login
+        if (!currentUser) {
+          setShowLoginModal(true);
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        // Pour l'instant, afficher une page profil simple
+        return (
+          <div className="p-4">
+            <h2 className="text-xl font-bold mb-4">Mon Profil</h2>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h3 className="font-semibold mb-2">Informations personnelles</h3>
+                <p><strong>Nom:</strong> {currentUser.nom || 'Non renseigné'}</p>
+                <p><strong>Téléphone:</strong> {currentUser.telephone}</p>
+                <p><strong>Rôle:</strong> {currentUser.role}</p>
+                <p><strong>Localisation:</strong> {currentUser.localisation || 'Non renseigné'}</p>
+              </div>
+              <button onClick={() => setCurrentPage('home')} className="w-full p-3 bg-green-600 text-white rounded">
+                Retour à l'accueil
+              </button>
+              <button onClick={handleLogout} className="w-full p-3 bg-red-600 text-white rounded">
+                Se déconnecter
+              </button>
+            </div>
+          </div>
+        );
       case 'more':
         // Page "Plus" avec options supplémentaires
         return (
@@ -1459,9 +1492,6 @@ function App() {
               </button>
               <button onClick={() => setCurrentPage('download')} className="w-full p-3 bg-green-600 text-white rounded">
                 Téléchargements
-              </button>
-              <button onClick={toggleInterfaceMode} className="w-full p-3 bg-gray-600 text-white rounded">
-                Interface Classique
               </button>
             </div>
           </div>
