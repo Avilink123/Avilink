@@ -306,6 +306,249 @@ def test_admin_endpoints(tester):
     
     return success_stats and success_export
 
+def test_all_api_endpoints(tester):
+    """Test all API endpoints comprehensively"""
+    print("\n===== COMPREHENSIVE API TESTING =====")
+    all_tests_passed = True
+    
+    # 1. User Management APIs
+    print("\n----- Testing User Management APIs -----")
+    
+    # Test user registration (already tested in main function)
+    print("✅ User registration tested in main function")
+    
+    # Test user login (already tested in main function)
+    print("✅ User login tested in main function")
+    
+    # Test get user profile
+    if tester.user_id:
+        success, user_profile = tester.run_test(
+            "Get User Profile",
+            "GET",
+            f"users/{tester.user_id}",
+            200
+        )
+        if success:
+            print(f"✅ Get user profile working: {user_profile['nom']}")
+        else:
+            print("❌ Get user profile failed")
+            all_tests_passed = False
+    else:
+        print("⚠️ Skipping user profile test - no user logged in")
+    
+    # 2. Product/Marketplace APIs
+    print("\n----- Testing Product/Marketplace APIs -----")
+    
+    # Test get all products
+    success, products = tester.test_get_products()
+    if success:
+        print(f"✅ Get all products working: {len(products)} products found")
+        
+        # If products exist, test get single product
+        if products:
+            product_id = products[0]['id']
+            success, product = tester.run_test(
+                "Get Single Product",
+                "GET",
+                f"products/{product_id}",
+                200
+            )
+            if success:
+                print(f"✅ Get single product working: {product['titre']}")
+            else:
+                print("❌ Get single product failed")
+                all_tests_passed = False
+    else:
+        print("❌ Get all products failed")
+        all_tests_passed = False
+    
+    # Test product creation (if user is aviculteur)
+    if tester.user_id:
+        # Get user role first
+        success, user = tester.run_test(
+            "Get User Role",
+            "GET",
+            f"users/{tester.user_id}",
+            200
+        )
+        
+        if success and user.get('role') == 'aviculteur':
+            # Test product creation
+            new_product = {
+                "titre": "Test API Product",
+                "description": "Product created during API testing",
+                "type_produit": "volaille_vivante",
+                "prix": 3800,
+                "unite": "pièce",
+                "quantite_disponible": 5,
+                "localisation": "Test Location",
+                "race_volaille": "Test Race",
+                "age_semaines": 6,
+                "poids_moyen": 1.8
+            }
+            
+            success, created_product = tester.test_create_product(new_product)
+            if success:
+                print(f"✅ Create product working: {created_product['titre']}")
+                
+                # Test product update
+                if tester.test_product_id:
+                    update_data = {
+                        "titre": "Updated Test Product",
+                        "prix": 4000,
+                        "quantite_disponible": 3
+                    }
+                    
+                    success, updated_product = tester.test_update_product(tester.test_product_id, update_data)
+                    if success:
+                        print(f"✅ Update product working: {updated_product['titre']}")
+                    else:
+                        print("❌ Update product failed")
+                        all_tests_passed = False
+                    
+                    # Test product deletion (cleanup)
+                    success, _ = tester.test_delete_product(tester.test_product_id)
+                    if success:
+                        print("✅ Delete product working")
+                    else:
+                        print("❌ Delete product failed")
+                        all_tests_passed = False
+            else:
+                print("❌ Create product failed")
+                all_tests_passed = False
+        else:
+            print("⚠️ Skipping product creation tests - user is not an aviculteur")
+    else:
+        print("⚠️ Skipping product creation tests - no user logged in")
+    
+    # 3. Price Monitoring APIs
+    print("\n----- Testing Price Monitoring APIs -----")
+    
+    # Test get all prices
+    success, prices = tester.test_get_prices()
+    if success:
+        print(f"✅ Get all prices working: {len(prices)} price entries found")
+    else:
+        print("❌ Get all prices failed")
+        all_tests_passed = False
+    
+    # Test report price (if user is logged in)
+    if tester.user_id:
+        price_data = {
+            "categorie": "produits",
+            "type_produit": "poulet_vif",
+            "prix": 3500,
+            "unite": "kg",
+            "localisation": "Test Location"
+        }
+        
+        success, reported_price = tester.test_report_price(price_data)
+        if success:
+            print("✅ Report price working")
+        else:
+            print("❌ Report price failed")
+            all_tests_passed = False
+    else:
+        print("⚠️ Skipping price reporting test - no user logged in")
+    
+    # 4. Animal Health APIs
+    print("\n----- Testing Animal Health APIs -----")
+    
+    # Test get all diseases
+    success, diseases = tester.test_get_diseases()
+    if success:
+        print(f"✅ Get all diseases working: {len(diseases)} diseases found")
+        
+        # If diseases exist, test get single disease
+        if diseases:
+            disease_id = diseases[0]['id']
+            success, disease = tester.test_get_disease(disease_id)
+            if success:
+                print(f"✅ Get single disease working: {disease['nom']}")
+            else:
+                print("❌ Get single disease failed")
+                all_tests_passed = False
+    else:
+        print("❌ Get all diseases failed")
+        all_tests_passed = False
+    
+    # Test get veterinarians
+    success, vets = tester.test_get_veterinaires()
+    if success:
+        print(f"✅ Get veterinarians working: {len(vets)} veterinarians found")
+    else:
+        print("❌ Get veterinarians failed")
+        all_tests_passed = False
+    
+    # Test report symptoms (if user is logged in)
+    if tester.user_id:
+        symptoms_data = {
+            "symptomes": ["Toux", "Perte d'appétit"],
+            "nombre_animaux": 3,
+            "actions_prises": "Isolation des animaux malades"
+        }
+        
+        success, report = tester.test_report_symptoms(symptoms_data)
+        if success:
+            print("✅ Report symptoms working")
+            
+            # Test get user symptom reports
+            success, reports = tester.test_get_user_symptom_reports()
+            if success:
+                print(f"✅ Get user symptom reports working: {len(reports)} reports found")
+            else:
+                print("❌ Get user symptom reports failed")
+                all_tests_passed = False
+        else:
+            print("❌ Report symptoms failed")
+            all_tests_passed = False
+    else:
+        print("⚠️ Skipping symptom reporting test - no user logged in")
+    
+    # 5. Financial Tools APIs
+    print("\n----- Testing Financial Tools APIs -----")
+    
+    # Test add transaction (if user is logged in)
+    if tester.user_id:
+        transaction_data = {
+            "type_transaction": "revenu",
+            "montant": 25000,
+            "description": "Test transaction",
+            "categorie": "vente_volaille",
+            "date_transaction": datetime.utcnow().isoformat(),
+            "mode_paiement": "especes"
+        }
+        
+        success, transaction = tester.test_add_transaction(transaction_data)
+        if success:
+            print("✅ Add transaction working")
+            
+            # Test get user transactions
+            success, transactions = tester.test_get_user_transactions()
+            if success:
+                print(f"✅ Get user transactions working: {len(transactions)} transactions found")
+            else:
+                print("❌ Get user transactions failed")
+                all_tests_passed = False
+            
+            # Test get financial summary
+            success, summary = tester.test_get_financial_summary()
+            if success:
+                print("✅ Get financial summary working")
+                print(f"  - Total revenue: {summary['total_revenus']}")
+                print(f"  - Total expenses: {summary['total_depenses']}")
+                print(f"  - Net profit: {summary['benefice_net']}")
+            else:
+                print("❌ Get financial summary failed")
+                all_tests_passed = False
+        else:
+            print("❌ Add transaction failed")
+            all_tests_passed = False
+    else:
+        print("⚠️ Skipping financial tools tests - no user logged in")
+    
+    return all_tests_passed
+
 def main():
     # Get the backend URL from the frontend .env file
     import os
