@@ -1360,6 +1360,11 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [stats, setStats] = useState({});
+  const [useAccessibleInterface, setUseAccessibleInterface] = useState(() => {
+    // Par défaut, utiliser l'interface accessible (Orange Money style)
+    const saved = localStorage.getItem('avimarche_interface_mode');
+    return saved ? saved === 'accessible' : true;
+  });
 
   useEffect(() => {
     loadStats();
