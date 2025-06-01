@@ -1430,24 +1430,55 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <ModernHeader
-        currentUser={currentUser}
-        onLogin={() => setShowLoginModal(true)}
-        onLogout={handleLogout}
-        onNavigate={setCurrentPage}
-        currentPage={currentPage}
-      />
-      
-      {renderCurrentPage()}
-      
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onLogin={handleLogin}
-      />
-      
-      {/* Footer */}
+    <ThemeProvider>
+      <div className="App">
+        {useAccessibleInterface ? (
+          // Interface Accessible (Orange Money style)
+          <>
+            <AccessibleHeader
+              currentUser={currentUser}
+              onNavigate={setCurrentPage}
+              onLogout={handleLogout}
+            />
+            
+            {renderAccessibleContent()}
+            
+            <BottomNavigation
+              currentPage={currentPage}
+              onNavigate={setCurrentPage}
+            />
+          </>
+        ) : (
+          // Interface Classique
+          <>
+            <ModernHeader
+              currentUser={currentUser}
+              onLogin={() => setShowLoginModal(true)}
+              onLogout={handleLogout}
+              onNavigate={setCurrentPage}
+              currentPage={currentPage}
+            />
+            
+            {renderCurrentPage()}
+          </>
+        )}
+        
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onLogin={handleLogin}
+        />
+        
+        {/* Bouton de basculement d'interface */}
+        <button
+          onClick={toggleInterfaceMode}
+          className="fixed top-4 right-4 z-50 bg-green-600 text-white p-2 rounded-full shadow-lg"
+          title={useAccessibleInterface ? "Interface Classique" : "Interface Accessible"}
+        >
+          {useAccessibleInterface ? "🔄" : "📱"}
+        </button>
+        
+        {/* Footer */}
       <footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto px-4 text-center">
           <div className="flex justify-center items-center space-x-2 mb-4">
