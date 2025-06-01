@@ -43,8 +43,8 @@ const ModernAnimalHealth = ({ currentUser, onNavigate }) => {
   const loadHealthData = async () => {
     try {
       const [diseasesResponse, vetsResponse] = await Promise.all([
-        axios.get(`${API}/health/diseases`),
-        axios.get(`${API}/health/veterinarians${selectedLocation ? `?location=${selectedLocation}` : ''}`)
+        axios.get(`${API}/diseases`),
+        axios.get(`${API}/veterinaires${selectedLocation ? `?localisation=${selectedLocation}` : ''}`)
       ]);
       
       setDiseases(diseasesResponse.data);
