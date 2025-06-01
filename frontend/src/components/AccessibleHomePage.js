@@ -13,7 +13,7 @@ const AccessibleHomePage = ({ currentUser, onNavigate }) => {
       style={{ backgroundColor: colors.background }}
     >
       {/* Section Dashboard */}
-      <DashboardSection currentUser={currentUser} />
+      <DashboardSection currentUser={currentUser} onNavigate={onNavigate} />
       
       {/* Section Actions Rapides */}
       <QuickActionsGrid currentUser={currentUser} onNavigate={onNavigate} />
