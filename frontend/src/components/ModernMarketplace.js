@@ -8,7 +8,7 @@ import { BACKGROUND_IMAGES, PRODUCT_TYPES, REGIONS_MALI } from '../constants';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const ModernMarketplace = ({ currentUser }) => {
+const ModernMarketplace = ({ currentUser, onNavigate }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
