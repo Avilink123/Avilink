@@ -1410,15 +1410,36 @@ function App() {
   };
 
   const handleRegister = (userData) => {
-    // Simulation de l'inscription (à connecter avec l'API plus tard)
-    console.log('Inscription:', userData);
-    const newUser = {
-      ...userData,
-      id: Date.now().toString() // ID temporaire
-    };
-    setCurrentUser(newUser);
-    localStorage.setItem('avimarket_user', JSON.stringify(newUser));
-    setCurrentPage('home');
+    try {
+      // Validation basique
+      if (!userData.nom || !userData.telephone || !userData.localisation) {
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+      }
+
+      // Simulation de l'inscription (à connecter avec l'API plus tard)
+      console.log('Inscription:', userData);
+      const newUser = {
+        ...userData,
+        id: Date.now().toString() // ID temporaire
+      };
+      
+      setCurrentUser(newUser);
+      localStorage.setItem('avimarket_user', JSON.stringify(newUser));
+      
+      // Message de bienvenue selon le rôle
+      const roleMessage = {
+        'aviculteur': 'Bienvenue éleveur ! Commencez à vendre vos volailles',
+        'acheteur': 'Bienvenue acheteur ! Trouvez les meilleures volailles',
+        'fournisseur': 'Bienvenue fournisseur ! Proposez vos aliments aux éleveurs'
+      };
+      
+      alert(`✅ Compte créé avec succès !\n${roleMessage[userData.role] || 'Bienvenue sur AviMarché !'}`);
+      setCurrentPage('home');
+    } catch (error) {
+      console.error('Erreur inscription:', error);
+      alert('❌ Erreur lors de la création du compte. Veuillez réessayer.');
+    }
   };
 
   const renderAccessibleContent = () => {
