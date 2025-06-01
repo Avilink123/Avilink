@@ -270,11 +270,7 @@ const ModernAnimalHealth = ({ currentUser, onNavigate }) => {
                           <span className="mr-2">💊</span>
                           Traitement
                         </h4>
-                        <ul className="space-y-1">
-                          {disease.traitement?.map((treatment, index) => (
-                            <li key={index} className="text-sm text-gray-600">• {treatment}</li>
-                          ))}
-                        </ul>
+                        <p className="text-sm text-gray-600">{disease.traitement}</p>
                       </div>
                     </div>
                   </ModernCard>
