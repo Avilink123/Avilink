@@ -448,12 +448,6 @@
         - agent: "main"
         - comment: "Deployment file download interface"
 
-## metadata:
-  created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 0
-  run_ui: false
-
   - task: "Improved Accessible Interface"
     implemented: true
     working: true
@@ -514,6 +508,27 @@
         - agent: "testing"
         - comment: "The AviMarché webapp is well-optimized for mobile devices used by Malian poultry farmers. The layout adapts well to different viewport sizes (320px to 768px) without horizontal scrolling. The bottom navigation is properly fixed at the bottom of the screen and easily accessible. Quick action buttons and cards have appropriate touch target sizes, though the theme toggle button in the header is slightly smaller than the recommended 44x44px (currently 40x40px). Text is readable on mobile screens with good contrast. The interface is clean, uncluttered, and provides easy access to all functionality on mobile devices. Overall, the mobile experience is excellent for the target users."
 
+  - task: "Navigation Links"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/AccessibleHeader.js, /app/frontend/src/components/BottomNavigation.js, /app/frontend/src/components/QuickActionsGrid.js, /app/frontend/src/components/ServicesGrid.js, /app/frontend/src/components/DashboardSection.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "main"
+        - comment: "Implemented fixes for all navigation links. The profile icon now correctly opens the login modal for guests and navigates to the profile page for logged-in users. The notifications button now navigates to the notifications page. The dark/light mode toggle works properly. The logout button now logs out and redirects to the home page."
+        - working: true
+        - agent: "testing"
+        - comment: "Verified all navigation links are working correctly. The bottom navigation links (Accueil 🏠, Vendre 🐔💰, Acheter 🛒, Prix 💵, Aide 🆘) all work correctly. The header navigation elements (Profile icon, Dark/light mode toggle, Notifications button) function as expected. The Quick Actions Grid buttons (Voir Marché, Devenir Vendeur, Prix du Jour, Guide Santé) all navigate to the correct pages. The 'Commencer maintenant' button in the Dashboard Section correctly opens the login modal."
+
+## metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
 ## test_plan:
   current_focus:
     - "Improved Accessible Interface"
@@ -521,6 +536,7 @@
     - "Essential Services Grid"
     - "Mobile-First Design"
     - "Mobile Responsiveness"
+    - "Navigation Links"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
