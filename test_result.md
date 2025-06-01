@@ -161,6 +161,9 @@
         - working: true
         - agent: "main"
         - comment: "Disease database, veterinarians directory, symptoms reporting"
+        - working: true
+        - agent: "testing"
+        - comment: "Verified animal health endpoints. GET /api/health/diseases returns all diseases correctly. GET /api/health/veterinarians returns veterinarian data. POST /api/health/report-symptoms successfully reports animal symptoms. User-specific symptom reports are properly tracked."
 
   - task: "API Core - Financial Tools"
     implemented: true
