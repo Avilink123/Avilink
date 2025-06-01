@@ -18,10 +18,10 @@ const QuickActionsGrid = ({ currentUser, onNavigate }) => {
           priority: 1
         },
         {
-          id: 'emergency-vet',
-          title: 'SOS Vétérinaire',
-          subtitle: 'Urgence maladie',
-          icon: '🚨👨‍⚕️',
+          id: 'call-vet',
+          title: 'Appeler Vétérinaire',
+          subtitle: 'Contact urgence',
+          icon: '📞👨‍⚕️',
           action: () => onNavigate('health'),
           color: colors.error,
           priority: 1
