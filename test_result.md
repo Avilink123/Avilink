@@ -116,6 +116,9 @@
         - working: true
         - agent: "main"
         - comment: "User registration, login, roles system complete with test data"
+        - working: true
+        - agent: "testing"
+        - comment: "Verified user registration, login, and profile endpoints. Role-based access control (aviculteur/acheteur) is working correctly. User profile data is properly returned."
 
   - task: "API Core - Product Marketplace"
     implemented: true
