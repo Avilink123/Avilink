@@ -71,7 +71,7 @@ const ModernAnimalHealth = ({ currentUser, onNavigate }) => {
     }
 
     try {
-      await axios.post(`${API}/health/report-symptoms`, {
+      await axios.post(`${API}/symptoms/report`, {
         symptoms: reportData.symptoms,
         location: reportData.location,
         description: reportData.description,
