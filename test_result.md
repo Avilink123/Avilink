@@ -331,6 +331,21 @@
         - agent: "main"
         - comment: "Complete admin interface with data visualization and export"
 
+  - task: "React App - Symptom Reporting"
+    implemented: true
+    working: false
+    file: "ModernAnimalHealth.js"
+    stuck_count: 1
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "main"
+        - comment: "Symptom reporting form with location selection"
+        - working: false
+        - agent: "testing"
+        - comment: "The symptom reporting endpoint (/api/symptoms/report) is now accessible, but returns an error: missing required query parameter 'user_id'. The API expects a different parameter structure than what the frontend is sending."
+
   - task: "React App - Download Page"
     implemented: true
     working: true
