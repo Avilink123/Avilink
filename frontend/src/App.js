@@ -1450,6 +1450,33 @@ function App() {
         setShowLoginModal(true);
         setCurrentPage('home');
         return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+      case 'notifications':
+        // Page notifications simple
+        return (
+          <div className="p-4">
+            <h2 className="text-xl font-bold mb-4">📢 Notifications</h2>
+            <div className="space-y-3">
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                <h3 className="font-semibold text-green-800">🐔 Nouvelle commande</h3>
+                <p className="text-green-700 text-sm">Un acheteur est intéressé par vos poules pondeuses</p>
+                <p className="text-xs text-green-600 mt-1">Il y a 2 heures</p>
+              </div>
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                <h3 className="font-semibold text-blue-800">💰 Prix marché</h3>
+                <p className="text-blue-700 text-sm">Le prix des poules a augmenté de 100 FCFA</p>
+                <p className="text-xs text-blue-600 mt-1">Il y a 4 heures</p>
+              </div>
+              <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                <h3 className="font-semibold text-red-800">🩺 Alerte santé</h3>
+                <p className="text-red-700 text-sm">Vaccination recommandée cette semaine</p>
+                <p className="text-xs text-red-600 mt-1">Il y a 1 jour</p>
+              </div>
+            </div>
+            <button onClick={() => setCurrentPage('home')} className="w-full mt-4 p-3 bg-green-600 text-white rounded">
+              Retour à l'accueil
+            </button>
+          </div>
+        );
       case 'profile':
         // Si connecté, afficher profil, sinon rediriger vers login
         if (!currentUser) {
