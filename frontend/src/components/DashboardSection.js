@@ -178,7 +178,7 @@ const DashboardSection = ({ currentUser, onNavigate }) => {
           
           {!currentUser && (
             <button
-              onClick={() => window.location.href = '#login'}
+              onClick={() => onNavigate('login')}
               className="mt-2 px-4 py-2 rounded-lg text-white font-bold text-sm"
               style={{ backgroundColor: colors.primary }}
             >
