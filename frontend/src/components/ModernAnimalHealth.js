@@ -71,11 +71,11 @@ const ModernAnimalHealth = ({ currentUser, onNavigate }) => {
     }
 
     try {
-      await axios.post(`${API}/symptoms/report`, {
-        symptoms: reportData.symptoms,
-        location: reportData.location,
-        description: reportData.description,
-        user_phone: currentUser?.telephone || 'anonymous'
+      const userId = currentUser?.id || currentUser?.telephone || 'anonymous';
+      await axios.post(`${API}/symptoms/report?user_id=${userId}`, {
+        symptomes: reportData.symptoms,
+        nombre_animaux: 1, // valeur par défaut
+        actions_prises: reportData.description
       });
       
       alert('Signalement envoyé avec succès ! Un vétérinaire vous contactera si nécessaire.');
