@@ -1421,7 +1421,7 @@ function App() {
     setCurrentPage('home');
   };
 
-  const renderCurrentPage = () => {
+  const renderAccessibleContent = () => {
     switch (currentPage) {
       case 'feed-market':
         // Marché des aliments - Accessible aux aviculteurs et fournisseurs uniquement
