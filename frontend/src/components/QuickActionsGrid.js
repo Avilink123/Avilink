@@ -173,10 +173,11 @@ const QuickActionsGrid = ({ currentUser, onNavigate }) => {
   return (
     <section className="px-4 py-6">
       <div className="max-w-md mx-auto">
-        {/* Titre plus contextualisé */}
+        {/* Titre plus contextualisé selon le rôle */}
         <h2 className="text-lg font-semibold mb-4" style={{ color: colors.text }}>
           {currentUser?.role === 'aviculteur' ? '🔥 Actions Rapides Éleveur' : 
            currentUser?.role === 'acheteur' ? '🛒 Actions Rapides Acheteur' : 
+           currentUser?.role === 'fournisseur' ? '🌾 Actions Rapides Fournisseur' :
            '⭐ Commencer Maintenant'}
         </h2>
 
