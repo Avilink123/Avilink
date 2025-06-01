@@ -47,7 +47,7 @@ const AccessibleHeader = ({ currentUser, onNavigate, onLogout }) => {
           {/* Toggle Dark/Light Mode */}
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200"
+            className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200"
             style={{ backgroundColor: colors.surface }}
             title={isDark ? 'Mode clair' : 'Mode sombre'}
           >
@@ -56,7 +56,7 @@ const AccessibleHeader = ({ currentUser, onNavigate, onLogout }) => {
 
           {/* Notifications */}
           <button
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 relative"
+            className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 relative"
             style={{ backgroundColor: colors.surface }}
             title="Notifications"
           >
@@ -74,7 +74,7 @@ const AccessibleHeader = ({ currentUser, onNavigate, onLogout }) => {
           {currentUser && (
             <button
               onClick={onLogout}
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200"
+              className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200"
               style={{ backgroundColor: colors.surface }}
               title="Déconnexion"
             >
