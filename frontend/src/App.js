@@ -1564,6 +1564,7 @@ function App() {
         <BottomNavigation
           currentPage={currentPage}
           onNavigate={setCurrentPage}
+          currentUser={currentUser}
         />
         
         <LoginModal
