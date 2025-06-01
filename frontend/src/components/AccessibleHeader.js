@@ -59,6 +59,7 @@ const AccessibleHeader = ({ currentUser, onNavigate, onLogout }) => {
 
           {/* Notifications */}
           <button
+            onClick={() => onNavigate('notifications')}
             className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 relative"
             style={{ backgroundColor: colors.surface }}
             title="Notifications"
