@@ -351,6 +351,9 @@
         - working: false
         - agent: "testing"
         - comment: "The symptom reporting endpoint (/api/symptoms/report) is now accessible, but returns an error: missing required query parameter 'user_id'. The API expects a different parameter structure than what the frontend is sending."
+        - working: false
+        - agent: "testing"
+        - comment: "Fixed the double API prefix issue in the backend server.py file. The symptom reporting endpoint is now accessible, but there's a parameter mismatch. The backend expects a 'user_id' query parameter, but the frontend is sending 'userId' in the URL. The backend function 'report_symptoms' expects a 'user_id' parameter, but the frontend is using 'userId'."
 
   - task: "React App - Download Page"
     implemented: true
