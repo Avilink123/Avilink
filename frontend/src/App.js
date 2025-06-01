@@ -15,6 +15,7 @@ import ModernAnimalHealth from "./components/ModernAnimalHealth";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import AccessibleHeader from "./components/AccessibleHeader";
 import AccessibleHomePage from "./components/AccessibleHomePage";
+import AviculteurHomePage from "./components/AviculteurHomePage";
 import BottomNavigation from "./components/BottomNavigation";
 import RegistrationPage from "./components/RegistrationPage";
 
