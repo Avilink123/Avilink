@@ -159,12 +159,14 @@ const DashboardSection = ({ currentUser, onNavigate }) => {
           </span>
         </div>
 
-        {/* Grid de statistiques - plus espacé */}
+        {/* Grid de statistiques - plus espacé et cliquable */}
         <div className="grid grid-cols-2 gap-4">
           {stats.map((stat, index) => (
-            <div
+            <button
               key={index}
-              className="rounded-xl p-4 shadow-lg"
+              onClick={() => stat.action && stat.action()}
+              disabled={!stat.action}
+              className={`rounded-xl p-4 shadow-lg transition-all duration-200 ${stat.action ? 'hover:scale-105 cursor-pointer' : 'cursor-default'}`}
               style={{ 
                 backgroundColor: colors.card, 
                 border: `2px solid ${stat.color}` 
