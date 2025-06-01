@@ -23,8 +23,11 @@ const AccessibleHeader = ({ currentUser, onNavigate, onLogout }) => {
       style={{ backgroundColor: colors.card, borderBottom: `1px solid ${colors.border}` }}
     >
       <div className="flex items-center justify-between max-w-md mx-auto">
-        {/* Profil utilisateur */}
-        <div className="flex items-center space-x-3">
+        {/* Profil utilisateur - CLIQUABLE */}
+        <button 
+          onClick={() => currentUser ? onNavigate('profile') : onNavigate('login')}
+          className="flex items-center space-x-3 transition-all duration-200 hover:opacity-80"
+        >
           <div 
             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
             style={{ backgroundColor: colors.primary }}
@@ -37,10 +40,10 @@ const AccessibleHeader = ({ currentUser, onNavigate, onLogout }) => {
               {getUserGreeting()} !
             </p>
             <p className="text-xs" style={{ color: colors.textSecondary }}>
-              {currentUser ? `${getUserRoleText()} ${currentUser.nom || currentUser.telephone}` : 'Invité'}
+              {currentUser ? `${getUserRoleText()} ${currentUser.nom || currentUser.telephone}` : 'Cliquez pour vous connecter'}
             </p>
           </div>
-        </div>
+        </button>
 
         {/* Actions header */}
         <div className="flex items-center space-x-2">
