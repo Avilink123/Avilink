@@ -227,6 +227,8 @@ const QuickActionsGrid = ({ currentUser, onNavigate }) => {
               ? '🌱 Bonne vente ! Votre élevage Mali prospère !' 
               : currentUser?.role === 'acheteur'
               ? '🤝 Trouvez les meilleures volailles au Mali !'
+              : currentUser?.role === 'fournisseur'
+              ? '🌾 Fournissez les meilleurs aliments aux éleveurs !'
               : '💚 Bienvenue sur AviMarché - Simple et efficace !'}
           </p>
         </div>
