@@ -1429,6 +1429,27 @@ function App() {
     }
   };
 
+  const renderAccessibleContent = () => {
+    switch (currentPage) {
+      case 'marketplace':
+        return <Marketplace currentUser={currentUser} />;
+      case 'myproducts':
+        return <MyProducts currentUser={currentUser} />;
+      case 'prices':
+        return <PriceMonitoring />;
+      case 'health':
+        return <AnimalHealth currentUser={currentUser} />;
+      case 'finances':
+        return <FinancialTools currentUser={currentUser} />;
+      case 'admin':
+        return <AdminDashboard />;
+      case 'download':
+        return <DownloadPage />;
+      default:
+        return <HomePage stats={stats} currentUser={currentUser} onNavigate={setCurrentPage} />;
+    }
+  };
+
   return (
     <ThemeProvider>
       <div className="App">
