@@ -1516,10 +1516,82 @@ function App() {
 
   const renderAccessibleContent = () => {
     switch (currentPage) {
+      case 'feed-market':
+        // Marché des aliments - Accessible aux aviculteurs et fournisseurs uniquement
+        if (!currentUser || (currentUser.role !== 'aviculteur' && currentUser.role !== 'fournisseur')) {
+          alert('Accès restreint : Cette section est réservée aux éleveurs et fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">🌾 Marché des Aliments pour Volailles</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+      
+      case 'my-feed-products':
+        // Gestion stock aliments - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">📦 Gestion de mon Stock d'Aliments</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+      
+      case 'feed-orders':
+        // Commandes aliments - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">📋 Commandes d'Aliments Reçues</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+      
+      case 'feed-prices':
+        // Prix aliments - Accessible à tous
+        return <div className="p-4"><h2 className="text-xl font-bold">💰 Prix des Aliments pour Volailles</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+      
+      case 'farmer-contacts':
+        // Contacts éleveurs - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">🤝 Contacts Éleveurs - Mes Clients</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+      
+      case 'contacts':
+        // Contacts pour acheteurs
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">📞 Mes Contacts Vendeurs</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+      
       case 'marketplace':
+        // Marché volailles - Interdit aux fournisseurs
+        if (currentUser && currentUser.role === 'fournisseur') {
+          alert('Accès restreint : Les fournisseurs d\'aliments ne peuvent pas accéder au marché des volailles');
+          setCurrentPage('feed-market');
+          return <div className="p-4"><h2 className="text-xl font-bold">🌾 Marché des Aliments pour Volailles</h2><p>Vous êtes redirigé vers votre marché...</p></div>;
+        }
         return <ModernMarketplace currentUser={currentUser} onNavigate={setCurrentPage} />;
+      
       case 'myproducts':
+        // Mes produits - Aviculteurs uniquement (volailles et œufs)
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs de volailles');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
         return <ModernMyProducts currentUser={currentUser} onNavigate={setCurrentPage} />;
+      
+      case 'health':
+        // Santé animale - Pas accessible aux fournisseurs (ils ne font pas d'élevage)
+        if (currentUser && currentUser.role === 'fournisseur') {
+          alert('Info : Les services vétérinaires ne concernent pas les fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
+      
       case 'prices':
         return <ModernPriceMonitoring currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'health':
