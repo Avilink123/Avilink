@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
 
-// Import des nouveaux composants modernes
+// Import des composants modernes existants
 import ModernHeader from "./components/ModernHeader";
 import ModernHomePage from "./components/ModernHomePage";
 import ModernLoginModal from "./components/ModernLoginModal";
@@ -10,6 +10,12 @@ import ModernMarketplace from "./components/ModernMarketplace";
 import ModernMyProducts from "./components/ModernMyProducts";
 import ModernPriceMonitoring from "./components/ModernPriceMonitoring";
 import ModernAnimalHealth from "./components/ModernAnimalHealth";
+
+// Import des nouveaux composants accessibles
+import { ThemeProvider } from "./contexts/ThemeContext";
+import AccessibleHeader from "./components/AccessibleHeader";
+import AccessibleHomePage from "./components/AccessibleHomePage";
+import BottomNavigation from "./components/BottomNavigation";
 
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
