@@ -6,22 +6,8 @@ const DashboardSection = ({ currentUser, onNavigate }) => {
 
   const getRelevantStatsForRole = () => {
     if (currentUser?.role === 'aviculteur') {
-      // Stats QUI COMPTENT pour un éleveur malien
+      // Stats QUI COMPTENT pour un éleveur malien - Ordre repensé pour faciliter l'accès
       return [
-        { 
-          label: 'Volailles à vendre', 
-          value: '45', 
-          icon: '🐔', 
-          color: colors.primary,
-          subtitle: 'Stock disponible'
-        },
-        { 
-          label: 'Gains ce mois', 
-          value: '125k', 
-          icon: '💰', 
-          color: colors.success,
-          subtitle: 'FCFA gagné'
-        },
         { 
           label: 'Prix moyen poule', 
           value: '2500', 
@@ -30,8 +16,23 @@ const DashboardSection = ({ currentUser, onNavigate }) => {
           subtitle: 'FCFA sur marché'
         },
         { 
-          label: 'Appels reçus', 
+          label: 'Vendeurs Aliments', 
           value: '8', 
+          icon: '🌾', 
+          color: colors.success,
+          subtitle: 'Fournisseurs actifs',
+          action: () => onNavigate('feed-market') // Vers marché aliments
+        },
+        { 
+          label: 'Volailles à vendre', 
+          value: '45', 
+          icon: '🐔', 
+          color: colors.primary,
+          subtitle: 'Stock disponible'
+        },
+        { 
+          label: 'Appels reçus', 
+          value: '12', 
           icon: '📞', 
           color: colors.info,
           subtitle: 'Acheteurs intéressés'
