@@ -730,6 +730,20 @@ def main():
     else:
         print("❌ Login as Amadou Traoré failed")
     
+    # Comprehensive API testing
+    print("\n===== RUNNING COMPREHENSIVE API TESTS =====")
+    tester = AviMarcheAPITester(backend_url)  # Reset tester
+    success_login, _ = tester.test_login("76123456")  # Login as Amadou (aviculteur)
+    
+    if success_login:
+        comprehensive_success = test_all_api_endpoints(tester)
+        if comprehensive_success:
+            print("\n✅ All API endpoints are working correctly!")
+        else:
+            print("\n⚠️ Some API endpoints have issues. See details above.")
+    else:
+        print("\n❌ Could not login for comprehensive testing")
+    
     # Print results
     print(f"\n📊 Tests passed: {tester.tests_passed}/{tester.tests_run}")
     return 0 if tester.tests_passed == tester.tests_run else 1
