@@ -1376,6 +1376,15 @@ function App() {
     }
   }, []);
 
+  // Sauvegarder la préférence d'interface
+  useEffect(() => {
+    localStorage.setItem('avimarche_interface_mode', useAccessibleInterface ? 'accessible' : 'classic');
+  }, [useAccessibleInterface]);
+
+  const toggleInterfaceMode = () => {
+    setUseAccessibleInterface(!useAccessibleInterface);
+  };
+
   const loadStats = async () => {
     try {
       const response = await axios.get(`${API}/stats/dashboard`);
