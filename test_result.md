@@ -246,6 +246,9 @@
         - working: true
         - agent: "testing"
         - comment: "BottomNavigation displays all 5 tabs (Accueil, Marché, Prix, Santé, Plus) correctly and navigation between tabs works properly."
+        - working: true
+        - agent: "testing"
+        - comment: "Role-based navigation is working correctly. AVICULTEUR sees: Accueil, Vendre, Aliments, Prix, Vétérinaire. ACHETEUR sees: Accueil, Acheter, Prix, Contact, Profil. FOURNISSEUR sees: Accueil, Stock, Marché, Commandes, Éleveurs. GUEST sees: S'inscrire, Connexion, Volailles, Prix, Aide."
 
   - task: "AccessibleHomePage"
     implemented: true
