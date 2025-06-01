@@ -70,6 +70,38 @@ const DashboardSection = ({ currentUser, onNavigate }) => {
           subtitle: 'Éleveurs'
         }
       ];
+    } else if (currentUser?.role === 'fournisseur') {
+      // Stats pour fournisseurs d'aliments
+      return [
+        { 
+          label: 'Stock d\'aliments', 
+          value: '1.2T', 
+          icon: '🌾', 
+          color: colors.primary,
+          subtitle: 'Tonnes disponibles'
+        },
+        { 
+          label: 'Commandes reçues', 
+          value: '15', 
+          icon: '📦', 
+          color: colors.success,
+          subtitle: 'Cette semaine'
+        },
+        { 
+          label: 'Prix moyen sac', 
+          value: '12k', 
+          icon: '💰', 
+          color: colors.warning,
+          subtitle: 'FCFA par sac 50kg'
+        },
+        { 
+          label: 'Éleveurs clients', 
+          value: '28', 
+          icon: '🤝', 
+          color: colors.info,
+          subtitle: 'Partenaires fidèles'
+        }
+      ];
     } else {
       // Stats générales pour invités - encourager inscription
       return [
