@@ -1432,21 +1432,42 @@ function App() {
   const renderAccessibleContent = () => {
     switch (currentPage) {
       case 'marketplace':
-        return <Marketplace currentUser={currentUser} />;
+        return <ModernMarketplace currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'myproducts':
-        return <MyProducts currentUser={currentUser} />;
+        return <ModernMyProducts currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'prices':
-        return <PriceMonitoring />;
+        return <ModernPriceMonitoring currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'health':
-        return <AnimalHealth currentUser={currentUser} />;
-      case 'finances':
+        return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
+      case 'financial':
         return <FinancialTools currentUser={currentUser} />;
       case 'admin':
         return <AdminDashboard />;
       case 'download':
         return <DownloadPage />;
+      case 'more':
+        // Page "Plus" avec options supplémentaires
+        return (
+          <div className="p-4">
+            <h2 className="text-xl font-bold mb-4">Plus d'options</h2>
+            <div className="space-y-2">
+              <button onClick={() => setCurrentPage('financial')} className="w-full p-3 bg-green-600 text-white rounded">
+                Outils Financiers
+              </button>
+              <button onClick={() => setCurrentPage('admin')} className="w-full p-3 bg-green-600 text-white rounded">
+                Administration
+              </button>
+              <button onClick={() => setCurrentPage('download')} className="w-full p-3 bg-green-600 text-white rounded">
+                Téléchargements
+              </button>
+              <button onClick={toggleInterfaceMode} className="w-full p-3 bg-gray-600 text-white rounded">
+                Interface Classique
+              </button>
+            </div>
+          </div>
+        );
       default:
-        return <HomePage stats={stats} currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
     }
   };
 
