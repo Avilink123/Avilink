@@ -1540,6 +1540,11 @@ function App() {
           </div>
         );
       default:
+        // Pour les non-connectés : afficher la page d'inscription
+        if (!currentUser) {
+          return <RegistrationPage onNavigate={setCurrentPage} onRegister={handleRegister} />;
+        }
+        // Pour les connectés : afficher l'accueil
         return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
     }
   };
