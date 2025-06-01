@@ -146,6 +146,9 @@
         - working: true
         - agent: "main"
         - comment: "Price tracking system with categories and trends"
+        - working: true
+        - agent: "testing"
+        - comment: "Verified price monitoring endpoints. GET /api/prices returns all price data correctly. POST /api/prices successfully adds new price reports. Price data is properly categorized and filtered."
 
   - task: "API Core - Animal Health"
     implemented: true
