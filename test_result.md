@@ -291,9 +291,9 @@
 
   - task: "React App - Animal Health"
     implemented: true
-    working: true
+    working: false
     file: "ModernAnimalHealth.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "medium"
     needs_retesting: false
     status_history:
@@ -303,6 +303,9 @@
         - working: true
         - agent: "testing"
         - comment: "Animal Health page loads correctly. Navigation to animal health works properly. There are 404 errors when trying to fetch health data from the API, but this appears to be a backend issue rather than a frontend navigation issue."
+        - working: false
+        - agent: "testing"
+        - comment: "API endpoints for diseases and veterinarians are now working (200 responses), but there's a rendering error: '_disease$traitement.map is not a function'. This suggests a data format mismatch between the frontend component and the API response."
 
   - task: "React App - Financial Tools"
     implemented: true
