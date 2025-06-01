@@ -335,7 +335,7 @@ const ModernMarketplace = ({ currentUser, onNavigate }) => {
               icon="➕"
               size="large"
               className="bg-white text-green-700 hover:bg-gray-100"
-              onClick={() => window.location.href = '#myproducts'}
+              onClick={() => onNavigate('myproducts')}
             />
           </ModernCard>
         )}
