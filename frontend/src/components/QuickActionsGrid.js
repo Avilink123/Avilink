@@ -85,6 +85,46 @@ const QuickActionsGrid = ({ currentUser, onNavigate }) => {
           priority: 2
         }
       ];
+    } else if (currentUser?.role === 'fournisseur') {
+      // Actions pour fournisseurs d'aliments
+      return [
+        {
+          id: 'manage-feed-stock',
+          title: 'Gérer Stock Aliments',
+          subtitle: 'Mettre à jour stock',
+          icon: '🌾📦',
+          action: () => onNavigate('my-feed-products'),
+          color: colors.primary,
+          priority: 1
+        },
+        {
+          id: 'feed-orders',
+          title: 'Commandes Aliments',
+          subtitle: 'Voir demandes',
+          icon: '📋✅',
+          action: () => onNavigate('feed-orders'),
+          color: colors.success,
+          priority: 1
+        },
+        {
+          id: 'feed-prices',
+          title: 'Prix Aliments',
+          subtitle: 'Cours du marché',
+          icon: '💰📊',
+          action: () => onNavigate('feed-prices'),
+          color: colors.warning,
+          priority: 1
+        },
+        {
+          id: 'contact-farmers',
+          title: 'Contacter Éleveurs',
+          subtitle: 'Clients potentiels',
+          icon: '📞🐔',
+          action: () => onNavigate('farmer-contacts'),
+          color: colors.info,
+          priority: 1
+        }
+      ];
     } else {
       // Utilisateur non connecté - actions d'invitation
       return [
