@@ -194,7 +194,7 @@ const DashboardSection = ({ currentUser, onNavigate }) => {
                   </p>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
