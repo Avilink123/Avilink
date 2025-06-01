@@ -306,6 +306,9 @@
         - working: false
         - agent: "testing"
         - comment: "API endpoints for diseases and veterinarians are now working (200 responses), but there's a rendering error: '_disease$traitement.map is not a function'. This suggests a data format mismatch between the frontend component and the API response."
+        - working: false
+        - agent: "testing"
+        - comment: "Fixed the double API prefix issue in the backend server.py file. API endpoints are now accessible and returning data correctly. However, the Animal Health component still has rendering issues. The component expects disease.traitement to be an array (using .map()), but the API returns it as a string."
 
   - task: "React App - Financial Tools"
     implemented: true
