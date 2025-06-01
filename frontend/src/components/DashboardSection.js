@@ -4,62 +4,158 @@ import { useTheme } from '../contexts/ThemeContext';
 const DashboardSection = ({ currentUser }) => {
   const { colors } = useTheme();
 
-  const getStatsForRole = () => {
+  const getRelevantStatsForRole = () => {
     if (currentUser?.role === 'aviculteur') {
+      // Stats QUI COMPTENT pour un éleveur malien
       return [
-        { label: 'Mes annonces', value: '12', icon: '📝', color: colors.primary },
-        { label: 'Vues cette semaine', value: '248', icon: '👁️', color: colors.info },
-        { label: 'Messages reçus', value: '15', icon: '💬', color: colors.warning },
-        { label: 'Ventes ce mois', value: '8', icon: '💰', color: colors.success }
+        { 
+          label: 'Volailles à vendre', 
+          value: '45', 
+          icon: '🐔', 
+          color: colors.primary,
+          subtitle: 'Stock disponible'
+        },
+        { 
+          label: 'Gains ce mois', 
+          value: '125k', 
+          icon: '💰', 
+          color: colors.success,
+          subtitle: 'FCFA gagné'
+        },
+        { 
+          label: 'Prix moyen poule', 
+          value: '2500', 
+          icon: '📊', 
+          color: colors.warning,
+          subtitle: 'FCFA sur marché'
+        },
+        { 
+          label: 'Appels reçus', 
+          value: '8', 
+          icon: '📞', 
+          color: colors.info,
+          subtitle: 'Acheteurs intéressés'
+        }
       ];
     } else if (currentUser?.role === 'acheteur') {
+      // Stats pour acheteurs
       return [
-        { label: 'Favoris sauvés', value: '7', icon: '❤️', color: colors.error },
-        { label: 'Achats ce mois', value: '3', icon: '🛍️', color: colors.success },
-        { label: 'Messages envoyés', value: '12', icon: '📩', color: colors.info },
-        { label: 'Budget dépensé', value: '425k', icon: '💳', color: colors.warning }
+        { 
+          label: 'Volailles vues', 
+          value: '23', 
+          icon: '👀', 
+          color: colors.info,
+          subtitle: 'Annonces consultées'
+        },
+        { 
+          label: 'Achats ce mois', 
+          value: '3', 
+          icon: '🛍️', 
+          color: colors.success,
+          subtitle: 'Transactions'
+        },
+        { 
+          label: 'Économisé', 
+          value: '15k', 
+          icon: '💵', 
+          color: colors.warning,
+          subtitle: 'FCFA vs prix magasin'
+        },
+        { 
+          label: 'Vendeurs contactés', 
+          value: '5', 
+          icon: '🤝', 
+          color: colors.primary,
+          subtitle: 'Éleveurs'
+        }
       ];
     } else {
+      // Stats générales pour invités - encourager inscription
       return [
-        { label: 'Annonces vues', value: '89', icon: '👀', color: colors.info },
-        { label: 'Recherches', value: '15', icon: '🔍', color: colors.primary },
-        { label: 'Prix consultés', value: '32', icon: '📊', color: colors.warning },
-        { label: 'Vétérinaires', value: '5', icon: '👨‍⚕️', color: colors.success }
+        { 
+          label: 'Volailles disponibles', 
+          value: '234', 
+          icon: '🐔', 
+          color: colors.primary,
+          subtitle: 'Sur le marché'
+        },
+        { 
+          label: 'Vendeurs actifs', 
+          value: '18', 
+          icon: '👨‍🌾', 
+          color: colors.success,
+          subtitle: 'Éleveurs en ligne'
+        },
+        { 
+          label: 'Prix moyen', 
+          value: '2300', 
+          icon: '💰', 
+          color: colors.warning,
+          subtitle: 'FCFA par poule'
+        },
+        { 
+          label: 'Nouveaux aujourd\'hui', 
+          value: '12', 
+          icon: '🆕', 
+          color: colors.info,
+          subtitle: 'Annonces fraîches'
+        }
       ];
     }
   };
 
-  const stats = getStatsForRole();
+  const stats = getRelevantStatsForRole();
 
   return (
     <section className="px-4 py-6">
       <div className="max-w-md mx-auto">
-        {/* Titre de section */}
-        <h2 className="text-lg font-semibold mb-4" style={{ color: colors.text }}>
-          📊 Mon tableau de bord
-        </h2>
+        {/* Titre contextualisé */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold" style={{ color: colors.text }}>
+            {currentUser?.role === 'aviculteur' ? '📊 Mon Élevage' : 
+             currentUser?.role === 'acheteur' ? '📊 Mes Achats' : 
+             '📊 Marché Aujourd\'hui'}
+          </h2>
+          
+          {/* Indicateur de fraîcheur des données */}
+          <span 
+            className="text-xs px-2 py-1 rounded-full"
+            style={{ backgroundColor: colors.success, color: 'white' }}
+          >
+            🔄 Mis à jour
+          </span>
+        </div>
 
-        {/* Grid de statistiques */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Grid de statistiques - plus espacé */}
+        <div className="grid grid-cols-2 gap-4">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="rounded-xl p-4 shadow-sm"
-              style={{ backgroundColor: colors.card, border: `1px solid ${colors.borderLight}` }}
+              className="rounded-xl p-4 shadow-lg"
+              style={{ 
+                backgroundColor: colors.card, 
+                border: `2px solid ${stat.color}` 
+              }}
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-col items-center text-center space-y-2">
+                {/* Icône plus visible */}
                 <div 
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg"
                   style={{ backgroundColor: stat.color }}
                 >
-                  <span className="text-lg">{stat.icon}</span>
+                  <span>{stat.icon}</span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xl font-bold" style={{ color: colors.text }}>
+                
+                {/* Valeur principale - plus grande */}
+                <div>
+                  <p className="text-2xl font-bold" style={{ color: colors.text }}>
                     {stat.value}
                   </p>
-                  <p className="text-xs truncate" style={{ color: colors.textSecondary }}>
+                  <p className="text-xs font-medium" style={{ color: colors.textSecondary }}>
                     {stat.label}
+                  </p>
+                  <p className="text-xs" style={{ color: colors.textMuted }}>
+                    {stat.subtitle}
                   </p>
                 </div>
               </div>
@@ -67,18 +163,28 @@ const DashboardSection = ({ currentUser }) => {
           ))}
         </div>
 
-        {/* Message de statut */}
+        {/* Message contextuel et encourageant */}
         <div 
-          className="mt-4 p-3 rounded-lg"
+          className="mt-4 p-4 rounded-lg text-center"
           style={{ backgroundColor: colors.surface }}
         >
-          <p className="text-sm text-center" style={{ color: colors.textSecondary }}>
+          <p className="text-sm font-medium" style={{ color: colors.text }}>
             {currentUser?.role === 'aviculteur' 
-              ? '🌱 Continuez à bien gérer votre élevage !' 
+              ? '🌟 Excellent travail ! Votre élevage progresse bien' 
               : currentUser?.role === 'acheteur'
-              ? '🛒 Trouvez les meilleures offres pour vos achats !'
-              : '👋 Bienvenue sur AviMarché Mali !'}
+              ? '🎯 Vous trouvez de bonnes affaires sur AviMarché !'
+              : '🚀 Rejoignez AviMarché pour suivre vos stats !'}
           </p>
+          
+          {!currentUser && (
+            <button
+              onClick={() => window.location.href = '#login'}
+              className="mt-2 px-4 py-2 rounded-lg text-white font-bold text-sm"
+              style={{ backgroundColor: colors.primary }}
+            >
+              Commencer maintenant
+            </button>
+          )}
         </div>
       </div>
     </section>
