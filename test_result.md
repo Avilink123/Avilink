@@ -191,6 +191,9 @@
         - working: true
         - agent: "main"
         - comment: "Data export and statistics endpoints"
+        - working: true
+        - agent: "testing"
+        - comment: "Verified admin dashboard endpoints. Admin stats endpoint provides accurate platform statistics including user counts, product counts, and role distributions. Admin export endpoint successfully generates data exports with proper summaries."
 
   - task: "API Core - Download System"
     implemented: true
