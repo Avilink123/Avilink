@@ -245,7 +245,7 @@
     implemented: true
     working: false
     file: "ModernLoginModal.js"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -255,6 +255,9 @@
         - working: false
         - agent: "testing"
         - comment: "Login form displays correctly, but login functionality fails with 404 error. API endpoint /api/users/login returns 404 Not Found. Backend API might not be running or endpoint path is incorrect."
+        - working: false
+        - agent: "testing"
+        - comment: "Login functionality still fails with 404 error. API endpoint /api/users/login returns 404 Not Found. The endpoint path correction was not applied to the login endpoint."
 
   - task: "React App - Marketplace"
     implemented: true
