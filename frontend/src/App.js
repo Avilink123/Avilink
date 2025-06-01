@@ -1391,13 +1391,13 @@ function App() {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 'marketplace':
-        return <ModernMarketplace currentUser={currentUser} />;
+        return <ModernMarketplace currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'myproducts':
-        return <ModernMyProducts currentUser={currentUser} />;
+        return <ModernMyProducts currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'prices':
-        return <ModernPriceMonitoring />;
+        return <ModernPriceMonitoring currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'health':
-        return <ModernAnimalHealth currentUser={currentUser} />;
+        return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'finances':
         return <FinancialTools currentUser={currentUser} />;
       case 'admin':
