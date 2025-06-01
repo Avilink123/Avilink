@@ -208,6 +208,8 @@ const DashboardSection = ({ currentUser, onNavigate }) => {
               ? '🌟 Excellent travail ! Votre élevage progresse bien' 
               : currentUser?.role === 'acheteur'
               ? '🎯 Vous trouvez de bonnes affaires sur AviMarché !'
+              : currentUser?.role === 'fournisseur'
+              ? '🌾 Continuez à bien servir nos éleveurs maliens !'
               : '🚀 Rejoignez AviMarché pour suivre vos stats !'}
           </p>
           
