@@ -8,7 +8,7 @@ import { BACKGROUND_IMAGES, REGIONS_MALI } from '../constants';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const ModernPriceMonitoring = () => {
+const ModernPriceMonitoring = ({ currentUser, onNavigate }) => {
   const [prices, setPrices] = useState([]);
   const [filteredPrices, setFilteredPrices] = useState([]);
   const [loading, setLoading] = useState(true);
