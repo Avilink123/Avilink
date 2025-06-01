@@ -250,7 +250,29 @@
         - agent: "testing"
         - comment: "Role-based navigation is working correctly. AVICULTEUR sees: Accueil, Vendre, Aliments, Prix, Vétérinaire. ACHETEUR sees: Accueil, Acheter, Prix, Contact, Profil. FOURNISSEUR sees: Accueil, Stock, Marché, Commandes, Éleveurs. GUEST sees: S'inscrire, Connexion, Volailles, Prix, Aide."
 
-  - task: "AccessibleHomePage"
+  - task: "Registration Page as Default"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "testing"
+        - comment: "Verified that non-logged users see the registration page as the default landing page instead of the home page. The registration page displays correctly with all required fields and the role selection dropdown."
+
+  - task: "Role Selection with Fournisseur Option"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/RegistrationPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "testing"
+        - comment: "Verified that the role selection dropdown includes the new 'fournisseur' role option along with 'aviculteur' and 'acheteur'. Users can successfully register with the fournisseur role and are redirected to the appropriate dashboard."
     implemented: true
     working: true
     file: "/app/frontend/src/components/AccessibleHomePage.js"
