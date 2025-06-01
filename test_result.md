@@ -258,6 +258,9 @@
         - working: false
         - agent: "testing"
         - comment: "Login functionality still fails with 404 error. API endpoint /api/users/login returns 404 Not Found. The endpoint path correction was not applied to the login endpoint."
+        - working: false
+        - agent: "testing"
+        - comment: "Fixed the double API prefix issue in the backend server.py file. API endpoints are now accessible, but the login functionality still fails. The login endpoint is now accessible, but there might be issues with the request format or parameter handling."
 
   - task: "React App - Marketplace"
     implemented: true
