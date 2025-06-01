@@ -1461,9 +1461,6 @@ function App() {
       case 'register':
         // Page d'inscription
         return <RegistrationPage onNavigate={setCurrentPage} onRegister={handleRegister} />;
-      case 'register':
-        // Page d'inscription
-        return <RegistrationPage onNavigate={setCurrentPage} onRegister={handleRegister} />;
       case 'login':
         // Ouvrir le modal de login et retourner à l'accueil
         setShowLoginModal(true);
