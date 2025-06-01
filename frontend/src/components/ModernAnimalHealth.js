@@ -8,7 +8,7 @@ import { BACKGROUND_IMAGES, REGIONS_MALI } from '../constants';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const ModernAnimalHealth = ({ currentUser }) => {
+const ModernAnimalHealth = ({ currentUser, onNavigate }) => {
   const [diseases, setDiseases] = useState([]);
   const [veterinarians, setVeterinarians] = useState([]);
   const [loading, setLoading] = useState(true);
