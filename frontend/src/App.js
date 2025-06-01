@@ -1617,7 +1617,11 @@ function App() {
         if (!currentUser) {
           return <RegistrationPage onNavigate={setCurrentPage} onRegister={handleRegister} />;
         }
-        // Pour les connectés : afficher l'accueil
+        // Pour les aviculteurs : page d'accueil spécialisée selon votre schéma
+        if (currentUser.role === 'aviculteur') {
+          return <AviculteurHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        // Pour les autres rôles : page d'accueil générale
         return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
     }
   };
