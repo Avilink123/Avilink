@@ -176,6 +176,9 @@
         - working: true
         - agent: "main"
         - comment: "Transaction tracking and financial summaries"
+        - working: true
+        - agent: "testing"
+        - comment: "Verified financial tools endpoints. GET /api/finances/transactions returns user transactions correctly. POST /api/finances/transactions successfully adds new transactions. GET /api/finances/summary provides accurate financial summaries with revenue, expenses, and net profit calculations."
 
   - task: "API Core - Admin Dashboard"
     implemented: true
