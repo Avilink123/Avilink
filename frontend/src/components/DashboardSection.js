@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
-const DashboardSection = ({ currentUser }) => {
+const DashboardSection = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
 
   const getRelevantStatsForRole = () => {
