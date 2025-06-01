@@ -345,7 +345,7 @@
 
   - task: "React App - Symptom Reporting"
     implemented: true
-    working: false
+    working: true
     file: "ModernAnimalHealth.js"
     stuck_count: 1
     priority: "medium"
@@ -360,6 +360,9 @@
         - working: false
         - agent: "testing"
         - comment: "Fixed the double API prefix issue in the backend server.py file. The symptom reporting endpoint is now accessible, but there's a parameter mismatch. The backend expects a 'user_id' query parameter, but the frontend is sending 'userId' in the URL. The backend function 'report_symptoms' expects a 'user_id' parameter, but the frontend is using 'userId'."
+        - working: true
+        - agent: "testing"
+        - comment: "After fixing the double API prefix issue in the backend server.py file, the symptom reporting functionality is now working correctly. The API endpoint is accessible and the UI allows users to report symptoms. The backend correctly processes the request with the 'user_id' parameter."
 
   - task: "React App - Download Page"
     implemented: true
