@@ -1474,51 +1474,25 @@ function App() {
   return (
     <ThemeProvider>
       <div className="App">
-        {useAccessibleInterface ? (
-          // Interface Accessible (Orange Money style)
-          <>
-            <AccessibleHeader
-              currentUser={currentUser}
-              onNavigate={setCurrentPage}
-              onLogout={handleLogout}
-            />
-            
-            {renderAccessibleContent()}
-            
-            <BottomNavigation
-              currentPage={currentPage}
-              onNavigate={setCurrentPage}
-            />
-          </>
-        ) : (
-          // Interface Classique
-          <>
-            <ModernHeader
-              currentUser={currentUser}
-              onLogin={() => setShowLoginModal(true)}
-              onLogout={handleLogout}
-              onNavigate={setCurrentPage}
-              currentPage={currentPage}
-            />
-            
-            {renderCurrentPage()}
-          </>
-        )}
+        {/* Interface Accessible UNIQUEMENT (Orange Money style) */}
+        <AccessibleHeader
+          currentUser={currentUser}
+          onNavigate={setCurrentPage}
+          onLogout={handleLogout}
+        />
+        
+        {renderAccessibleContent()}
+        
+        <BottomNavigation
+          currentPage={currentPage}
+          onNavigate={setCurrentPage}
+        />
         
         <LoginModal
           isOpen={showLoginModal}
           onClose={() => setShowLoginModal(false)}
           onLogin={handleLogin}
         />
-        
-        {/* Bouton de basculement d'interface */}
-        <button
-          onClick={toggleInterfaceMode}
-          className="fixed top-4 right-4 z-50 bg-green-600 text-white p-2 rounded-full shadow-lg"
-          title={useAccessibleInterface ? "Interface Classique" : "Interface Accessible"}
-        >
-          {useAccessibleInterface ? "🔄" : "📱"}
-        </button>
         
         {/* Footer */}
         <footer className="bg-gray-800 text-white py-8">
