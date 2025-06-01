@@ -308,7 +308,23 @@ def test_admin_endpoints(tester):
 
 def main():
     # Get the backend URL from the frontend .env file
-    backend_url = "https://73f50d78-544a-4e40-998e-545a731a11e7.preview.emergentagent.com"
+    import os
+    import re
+    
+    # Read the REACT_APP_BACKEND_URL from the frontend/.env file
+    backend_url = None
+    try:
+        with open('/app/frontend/.env', 'r') as f:
+            env_content = f.read()
+            match = re.search(r'REACT_APP_BACKEND_URL=(.+)', env_content)
+            if match:
+                backend_url = match.group(1).strip()
+    except Exception as e:
+        print(f"Error reading frontend/.env file: {str(e)}")
+    
+    # Fallback if we couldn't read from the file
+    if not backend_url:
+        backend_url = "https://73f50d78-544a-4e40-998e-545a731a11e7.preview.emergentagent.com"
     
     print(f"🚀 Testing AviMarché API at {backend_url}")
     tester = AviMarcheAPITester(backend_url)
