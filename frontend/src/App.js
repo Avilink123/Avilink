@@ -1505,6 +1505,15 @@ function App() {
         }
         return <div className="p-4"><h2 className="text-xl font-bold">📞 Mes Contacts Vendeurs</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
       
+      case 'orders':
+        // Commandes - Accessible aux aviculteurs et acheteurs
+        if (!currentUser || (currentUser.role !== 'aviculteur' && currentUser.role !== 'acheteur')) {
+          alert('Accès restreint : Cette section est réservée aux éleveurs et acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">📋 {currentUser.role === 'aviculteur' ? 'Commandes Reçues' : 'Mes Commandes'}</h2><div className="mt-4 space-y-3">{currentUser.role === 'aviculteur' ? <div><div className="bg-green-50 p-3 rounded border-l-4 border-green-500"><h3 className="font-bold text-green-800">📦 Commande #001</h3><p>• 10 poules pondeuses</p><p>• Client : Amadou Diallo</p><p>• Montant : 25,000 FCFA</p><p className="text-sm text-green-600 mt-1">🕐 Reçue il y a 2 heures</p></div><div className="bg-blue-50 p-3 rounded border-l-4 border-blue-500"><h3 className="font-bold text-blue-800">📦 Commande #002</h3><p>• 50 œufs frais</p><p>• Client : Fatou Keita</p><p>• Montant : 7,500 FCFA</p><p className="text-sm text-blue-600 mt-1">🕐 Reçue hier</p></div></div> : <div><div className="bg-orange-50 p-3 rounded border-l-4 border-orange-500"><h3 className="font-bold text-orange-800">🛒 Ma commande #003</h3><p>• 5 poules pondeuses</p><p>• Vendeur : Mamadou Traoré</p><p>• Montant : 12,500 FCFA</p><p className="text-sm text-orange-600 mt-1">📦 En cours de livraison</p></div></div>}</div><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+      
       case 'marketplace':
         // Marché volailles - Interdit aux fournisseurs
         if (currentUser && currentUser.role === 'fournisseur') {
