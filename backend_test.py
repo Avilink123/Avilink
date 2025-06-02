@@ -287,6 +287,13 @@ def test_admin_endpoints(tester):
         print(f"  - Total products: {stats_data['general_stats']['total_products']}")
         print(f"  - Active products: {stats_data['general_stats']['active_products']}")
         print(f"  - Users by role: {stats_data['users_by_role']}")
+        
+        # Check if FOURNISSEUR role is included in the stats
+        if 'fournisseur' in stats_data['users_by_role']:
+            print(f"  - Fournisseur users: {stats_data['users_by_role']['fournisseur']}")
+            print("✅ FOURNISSEUR role is included in admin stats")
+        else:
+            print("⚠️ FOURNISSEUR role is not included in admin stats yet")
     else:
         print("❌ Admin stats endpoint failed")
     
@@ -301,6 +308,14 @@ def test_admin_endpoints(tester):
     if success_export:
         print("✅ Admin export endpoint working")
         print(f"  - Export summary: {export_data['summary']}")
+        
+        # Check if there are any FOURNISSEUR users in the export
+        fournisseur_users = [user for user in export_data['data']['users'] if user.get('role') == 'fournisseur']
+        if fournisseur_users:
+            print(f"  - Found {len(fournisseur_users)} FOURNISSEUR users in the export")
+            print("✅ FOURNISSEUR role is included in admin export")
+        else:
+            print("⚠️ No FOURNISSEUR users found in the export yet")
     else:
         print("❌ Admin export endpoint failed")
     
