@@ -32,7 +32,7 @@ const AcheteurHomePage = ({ currentUser, onNavigate }) => {
       title: 'Calculateur',
       subtitle: 'Calculer les coûts d\'achat\nEstimer les bénéfices',
       icon: '🧮💰',
-      action: () => alert('Calculateur d\'achat AviMarché\n\n📊 Coût moyen poule : 2,500 FCFA\n📊 Coût moyen œuf : 150 FCFA\n📊 Transport : 200 FCFA/km\n\n💡 Calculez votre budget avant achat !'),
+      action: () => onNavigate('calculateur'),
       color: colors.warning
     }
   ];
