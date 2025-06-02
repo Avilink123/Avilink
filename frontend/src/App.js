@@ -1396,7 +1396,11 @@ const MyProducts = ({ currentUser }) => {
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
-  const [pageParams, setPageParams] = useState({});
+  // Fonction de navigation avancée pour gérer les paramètres
+  const handleNavigate = (page, params = {}) => {
+    setCurrentPage(page);
+    setPageParams(params);
+  };
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [stats, setStats] = useState({});
   const [useAccessibleInterface, setUseAccessibleInterface] = useState(() => {
