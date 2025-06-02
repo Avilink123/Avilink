@@ -45,7 +45,7 @@ const AcheteurHomePage = ({ currentUser, onNavigate }) => {
       value: '3',
       subtitle: 'Commandes actives',
       icon: '📦✅',
-      action: () => onNavigate('orders'),
+      action: () => onNavigate('buyer-orders'),
       color: colors.primary
     },
     {
