@@ -26,6 +26,12 @@ import VendreVolaillesPage from "./components/VendreVolaillesPage";
 import VeterinairePage from "./components/VeterinairePage";
 import CalculateurPage from "./components/CalculateurPage";
 
+// Import des nouvelles pages demandées
+import BuyFeedPage from "./components/BuyFeedPage";
+import BuyChicksPage from "./components/BuyChicksPage";
+import MessagesPage from "./components/MessagesPage";
+import MyPoultryStockPage from "./components/MyPoultryStockPage";
+
 // Import des pages ÉLEVEURS
 import FeedMarketPage from "./components/FeedMarketPage";
 import VeterinaireContactsPage from "./components/VeterinaireContactsPage";
