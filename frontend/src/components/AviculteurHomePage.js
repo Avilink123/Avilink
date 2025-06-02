@@ -231,7 +231,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       <section className="px-4 py-4">
         <div className="max-w-md mx-auto">
           <h2 className="text-lg font-bold mb-4 px-2" style={{ color: colors.text }}>
-            📊 Mon élevage
+            Mon elevage
           </h2>
           <div 
             className="p-4 rounded-xl shadow-sm"
