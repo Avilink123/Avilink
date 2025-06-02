@@ -1592,25 +1592,13 @@ function App() {
         return <ModernMyProducts currentUser={currentUser} onNavigate={setCurrentPage} />;
       
       case 'health':
-        // Santé animale - Pas accessible aux fournisseurs (ils ne font pas d'élevage)
-        if (currentUser && currentUser.role === 'fournisseur') {
-          alert('Info : Les services vétérinaires ne concernent pas les fournisseurs d\'aliments');
-          setCurrentPage('home');
-          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
-        }
-        return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
-      
-      case 'prices':
-        // Page prix volailles simplifiée - Tous utilisateurs
-        return <SimplePricesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
-      case 'health':
-        // Page conseils pratiques et maladies - Aviculteurs
+        // Page conseils pratiques et maladies - Aviculteurs uniquement
         if (!currentUser || currentUser.role !== 'aviculteur') {
           alert('Accès restreint : Cette section est réservée aux éleveurs');
           setCurrentPage('home');
-          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
-        return <PracticalAdvicePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <PracticalAdvicePage currentUser={currentUser} onNavigate={handleNavigate} />;
       case 'financial':
         // Page outils financiers simplifiés - Tous utilisateurs connectés
         if (!currentUser) {
