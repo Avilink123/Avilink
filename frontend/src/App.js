@@ -1529,8 +1529,13 @@ function App() {
         return <div className="p-4"><h2 className="text-xl font-bold">📋 Commandes d'Aliments Reçues</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
       
       case 'feed-prices':
-        // Prix aliments - Accessible à tous
-        return <div className="p-4"><h2 className="text-xl font-bold">💰 Prix des Aliments pour Volailles</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+        // Prix aliments - Éleveurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <SimpleFeedPricesPage currentUser={currentUser} onNavigate={handleNavigate} />;
       
       case 'farmer-contacts':
         // Contacts éleveurs - Fournisseurs uniquement
