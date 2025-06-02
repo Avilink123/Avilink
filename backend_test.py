@@ -377,7 +377,7 @@ def test_all_api_endpoints(tester):
         print("❌ Get all products failed")
         all_tests_passed = False
     
-    # Test product creation (if user is aviculteur)
+    # Test product creation (if user is aviculteur or fournisseur)
     if tester.user_id:
         # Get user role first
         success, user = tester.run_test(
@@ -387,31 +387,46 @@ def test_all_api_endpoints(tester):
             200
         )
         
-        if success and user.get('role') == 'aviculteur':
-            # Test product creation
-            new_product = {
-                "titre": "Test API Product",
-                "description": "Product created during API testing",
-                "type_produit": "volaille_vivante",
-                "prix": 3800,
-                "unite": "pièce",
-                "quantite_disponible": 5,
-                "localisation": "Test Location",
-                "race_volaille": "Test Race",
-                "age_semaines": 6,
-                "poids_moyen": 1.8
-            }
+        if success and user.get('role') in ['aviculteur', 'fournisseur']:
+            # Test product creation based on role
+            if user.get('role') == 'aviculteur':
+                new_product = {
+                    "titre": "Test API Product",
+                    "description": "Product created during API testing",
+                    "type_produit": "volaille_vivante",
+                    "prix": 3800,
+                    "unite": "pièce",
+                    "quantite_disponible": 5,
+                    "localisation": "Test Location",
+                    "race_volaille": "Test Race",
+                    "age_semaines": 6,
+                    "poids_moyen": 1.8
+                }
+                product_type = "volaille_vivante"
+            else:  # fournisseur
+                new_product = {
+                    "titre": "Test API Aliment",
+                    "description": "Aliment created during API testing",
+                    "type_produit": "amendements",
+                    "prix": 2800,
+                    "unite": "kg",
+                    "quantite_disponible": 50,
+                    "localisation": "Test Location",
+                    "type_amendement": "Aliment volaille",
+                    "composition": "Maïs, soja, vitamines"
+                }
+                product_type = "amendements"
             
             success, created_product = tester.test_create_product(new_product)
             if success:
-                print(f"✅ Create product working: {created_product['titre']}")
+                print(f"✅ {user.get('role').capitalize()} can create {product_type} products: {created_product['titre']}")
                 
                 # Test product update
                 if tester.test_product_id:
                     update_data = {
-                        "titre": "Updated Test Product",
-                        "prix": 4000,
-                        "quantite_disponible": 3
+                        "titre": f"Updated Test {product_type}",
+                        "prix": new_product["prix"] + 200,
+                        "quantite_disponible": new_product["quantite_disponible"] - 2
                     }
                     
                     success, updated_product = tester.test_update_product(tester.test_product_id, update_data)
@@ -429,10 +444,10 @@ def test_all_api_endpoints(tester):
                         print("❌ Delete product failed")
                         all_tests_passed = False
             else:
-                print("❌ Create product failed")
+                print(f"❌ {user.get('role').capitalize()} cannot create products")
                 all_tests_passed = False
         else:
-            print("⚠️ Skipping product creation tests - user is not an aviculteur")
+            print(f"⚠️ Skipping product creation tests - user is not an aviculteur or fournisseur")
     else:
         print("⚠️ Skipping product creation tests - no user logged in")
     
