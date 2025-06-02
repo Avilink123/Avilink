@@ -19,10 +19,10 @@ const VendreVolaillesPage = ({ currentUser, onNavigate }) => {
 
   const typesVolailles = [
     { value: 'poules', label: '🐔 Poules pondeuses', icon: '🐔' },
-    { value: 'coqs', label: '🐓 Coqs', icon: '🐓' },
+    { value: 'pintades', label: '🦃 Pintades', icon: '🦃' },
     { value: 'poussins', label: '🐣 Poussins', icon: '🐣' },
     { value: 'oeufs', label: '🥚 Œufs frais', icon: '🥚' },
-    { value: 'oeufs-fecondes', label: '🥚🐣 Œufs fécondés', icon: '🥚' }
+    { value: 'oeufs-fecondes', label: '🐣 Œufs fécondés', icon: '🐣' }
   ];
 
   return (
