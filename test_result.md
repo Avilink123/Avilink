@@ -119,6 +119,21 @@ backend:
         - agent: "testing"
         - comment: "The backend API is working correctly after the addition of all the new FOURNISSEUR pages. Comprehensive tests show that all endpoints are functioning properly, including user registration, login, product management, price monitoring, animal health, and financial tools. FOURNISSEUR users can properly create, update, and delete products of type 'amendements'. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export."
 
+  - task: "Additional-Modules"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing additional modules: Price Monitoring, Animal Health, and Financial Tools"
+        - working: true
+        - agent: "testing"
+        - comment: "Additional modules are working correctly. Price Monitoring API allows getting and reporting prices. Animal Health API allows getting diseases, reporting symptoms, and recording vaccinations. Financial Tools API allows adding transactions and getting financial summaries."
+
 frontend:
   - task: "Registration-FOURNISSEUR"
     implemented: true
