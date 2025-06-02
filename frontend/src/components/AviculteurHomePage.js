@@ -17,21 +17,21 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       id: 'acheter-aliments',
       title: 'Acheter aliments volailles',
       icon: '🌾🛒',
-      action: () => onNavigate('feed-market'),
+      action: () => onNavigate('buy-feed'),
       color: colors.success
     },
     {
       id: 'acheter-oeufs-poussins',
       title: 'Acheter des œufs fécondés/poussins',
       icon: '🥚🐣',
-      action: () => onNavigate('marketplace'),
+      action: () => onNavigate('buy-chicks'),
       color: colors.warning
     },
     {
       id: 'messages',
       title: 'Messages',
       icon: '💬📩',
-      action: () => onNavigate('contacts'),
+      action: () => onNavigate('messages'),
       color: colors.info
     }
   ];
