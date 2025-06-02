@@ -66,6 +66,20 @@ const ModernMarketplace = ({ currentUser, onNavigate }) => {
     window.open(`tel:${vendeur.telephone}`, '_self');
   };
 
+  const handleSendMessage = (vendeur, produit) => {
+    // Rediriger vers la messagerie avec le vendeur du produit
+    if (currentUser) {
+      alert(
+        `💬 Message à ${vendeur.nom}\n\n` +
+        `Concernant : ${produit.nom}\n\n` +
+        `Vous allez être redirigé vers la messagerie pour discuter avec ce vendeur.`
+      );
+      onNavigate('messages');
+    } else {
+      alert('Vous devez être connecté pour envoyer un message');
+    }
+  };
+
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedType('');
