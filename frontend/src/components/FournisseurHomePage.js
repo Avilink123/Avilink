@@ -84,7 +84,7 @@ const FournisseurHomePage = ({ currentUser, onNavigate }) => {
       title: 'Prix du marché',
       subtitle: 'Évolution prix aliments volailles',
       icon: '📈💰',
-      action: () => onNavigate('feed-prices'),
+      action: () => onNavigate('supplier-feed-prices'),
       color: colors.primary
     },
     {
@@ -92,23 +92,40 @@ const FournisseurHomePage = ({ currentUser, onNavigate }) => {
       title: 'Demande du marché',
       subtitle: 'Besoins des éleveurs maliens',
       icon: '📊📈',
-      action: () => alert('Demande du marché - Semaine actuelle :\n\n📈 En hausse :\n🌾 Maïs (+15%) - Saison sèche\n🐟 Farine poisson (+8%) - Ponte\n\n📉 En baisse :\n🌱 Son de blé (-5%)\n🥬 Verdure (-12%) - Disponible localement\n\n💡 Conseil : Stockez plus de maïs et farine de poisson'),
+      action: () => onNavigate('market-demand'),
       color: colors.warning
+    },
+    {
+      id: 'produits-demandes',
+      title: 'Produits les plus demandés',
+      subtitle: 'Tendances du marché cette semaine',
+      icon: '🏆📊',
+      action: () => onNavigate('product-demand'),
+      color: colors.info
+    },
+    {
+      id: 'mes-ventes',
+      title: 'Mes ventes',
+      subtitle: 'Performance et historique',
+      icon: '💰📈',
+      action: () => onNavigate('supplier-sales'),
+      color: colors.success
     },
     {
       id: 'conseils-fournisseurs',
       title: 'Conseils fournisseurs',
       subtitle: 'Guide business aliments volailles',
       icon: '📚💡',
-      action: () => alert('Conseils Fournisseurs AviMarché :\n\n✅ Bonnes pratiques :\n• Stockage au sec (< 12% humidité)\n• Rotation des stocks (FIFO)\n• Contrôle qualité régulier\n• Prix compétitifs vs marché\n\n📞 Formation gratuite :\n+223 XX XX XX XX\nTous les jeudis 14h-16h'),
-      color: colors.success
+      action: () => onNavigate('supplier-advice'),
+      color: colors.warning
     },
     {
       id: 'contact-support',
       title: 'Contact Support',
+      subtitle: 'Équipe spécialisée fournisseurs',
       icon: '📞🆘',
-      action: () => alert('Support AviMarché Mali - Fournisseurs\n📞 +223 XX XX XX XX\n📧 fournisseurs@avimarche.ml\n\nServices spécialisés :\n🌾 Conseils stockage aliments\n📊 Analyse demande marché\n💰 Optimisation prix vente\n🚛 Support logistique\n\nHeures : Lundi-Samedi 8h-18h'),
-      color: colors.info
+      action: () => onNavigate('supplier-contact-support'),
+      color: colors.error
     }
   ];
 
