@@ -636,12 +636,48 @@ def main():
             success_create, created_product = tester_fournisseur.test_create_product(new_product)
             if success_create:
                 print(f"✅ Fournisseur can create products: {created_product['titre']}")
+                product_id = created_product['id']
+                
+                # Test updating the product as fournisseur
+                update_data = {
+                    "titre": "Aliment Premium pour Volailles - Mise à jour",
+                    "prix": 2700,
+                    "quantite_disponible": 90
+                }
+                
+                success_update, updated_product = tester_fournisseur.test_update_product(product_id, update_data)
+                if success_update:
+                    print(f"✅ Fournisseur can update products: {updated_product['titre']}")
+                else:
+                    print("❌ Fournisseur cannot update products (unexpected)")
+                
+                # Test getting user products as fournisseur
+                success_get, user_products = tester_fournisseur.test_get_user_products(user_fournisseur['id'])
+                if success_get:
+                    print(f"✅ Fournisseur can view their products: {len(user_products)} products found")
+                else:
+                    print("❌ Fournisseur cannot view their products (unexpected)")
                 
                 # Clean up
                 if tester_fournisseur.test_product_id:
-                    tester_fournisseur.test_delete_product(tester_fournisseur.test_product_id)
+                    success_delete, _ = tester_fournisseur.test_delete_product(tester_fournisseur.test_product_id)
+                    if success_delete:
+                        print("✅ Fournisseur can delete products")
+                    else:
+                        print("❌ Fournisseur cannot delete products (unexpected)")
             else:
                 print("❌ Fournisseur cannot create products (unexpected)")
+                
+            # Test dashboard stats to ensure FOURNISSEUR role is included
+            success_stats, stats = tester_fournisseur.test_stats()
+            if success_stats:
+                print("✅ Dashboard stats include FOURNISSEUR data")
+                print(f"  - Total users: {stats['total_utilisateurs']}")
+                print(f"  - Total products: {stats['total_produits']}")
+                if 'stats_par_type' in stats and 'amendements' in stats['stats_par_type']:
+                    print(f"  - Amendements products: {stats['stats_par_type']['amendements']}")
+            else:
+                print("❌ Dashboard stats failed")
         else:
             print("❌ Login as fournisseur failed")
     else:
