@@ -275,7 +275,7 @@ frontend:
 
 ## test_plan:
   current_focus:
-    - "Backend-FOURNISSEUR-Integration"
+    - "Backend-ACHETEUR-Integration"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
