@@ -830,19 +830,47 @@ def main():
     else:
         print("❌ Login as Amadou Traoré failed")
     
-    # Comprehensive API testing
-    print("\n===== RUNNING COMPREHENSIVE API TESTS =====")
+    # Comprehensive API testing with aviculteur
+    print("\n===== RUNNING COMPREHENSIVE API TESTS WITH AVICULTEUR =====")
     tester = AviMarcheAPITester(backend_url)  # Reset tester
     success_login, _ = tester.test_login("76123456")  # Login as Amadou (aviculteur)
     
     if success_login:
         comprehensive_success = test_all_api_endpoints(tester)
         if comprehensive_success:
-            print("\n✅ All API endpoints are working correctly!")
+            print("\n✅ All API endpoints are working correctly with AVICULTEUR role!")
         else:
-            print("\n⚠️ Some API endpoints have issues. See details above.")
+            print("\n⚠️ Some API endpoints have issues with AVICULTEUR role. See details above.")
     else:
-        print("\n❌ Could not login for comprehensive testing")
+        print("\n❌ Could not login as AVICULTEUR for comprehensive testing")
+    
+    # Comprehensive API testing with fournisseur
+    print("\n===== RUNNING COMPREHENSIVE API TESTS WITH FOURNISSEUR =====")
+    
+    # First, register a new fournisseur if needed
+    tester = AviMarcheAPITester(backend_url)  # Reset tester
+    fournisseur_data = {
+        "nom": "Test Fournisseur Complet",
+        "telephone": "7515",  # Will be made unique with timestamp
+        "role": "fournisseur",
+        "localisation": "Bamako"
+    }
+    success_register, registered_fournisseur = tester.test_register(fournisseur_data)
+    
+    if success_register:
+        fournisseur_phone = registered_fournisseur['telephone']
+        success_login, _ = tester.test_login(fournisseur_phone)
+        
+        if success_login:
+            comprehensive_success = test_all_api_endpoints(tester)
+            if comprehensive_success:
+                print("\n✅ All API endpoints are working correctly with FOURNISSEUR role!")
+            else:
+                print("\n⚠️ Some API endpoints have issues with FOURNISSEUR role. See details above.")
+        else:
+            print("\n❌ Could not login as FOURNISSEUR for comprehensive testing")
+    else:
+        print("\n❌ Could not register a FOURNISSEUR for comprehensive testing")
     
     # Print results
     print(f"\n📊 Tests passed: {tester.tests_passed}/{tester.tests_run}")
