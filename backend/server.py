@@ -259,8 +259,8 @@ async def get_user(user_id: str):
 async def create_product(product_data: ProductCreate, vendeur_id: str = Query(...)):
     # Récupérer les infos du vendeur
     vendeur = await get_current_user(vendeur_id)
-    if vendeur.role != UserRole.AVICULTEUR:
-        raise HTTPException(status_code=403, detail="Seuls les aviculteurs peuvent créer des annonces")
+    if vendeur.role not in [UserRole.AVICULTEUR, UserRole.FOURNISSEUR]:
+        raise HTTPException(status_code=403, detail="Seuls les aviculteurs et fournisseurs peuvent créer des annonces")
     
     product_dict = product_data.dict()
     product_dict.update({
