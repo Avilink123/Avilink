@@ -33,6 +33,7 @@ security = HTTPBearer()
 class UserRole(str, Enum):
     AVICULTEUR = "aviculteur"
     ACHETEUR = "acheteur"
+    FOURNISSEUR = "fournisseur"
 
 class ProductType(str, Enum):
     VOLAILLE_VIVANTE = "volaille_vivante"
