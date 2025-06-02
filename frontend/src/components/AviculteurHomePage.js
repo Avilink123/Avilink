@@ -235,7 +235,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
           </h2>
           <div 
             className="p-4 rounded-xl shadow-sm"
-            style={{ backgroundColor: colors.surface, border: `1px solid ${colors.border}` }}
+            style={{ backgroundColor: colors.surface, border: `2px solid ${colors.border}` }}
           >
             <div className="grid grid-cols-2 gap-4">
               {monElevage.map(renderElevageCard)}
