@@ -286,3 +286,19 @@
         - working: true
         - agent: "testing"
         - comment: "The PerformanceDashboardPage (Performance) is working correctly. The page displays performance metrics for the fournisseur's business. The page is accessible to fournisseurs via the 'Performance' button on the FournisseurHomePage. The UI is consistent with the rest of the application and follows the Orange Money Mali design guidelines."
+## test_plan:
+  current_focus:
+    - "FeedMarketPage"
+    - "VeterinaireContactsPage"
+    - "FeedPricesPage"
+    - "FavoriteSellersPage"
+    - "ReceivedOrdersPage"
+    - "TopSellersPage"
+    - "MyFeedProductsPage"
+    - "FeedOrdersPage"
+    - "FarmerContactsPage"
+    - "PerformanceDashboardPage"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+  backend_tested: true
