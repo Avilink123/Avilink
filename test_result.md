@@ -346,8 +346,7 @@
     - "FeedOrdersPage"
     - "FarmerContactsPage"
     - "PerformanceDashboardPage"
-  stuck_tasks: 
-    - "RegistrationFlow"
+  stuck_tasks: []
   test_all: true
   test_priority: "high_first"
   backend_tested: true
