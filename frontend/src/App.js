@@ -1644,7 +1644,7 @@ function App() {
           setCurrentPage('register');
           return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
         }
-        return <MessagesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <MessagesPage currentUser={currentUser} onNavigate={handleNavigate} params={pageParams} />;
 
       case 'my-poultry-stock':
         // Page mon stock volailles - Aviculteurs uniquement
