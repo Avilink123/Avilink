@@ -119,6 +119,21 @@ backend:
         - agent: "testing"
         - comment: "The backend API is working correctly after the addition of all the new FOURNISSEUR pages. Comprehensive tests show that all endpoints are functioning properly, including user registration, login, product management, price monitoring, animal health, and financial tools. FOURNISSEUR users can properly create, update, and delete products of type 'amendements'. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export."
 
+  - task: "Backend-ACHETEUR-Integration"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the backend API after the addition of all the new ACHETEUR pages to ensure no regressions were introduced"
+        - working: true
+        - agent: "testing"
+        - comment: "The backend API is working correctly after the addition of all the new ACHETEUR pages. Comprehensive tests show that all endpoints are functioning properly, including user registration, login, product management, price monitoring, animal health, and financial tools. The API correctly enforces role-based permissions, with ACHETEUR users being prevented from creating products as expected. All three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR) are handled correctly. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export."
+
   - task: "Additional-Modules"
     implemented: true
     working: true
