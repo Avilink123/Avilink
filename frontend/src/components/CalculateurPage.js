@@ -16,7 +16,7 @@ const CalculateurPage = ({ currentUser, onNavigate }) => {
 
   const typesVolailles = {
     'poules': { nom: 'Poules pondeuses', icon: '🐔', prixMoyen: 2500 },
-    'coqs': { nom: 'Coqs', icon: '🐓', prixMoyen: 3000 },
+    'pintades': { nom: 'Pintades', icon: '🦃', prixMoyen: 4200 },
     'poussins': { nom: 'Poussins', icon: '🐣', prixMoyen: 500 },
     'oeufs': { nom: 'Œufs (par 30)', icon: '🥚', prixMoyen: 4500 }
   };
