@@ -1396,6 +1396,7 @@ const MyProducts = ({ currentUser }) => {
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
+  const [pageParams, setPageParams] = useState({});
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [stats, setStats] = useState({});
   const [useAccessibleInterface, setUseAccessibleInterface] = useState(() => {
