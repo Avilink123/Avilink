@@ -48,6 +48,11 @@ import FeedPricesPage from "./components/FeedPricesPage";
 import FavoriteSellersPage from "./components/FavoriteSellersPage";
 import ReceivedOrdersPage from "./components/ReceivedOrdersPage";
 import TopSellersPage from "./components/TopSellersPage";
+import BuyPoultryPage from "./components/BuyPoultryPage";
+import BuyEggsPage from "./components/BuyEggsPage";
+import BuyerMessagesPage from "./components/BuyerMessagesPage";
+import BuyerOrdersPage from "./components/BuyerOrdersPage";
+import BuyerContactSupportPage from "./components/BuyerContactSupportPage";
 
 // Import des pages FOURNISSEURS
 import MyFeedProductsPage from "./components/MyFeedProductsPage";
