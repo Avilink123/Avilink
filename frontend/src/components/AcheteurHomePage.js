@@ -107,7 +107,7 @@ const AcheteurHomePage = ({ currentUser, onNavigate }) => {
       id: 'contact-support',
       title: 'Contact Support',
       icon: '📞🆘',
-      action: () => alert('Support AviMarché Mali - Acheteurs\n📞 +223 XX XX XX XX\n📧 acheteurs@avimarche.ml\n\nServices :\n🛒 Aide aux achats\n💰 Conseils prix\n🚛 Support livraison\n\nHeures : Lundi-Samedi 8h-18h'),
+      action: () => onNavigate('buyer-contact-support'),
       color: colors.info
     }
   ];
