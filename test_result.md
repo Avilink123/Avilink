@@ -337,15 +337,18 @@
 
   - task: "VendreVolaillesPage"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/VendreVolaillesPage.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
         - agent: "testing"
         - comment: "Need to verify the corrections: 'Prix total' → 'Prix unitaire', 'Coqs' → 'Pintades', 'Œufs de village' → 'Œufs fécondés'"
+        - working: true
+        - agent: "testing"
+        - comment: "Code review confirms that the corrections have been implemented correctly in VendreVolaillesPage.js. The component now uses 'Prix unitaire' instead of 'Prix total', 'Pintades' instead of 'Coqs', and 'Œufs fécondés' instead of 'Œufs de village'. Could not verify through UI testing due to login limitations."
 
   - task: "BuyFeedPage"
     implemented: true
