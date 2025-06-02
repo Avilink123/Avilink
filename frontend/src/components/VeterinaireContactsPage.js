@@ -305,7 +305,7 @@ const VeterinaireContactsPage = ({ currentUser, onNavigate }) => {
                 </p>
               </div>
 
-              {/* Tarifs */}
+              {/* Tarifs - prix consultation uniquement */}
               <div className="mb-3">
                 <div className="flex items-center justify-between text-sm">
                   <span style={{ color: colors.text }}>Consultation :</span>
@@ -313,14 +313,9 @@ const VeterinaireContactsPage = ({ currentUser, onNavigate }) => {
                     {vet.tarifs.consultation.toLocaleString()} FCFA
                   </span>
                 </div>
-                {vet.deplacement && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span style={{ color: colors.text }}>Déplacement :</span>
-                    <span className="font-medium" style={{ color: colors.warning }}>
-                      {vet.tarifs.deplacement.toLocaleString()} FCFA
-                    </span>
-                  </div>
-                )}
+                <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>
+                  📞 Appelez pour négocier déplacement
+                </p>
               </div>
 
               {/* Action */}
