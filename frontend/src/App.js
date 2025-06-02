@@ -1556,6 +1556,33 @@ function App() {
         return <AdminDashboard />;
       case 'download':
         return <DownloadPage />;
+      case 'vendre-volailles':
+        // Page vente volailles/œufs - Aviculteurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <VendreVolaillesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+      
+      case 'veterinaire-contacts':
+        // Page vétérinaires - Aviculteurs uniquement 
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <VeterinairePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+      
+      case 'calculateur':
+        // Page calculateur - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <CalculateurPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+      
       case 'register':
         // Page d'inscription
         return <RegistrationPage onNavigate={setCurrentPage} onRegister={handleRegister} />;
