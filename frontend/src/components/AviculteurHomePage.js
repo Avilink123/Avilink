@@ -87,7 +87,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
     },
     {
       id: 'prix-aliments',
-      title: 'Suivi prix des aliments pour volailles sur le marché',
+      title: 'suivi prix des aliments pour volailles sur le marché',
       icon: '📊🌾',
       action: () => onNavigate('feed-prices'),
       color: colors.warning
