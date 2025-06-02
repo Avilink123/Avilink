@@ -1430,6 +1430,7 @@ function App() {
     localStorage.setItem('avimarket_user', JSON.stringify(user));
     localStorage.setItem('avimarket_token', token);
     setShowLoginModal(false);
+    setCurrentPage('home'); // Rediriger vers home après connexion réussie
   };
 
   const handleLogout = () => {
