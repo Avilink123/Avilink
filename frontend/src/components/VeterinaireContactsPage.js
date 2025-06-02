@@ -162,8 +162,7 @@ const VeterinaireContactsPage = ({ currentUser, onNavigate }) => {
       `📍 Localisation : ${vet.localisation}\n` +
       `⏰ Disponibilité : ${vet.disponibilite}\n` +
       `💰 Consultation : ${vet.tarifs.consultation.toLocaleString()} FCFA\n` +
-      `${vet.deplacement ? `🚗 Déplacement : ${vet.tarifs.deplacement.toLocaleString()} FCFA\n` : ''}` +
-      `${vet.urgence24h ? `🚨 Urgence : ${vet.tarifs.urgence.toLocaleString()} FCFA\n` : ''}\n` +
+      `📞 Appelez pour négocier déplacement\n\n` +
       `☎️ Téléphone : ${vet.telephone}\n\n` +
       `Services proposés :\n${vet.services.map(s => `• ${s}`).join('\n')}`
     );
