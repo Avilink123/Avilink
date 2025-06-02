@@ -10,21 +10,21 @@ const AcheteurHomePage = ({ currentUser, onNavigate }) => {
       id: 'acheter-volailles',
       title: 'Acheter volailles',
       icon: '🐔🛍️',
-      action: () => onNavigate('marketplace'),
+      action: () => onNavigate('buy-poultry'),
       color: colors.primary
     },
     {
       id: 'acheter-oeufs',
       title: 'Acheter œufs',
       icon: '🥚🛒',
-      action: () => onNavigate('marketplace'),
+      action: () => onNavigate('buy-eggs'),
       color: colors.success
     },
     {
       id: 'messages',
       title: 'Messages',
       icon: '💬📩',
-      action: () => onNavigate('contacts'),
+      action: () => onNavigate('buyer-messages'),
       color: colors.info
     },
     {
