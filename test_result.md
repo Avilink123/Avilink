@@ -211,6 +211,18 @@
         - comment: "Verified download system endpoints. File download functionality is working correctly with proper content type handling and file serving capabilities."
 
 ## frontend:
+  - task: "AcheteurHomePage"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/AcheteurHomePage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "testing"
+        - comment: "Tested the AcheteurHomePage component and verified it's correctly implemented with the three required sections in the proper hierarchy: 1) Action rapide (top priority), 2) Mes Achats (purchase monitoring), and 3) Tendance (market trends). Each section has a 2x2 grid layout with appropriate buttons/cards. The Action rapide section includes 'Acheter volailles', 'Acheter œufs', 'Messages', and 'Calculateur' buttons. The Mes Achats section shows cards for 'Mes commandes' (3 commandes actives), 'Mes dépenses' (85k FCFA ce mois), 'Mes éleveurs favoris' (7 éleveurs fiables), and 'Stock reçu' (25 volailles livrées). The Tendance section includes market trend information. Navigation functions are correctly implemented: 'Acheter volailles' navigates to marketplace, 'Acheter œufs' navigates to marketplace. Role-specific display is correctly implemented in App.js with currentUser.role === 'acheteur' condition. The component has proper styling with cards grouped in containers and a consistent color scheme."
+
   - task: "AviculteurHomePage"
     implemented: true
     working: true
