@@ -103,7 +103,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       id: 'contact-support',
       title: 'Contact Support',
       icon: '📞🆘',
-      action: () => alert('Support AviMarché Mali\n📞 +223 XX XX XX XX\n📧 support@avimarche.ml\n\nHeures : Lundi-Samedi 8h-18h'),
+      action: () => alert('Support AviMarché Mali - Éleveurs\n📞 +223 XX XX XX XX\n📧 eleveurs@avimarche.ml\n\nServices spécialisés :\n🐔 Conseils élevage volailles\n💰 Aide vente et pricing\n🩺 Support vétérinaire\n🌾 Conseils alimentation\n\nHeures : Lundi-Samedi 8h-18h'),
       color: colors.success
     }
   ];
