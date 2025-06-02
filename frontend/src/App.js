@@ -21,6 +21,11 @@ import FournisseurHomePage from "./components/FournisseurHomePage";
 import BottomNavigation from "./components/BottomNavigation";
 import RegistrationPage from "./components/RegistrationPage";
 
+// Import des nouvelles pages spécialisées
+import VendreVolaillesPage from "./components/VendreVolaillesPage";
+import VeterinairePage from "./components/VeterinairePage";
+import CalculateurPage from "./components/CalculateurPage";
+
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
 import AdminDashboard from "./AdminDashboard";
