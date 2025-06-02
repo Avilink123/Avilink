@@ -297,7 +297,18 @@
         - working: true
         - agent: "testing"
         - comment: "Verified that the role selection dropdown includes the new 'fournisseur' role option along with 'aviculteur' and 'acheteur'. Users can successfully register with the fournisseur role and are redirected to the appropriate dashboard."
+
+  - task: "FournisseurHomePage"
     implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/FournisseurHomePage.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Code review of FournisseurHomePage component shows it's correctly implemented with the three required sections in the proper hierarchy: 1) Action rapide (Priority Actions), 2) Mon Business (Business Monitoring), and 3) Tendance (Market Trends & Support). Each section has a 2x2 grid layout with appropriate buttons/cards. However, we were unable to test the functionality through the browser due to issues with the registration/login process. The component appears to be properly implemented in the codebase, but we couldn't verify its functionality in the browser."
     working: true
     file: "/app/frontend/src/components/AccessibleHomePage.js"
     stuck_count: 0
