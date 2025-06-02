@@ -1591,6 +1591,43 @@ function App() {
         return <AdminDashboard />;
       case 'download':
         return <DownloadPage />;
+      // ===== NOUVELLES PAGES DEMANDÉES =====
+      case 'buy-feed':
+        // Page acheter aliments volailles - Aviculteurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <BuyFeedPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'buy-chicks':
+        // Page acheter poussins/œufs fécondés - Aviculteurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <BuyChicksPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'messages':
+        // Page messages - Tous les utilisateurs connectés
+        if (!currentUser) {
+          alert('Vous devez être connecté pour accéder aux messages');
+          setCurrentPage('register');
+          return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
+        }
+        return <MessagesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'my-poultry-stock':
+        // Page mon stock volailles - Aviculteurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <MyPoultryStockPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
       case 'vendre-volailles':
         // Page vente volailles/œufs - Aviculteurs uniquement
         if (!currentUser || currentUser.role !== 'aviculteur') {
