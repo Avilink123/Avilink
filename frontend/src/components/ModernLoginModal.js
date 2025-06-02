@@ -141,30 +141,42 @@ const ModernLoginModal = ({ isOpen, onClose, onLogin }) => {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Vous êtes :
                     </label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-3 gap-2">
                       <button
                         type="button"
                         onClick={() => setFormData({...formData, role: 'acheteur'})}
-                        className={`p-4 rounded-lg border-2 transition-all text-center ${
+                        className={`p-3 rounded-lg border-2 transition-all text-center ${
                           formData.role === 'acheteur'
                             ? 'border-green-500 bg-green-50 text-green-700'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        <div className="text-2xl mb-1">🛒</div>
-                        <div className="font-medium">Acheteur</div>
+                        <div className="text-lg mb-1">🛒</div>
+                        <div className="font-medium text-xs">Acheteur</div>
                       </button>
                       <button
                         type="button"
                         onClick={() => setFormData({...formData, role: 'aviculteur'})}
-                        className={`p-4 rounded-lg border-2 transition-all text-center ${
+                        className={`p-3 rounded-lg border-2 transition-all text-center ${
                           formData.role === 'aviculteur'
                             ? 'border-green-500 bg-green-50 text-green-700'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        <div className="text-2xl mb-1">🚜</div>
-                        <div className="font-medium">Aviculteur</div>
+                        <div className="text-lg mb-1">🚜</div>
+                        <div className="font-medium text-xs">Éleveur</div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({...formData, role: 'fournisseur'})}
+                        className={`p-3 rounded-lg border-2 transition-all text-center ${
+                          formData.role === 'fournisseur'
+                            ? 'border-green-500 bg-green-50 text-green-700'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="text-lg mb-1">🌾</div>
+                        <div className="font-medium text-xs">Fournisseur</div>
                       </button>
                     </div>
                   </div>
