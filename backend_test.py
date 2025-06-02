@@ -597,7 +597,7 @@ def main():
     
     # Fallback if we couldn't read from the file
     if not backend_url:
-        backend_url = "https://bc63c916-6d63-41d7-b174-d6220494df1e.preview.emergentagent.com"
+        backend_url = "https://24d63c5a-1f9d-4a54-b336-7bbd28ae59ae.preview.emergentagent.com"
     
     print(f"🚀 Testing AviMarché API at {backend_url}")
     tester = AviMarcheAPITester(backend_url)
