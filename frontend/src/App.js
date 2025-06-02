@@ -26,6 +26,22 @@ import VendreVolaillesPage from "./components/VendreVolaillesPage";
 import VeterinairePage from "./components/VeterinairePage";
 import CalculateurPage from "./components/CalculateurPage";
 
+// Import des pages ÉLEVEURS
+import FeedMarketPage from "./components/FeedMarketPage";
+import VeterinaireContactsPage from "./components/VeterinaireContactsPage";
+import FeedPricesPage from "./components/FeedPricesPage";
+
+// Import des pages ACHETEURS
+import FavoriteSellersPage from "./components/FavoriteSellersPage";
+import ReceivedOrdersPage from "./components/ReceivedOrdersPage";
+import TopSellersPage from "./components/TopSellersPage";
+
+// Import des pages FOURNISSEURS
+import MyFeedProductsPage from "./components/MyFeedProductsPage";
+import FeedOrdersPage from "./components/FeedOrdersPage";
+import FarmerContactsPage from "./components/FarmerContactsPage";
+import PerformanceDashboardPage from "./components/PerformanceDashboardPage";
+
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
 import AdminDashboard from "./AdminDashboard";
