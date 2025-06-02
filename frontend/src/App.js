@@ -1686,7 +1686,7 @@ function App() {
           setCurrentPage('home');
           return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
         }
-        return <FeedPricesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <SimpleFeedPricesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
 
       // ===== PAGES ACHETEURS =====
       case 'favorite-sellers':
