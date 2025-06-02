@@ -1,332 +1,256 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const FarmerContactsPage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
-  const [eleveurs, setEleveurs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('tous');
+  const [activeTab, setActiveTab] = useState('messages');
 
-  useEffect(() => {
-    // Simulation données clients éleveurs du fournisseur
-    const mockEleveurs = [
-      {
-        id: '1',
-        nom: 'Mamadou Keita',
-        ferme: 'Ferme Sahel',
-        localisation: 'Sikasso',
-        telephone: '+223 76 12 34 56',
-        statut: 'actif',
-        typeClient: 'regulier',
-        premierAchat: '2024-08-15',
-        dernierAchat: '2025-01-18',
-        nombreCommandes: 12,
-        montantTotal: 185000,
-        moyenneCommande: 15400,
-        produitsPreferes: ['Maïs concassé', 'Tourteau soja', 'Concentré ponte'],
-        tailleElevage: '150-300 volailles',
-        specialiteElevage: 'Poulets de chair',
-        frequenceAchat: 'Bi-mensuelle',
-        modePaiementPrefere: 'Orange Money',
-        evaluationFournisseur: 4.8,
-        fidelite: 92,
-        dernieresCommandes: [
-          { date: '2025-01-18', produits: 'Maïs + Soja', montant: 26500, statut: 'confirmée' },
-          { date: '2025-01-05', produits: 'Concentré ponte', montant: 15600, statut: 'livrée' },
-          { date: '2024-12-20', produits: 'Maïs concassé', montant: 17500, statut: 'livrée' }
-        ],
-        besoinsEstimes: {
-          mensuel: '45000 FCFA',
-          produitsPrincipaux: 'Maïs (60%), Protéines (30%), Compléments (10%)',
-          periodesFortes: 'Janvier-Mars, Septembre-Novembre'
-        },
-        notes: 'Client très fiable, paiements ponctuels. Elevage moderne avec bonnes pratiques.',
-        contact: {
-          preference: 'WhatsApp matin',
-          langues: ['Français', 'Bambara'],
-          disponibilite: 'Tous les jours 7h-18h'
-        }
-      },
-      {
-        id: '2',
-        nom: 'Fatoumata Diarra',
-        ferme: 'Élevage Baobab',
-        localisation: 'Ségou',
-        telephone: '+223 65 43 21 98',
-        statut: 'actif',
-        typeClient: 'occasionnel',
-        premierAchat: '2024-11-10',
-        dernierAchat: '2025-01-17',
-        nombreCommandes: 6,
-        montantTotal: 78000,
-        moyenneCommande: 13000,
-        produitsPreferes: ['Concentré ponte', 'Prémix vitamines', 'Son de blé'],
-        tailleElevage: '50-100 volailles',
-        specialiteElevage: 'Pintades et canards',
-        frequenceAchat: 'Mensuelle',
-        modePaiementPrefere: 'Mobile Money',
-        evaluationFournisseur: 4.5,
-        fidelite: 78,
-        dernieresCommandes: [
-          { date: '2025-01-17', produits: 'Concentré + Vitamines', montant: 21600, statut: 'livrée' },
-          { date: '2024-12-28', produits: 'Son de blé', montant: 14000, statut: 'livrée' },
-          { date: '2024-12-10', produits: 'Concentré ponte', montant: 15600, statut: 'livrée' }
-        ],
-        besoinsEstimes: {
-          mensuel: '18000 FCFA',
-          produitsPrincipaux: 'Compléments (50%), Céréales (30%), Vitamines (20%)',
-          periodesFortes: 'Décembre-Février (ponte)'
-        },
-        notes: 'Spécialisée volailles rustiques. Besoins spécifiques pour pintades.',
-        contact: {
-          preference: 'Appel téléphonique',
-          langues: ['Bambara', 'Français'],
-          disponibilite: 'Matin 8h-12h, soir 16h-19h'
-        }
-      },
-      {
-        id: '3',
-        nom: 'Ibrahim Coulibaly',
-        ferme: 'Ranch Moderne',
-        localisation: 'Bamako',
-        telephone: '+223 78 87 65 43',
-        statut: 'actif',
-        typeClient: 'premium',
-        premierAchat: '2024-06-20',
-        dernierAchat: '2025-01-16',
-        nombreCommandes: 18,
-        montantTotal: 385000,
-        moyenneCommande: 21400,
-        produitsPreferes: ['Farine de poisson', 'Maïs bio', 'Compléments premium'],
-        tailleElevage: '500+ volailles',
-        specialiteElevage: 'Poulets bio certifiés',
-        frequenceAchat: 'Hebdomadaire',
-        modePaiementPrefere: 'Virement bancaire',
-        evaluationFournisseur: 4.9,
-        fidelite: 96,
-        dernieresCommandes: [
-          { date: '2025-01-16', produits: 'Farine poisson + Son', montant: 46750, statut: 'en cours' },
-          { date: '2025-01-08', produits: 'Maïs bio premium', montant: 35000, statut: 'livrée' },
-          { date: '2024-12-30', produits: 'Mix complet bio', montant: 52000, statut: 'livrée' }
-        ],
-        besoinsEstimes: {
-          mensuel: '85000 FCFA',
-          produitsPrincipaux: 'Protéines premium (40%), Céréales bio (35%), Compléments (25%)',
-          periodesFortes: 'Toute l\'année (production continue)'
-        },
-        notes: 'Client premium, volumes importants. Exigences qualité très élevées.',
-        contact: {
-          preference: 'WhatsApp ou email',
-          langues: ['Français', 'Anglais'],
-          disponibilite: 'Bureau 9h-17h, urgences 24h'
-        }
-      },
-      {
-        id: '4',
-        nom: 'Aminata Touré',
-        ferme: 'Volailles du Fleuve',
-        localisation: 'Mopti',
-        telephone: '+223 69 78 45 12',
-        statut: 'inactif',
-        typeClient: 'occasionnel',
-        premierAchat: '2024-09-05',
-        dernierAchat: '2024-12-15',
-        nombreCommandes: 4,
-        montantTotal: 52000,
-        moyenneCommande: 13000,
-        produitsPreferes: ['Maïs local', 'Son de blé', 'Concentré ponte'],
-        tailleElevage: '80-150 volailles',
-        specialiteElevage: 'Poulets fermiers',
-        frequenceAchat: 'Irrégulière',
-        modePaiementPrefere: 'Espèces',
-        evaluationFournisseur: 4.2,
-        fidelite: 65,
-        dernieresCommandes: [
-          { date: '2024-12-15', produits: 'Maïs + Concentré', montant: 16400, statut: 'livrée' },
-          { date: '2024-11-20', produits: 'Son de blé', montant: 14000, statut: 'livrée' },
-          { date: '2024-10-10', produits: 'Concentré ponte', montant: 10400, statut: 'livrée' }
-        ],
-        besoinsEstimes: {
-          mensuel: '12000 FCFA',
-          produitsPrincipaux: 'Céréales locales (60%), Compléments (40%)',
-          periodesFortes: 'Saison sèche (élevage intensif)'
-        },
-        notes: 'Cliente irrégulière, budget limité. À relancer pour réactivation.',
-        contact: {
-          preference: 'Appel après 17h',
-          langues: ['Peulh', 'Français'],
-          disponibilite: 'Soir 17h-20h'
-        }
-      },
-      {
-        id: '5',
-        nom: 'Sekou Traoré',
-        ferme: 'Aviculture Moderne Kayes',
-        localisation: 'Kayes',
-        telephone: '+223 72 85 96 30',
-        statut: 'probleme',
-        typeClient: 'regulier',
-        premierAchat: '2024-07-10',
-        dernierAchat: '2025-01-14',
-        nombreCommandes: 8,
-        montantTotal: 125000,
-        moyenneCommande: 15600,
-        produitsPreferes: ['Concentré ponte', 'Son de blé', 'Vitamines'],
-        tailleElevage: '200-400 volailles',
-        specialiteElevage: 'Coqs et poules locales',
-        frequenceAchat: 'Mensuelle',
-        modePaiementPrefere: 'Orange Money',
-        evaluationFournisseur: 3.2,
-        fidelite: 58,
-        dernieresCommandes: [
-          { date: '2025-01-14', produits: 'Concentré + Son', montant: 21800, statut: 'problème' },
-          { date: '2024-12-05', produits: 'Vitamines', montant: 12000, statut: 'livrée' },
-          { date: '2024-11-15', produits: 'Son de blé', montant: 16800, statut: 'livrée' }
-        ],
-        besoinsEstimes: {
-          mensuel: '20000 FCFA',
-          produitsPrincipaux: 'Compléments (45%), Céréales (35%), Vitamines (20%)',
-          periodesFortes: 'Octobre-Décembre (reproduction)'
-        },
-        notes: 'Problème qualité récent à résoudre. Client habituellement satisfait.',
-        contact: {
-          preference: 'WhatsApp uniquement',
-          langues: ['Français', 'Soninké'],
-          disponibilite: 'Après-midi 14h-18h'
-        }
-      }
-    ];
-
-    setTimeout(() => {
-      setEleveurs(mockEleveurs);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const filteredEleveurs = eleveurs.filter(eleveur => {
-    if (filter === 'tous') return true;
-    if (filter === 'inactifs') return eleveur.statut === 'inactif';
-    if (filter === 'premium') return eleveur.typeClient === 'premium';
-    if (filter === 'problemes') return eleveur.statut === 'probleme';
-    return eleveur.typeClient === filter;
-  });
-
-  const getStatutColor = (statut) => {
-    switch (statut) {
-      case 'actif': return colors.success;
-      case 'inactif': return colors.warning;
-      case 'probleme': return colors.error;
-      default: return colors.textSecondary;
+  // Simulation messages avec éleveurs
+  const conversations = [
+    {
+      id: '1',
+      contact: 'Amadou Traoré',
+      role: 'Éleveur - Poules pondeuses',
+      dernierMessage: 'Merci pour le maïs de qualité !',
+      heure: '14:30',
+      nonLu: false,
+      telephone: '+223 76 12 34 56',
+      localisation: 'Bamako, Commune III',
+      client_depuis: '2023-08-15',
+      commandes_total: 12,
+      montant_total: 340000,
+      messages: [
+        { id: '1', texte: 'Bonjour, avez-vous du maïs en stock ?', expediteur: 'Amadou Traoré', heure: '14:20' },
+        { id: '2', texte: 'Oui, j\'ai du maïs de qualité à 280F/kg', expediteur: 'Moi', heure: '14:22' },
+        { id: '3', texte: 'Parfait ! Je veux 50kg', expediteur: 'Amadou Traoré', heure: '14:25' },
+        { id: '4', texte: 'Commande confirmée. Livraison demain matin', expediteur: 'Moi', heure: '14:27' },
+        { id: '5', texte: 'Merci pour le maïs de qualité !', expediteur: 'Amadou Traoré', heure: '14:30' }
+      ]
+    },
+    {
+      id: '2',
+      contact: 'Fatoumata Diallo',
+      role: 'Éleveur - Pintades',
+      dernierMessage: 'Vos poussins sont-ils disponibles ?',
+      heure: '11:45',
+      nonLu: true,
+      telephone: '+223 65 43 21 87',
+      localisation: 'Bamako, Commune IV',
+      client_depuis: '2024-01-10',
+      commandes_total: 3,
+      montant_total: 45000,
+      messages: [
+        { id: '1', texte: 'Bonjour ! Vos poussins sont-ils disponibles ?', expediteur: 'Fatoumata Diallo', heure: '11:45' }
+      ]
+    },
+    {
+      id: '3',
+      contact: 'Ibrahim Keita',
+      role: 'Éleveur - Poulets de chair',
+      dernierMessage: 'Commande livrée, parfait !',
+      heure: 'Hier',
+      nonLu: false,
+      telephone: '+223 78 87 65 43',
+      localisation: 'Kati',
+      client_depuis: '2023-05-20',
+      commandes_total: 28,
+      montant_total: 890000,
+      messages: [
+        { id: '1', texte: 'Concentré ponte disponible ?', expediteur: 'Ibrahim Keita', heure: 'Hier 09:00' },
+        { id: '2', texte: 'Oui, 30kg à 380F/kg', expediteur: 'Moi', heure: 'Hier 09:15' },
+        { id: '3', texte: 'Je prends ! Livraison possible ?', expediteur: 'Ibrahim Keita', heure: 'Hier 09:20' },
+        { id: '4', texte: 'Commande livrée, parfait !', expediteur: 'Ibrahim Keita', heure: 'Hier 17:00' }
+      ]
+    },
+    {
+      id: '4',
+      contact: 'Mariam Coulibaly',
+      role: 'Éleveur - Élevage mixte',
+      dernierMessage: 'À bientôt pour la prochaine commande',
+      heure: 'Lundi',
+      nonLu: false,
+      telephone: '+223 90 11 22 33',
+      localisation: 'Bamako, Commune II',
+      client_depuis: '2023-11-03',
+      commandes_total: 15,
+      montant_total: 520000,
+      messages: [
+        { id: '1', texte: 'Livraison effectuée. Merci !', expediteur: 'Moi', heure: 'Lundi 16:30' },
+        { id: '2', texte: 'À bientôt pour la prochaine commande', expediteur: 'Mariam Coulibaly', heure: 'Lundi 17:00' }
+      ]
     }
+  ];
+
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [newMessage, setNewMessage] = useState('');
+
+  // Simulation clients fidèles pour onglet "Mes clients"
+  const topClients = conversations
+    .sort((a, b) => b.montant_total - a.montant_total)
+    .map(client => ({
+      ...client,
+      fidelite: client.commandes_total > 20 ? 'excellent' : client.commandes_total > 10 ? 'bon' : 'nouveau',
+      derniere_commande: client.id === '2' ? 'Jamais' : `${Math.floor(Math.random() * 30)} jours`
+    }));
+
+  const handleEnvoyerMessage = () => {
+    if (!newMessage.trim() || !selectedConversation) return;
+
+    const newMsg = {
+      id: Date.now().toString(),
+      texte: newMessage,
+      expediteur: 'Moi',
+      heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    // Mettre à jour la conversation
+    const updatedConversation = {
+      ...selectedConversation,
+      messages: [...selectedConversation.messages, newMsg],
+      dernierMessage: newMessage,
+      heure: 'Maintenant'
+    };
+    
+    setSelectedConversation(updatedConversation);
+    setNewMessage('');
   };
 
-  const getTypeClientColor = (type) => {
-    switch (type) {
-      case 'premium': return colors.primary;
-      case 'regulier': return colors.success;
-      case 'occasionnel': return colors.info;
-      default: return colors.textSecondary;
-    }
-  };
-
-  const getTypeClientText = (type) => {
-    switch (type) {
-      case 'premium': return 'Premium';
-      case 'regulier': return 'Régulier';
-      case 'occasionnel': return 'Occasionnel';
-      default: return type;
-    }
+  const handleAppeler = (client) => {
+    alert(
+      `📞 Appeler ${client.contact}\n\n` +
+      `👤 ${client.role}\n` +
+      `☎️ ${client.telephone}\n` +
+      `📍 ${client.localisation}\n\n` +
+      `💰 Total achats : ${client.montant_total.toLocaleString()}F\n` +
+      `📋 ${client.commandes_total} commandes\n\n` +
+      `Appuyez sur le numéro pour composer`
+    );
   };
 
   const getFideliteColor = (fidelite) => {
-    if (fidelite >= 90) return colors.success;
-    if (fidelite >= 70) return colors.info;
-    if (fidelite >= 50) return colors.warning;
-    return colors.error;
+    switch (fidelite) {
+      case 'excellent': return '#4CAF50';
+      case 'bon': return '#FF9800';
+      case 'nouveau': return '#2196F3';
+      default: return colors.textSecondary;
+    }
   };
 
-  const handleContacterEleveur = (eleveur) => {
-    alert(
-      `📞 Contacter ${eleveur.nom}\n\n` +
-      `🏡 Ferme : ${eleveur.ferme}\n` +
-      `📍 Localisation : ${eleveur.localisation}\n` +
-      `📱 Téléphone : ${eleveur.telephone}\n` +
-      `🐔 Élevage : ${eleveur.specialiteElevage} (${eleveur.tailleElevage})\n` +
-      `💰 Montant total achats : ${eleveur.montantTotal.toLocaleString()} FCFA\n` +
-      `📋 Commandes : ${eleveur.nombreCommandes}\n\n` +
-      `📞 Contact préféré : ${eleveur.contact.preference}\n` +
-      `🌍 Langues : ${eleveur.contact.langues.join(', ')}\n` +
-      `⏰ Disponibilité : ${eleveur.contact.disponibilite}\n\n` +
-      `💬 Message suggéré :\n"Bonjour ${eleveur.nom}, comment va votre élevage ?"`
-    );
+  const getFideliteText = (fidelite) => {
+    switch (fidelite) {
+      case 'excellent': return '⭐ Excellent';
+      case 'bon': return '👍 Bon client';
+      case 'nouveau': return '🆕 Nouveau';
+      default: return fidelite;
+    }
   };
 
-  const handleVoirProfil = (eleveur) => {
-    alert(
-      `👨‍🌾 Profil Client - ${eleveur.nom}\n\n` +
-      `📊 Statistiques :\n` +
-      `• Premier achat : ${eleveur.premierAchat}\n` +
-      `• Dernier achat : ${eleveur.dernierAchat}\n` +
-      `• Fréquence : ${eleveur.frequenceAchat}\n` +
-      `• Fidélité : ${eleveur.fidelite}%\n` +
-      `• Évaluation : ${eleveur.evaluationFournisseur}/5\n\n` +
-      `🐔 Élevage :\n` +
-      `• Spécialité : ${eleveur.specialiteElevage}\n` +
-      `• Taille : ${eleveur.tailleElevage}\n\n` +
-      `💰 Besoins estimés :\n` +
-      `• Budget mensuel : ${eleveur.besoinsEstimes.mensuel}\n` +
-      `• Répartition : ${eleveur.besoinsEstimes.produitsPrincipaux}\n` +
-      `• Périodes fortes : ${eleveur.besoinsEstimes.periodesFortes}\n\n` +
-      `📝 Notes : ${eleveur.notes}`
-    );
-  };
-
-  const handleAnalyserVentes = (eleveur) => {
-    const derniereMoyenne = eleveur.dernieresCommandes.slice(0, 3).reduce((sum, cmd) => sum + cmd.montant, 0) / 3;
-    const tendance = derniereMoyenne > eleveur.moyenneCommande ? 'Hausse' : 'Baisse';
-
-    alert(
-      `📈 Analyse Ventes - ${eleveur.nom}\n\n` +
-      `💰 Performances :\n` +
-      `• Montant total : ${eleveur.montantTotal.toLocaleString()} FCFA\n` +
-      `• Moyenne/commande : ${eleveur.moyenneCommande.toLocaleString()} FCFA\n` +
-      `• Dernières commandes : ${derniereMoyenne.toLocaleString()} FCFA\n` +
-      `• Tendance : ${tendance}\n\n` +
-      `🌾 Produits préférés :\n` +
-      eleveur.produitsPreferes.map(p => `• ${p}`).join('\n') +
-      `\n\n📅 Historique récent :\n` +
-      eleveur.dernieresCommandes.map(cmd => 
-        `• ${cmd.date} : ${cmd.montant.toLocaleString()} FCFA (${cmd.statut})`
-      ).join('\n') +
-      `\n\n💡 Recommandations :\n` +
-      `• Proposer des offres sur ses produits préférés\n` +
-      `• Ajuster les quantités selon ses besoins\n` +
-      `• Contacter avant ses périodes d'achat habituelles`
-    );
-  };
-
-  const handleProposerOffre = (eleveur) => {
-    alert(
-      `💰 Proposer Offre - ${eleveur.nom}\n\n` +
-      `🎯 Offre personnalisée basée sur :\n` +
-      `• Historique d'achats : ${eleveur.nombreCommandes} commandes\n` +
-      `• Budget habituel : ${eleveur.moyenneCommande.toLocaleString()} FCFA\n` +
-      `• Produits préférés : ${eleveur.produitsPreferes.slice(0, 2).join(', ')}\n\n` +
-      `💡 Suggestions d'offres :\n` +
-      `• Remise 5% sur lot ${eleveur.produitsPreferes[0]}\n` +
-      `• Livraison gratuite (achat > ${Math.round(eleveur.moyenneCommande * 1.5).toLocaleString()} FCFA)\n` +
-      `• Pack fidélité ${eleveur.typeClient}\n` +
-      `• Paiement échelonné\n\n` +
-      `📞 Contacter ${eleveur.nom} pour présenter l'offre`
-    );
-  };
-
-  if (loading) {
+  // Vue conversation sélectionnée
+  if (selectedConversation) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 mx-auto mb-4" style={{ borderColor: colors.primary }}></div>
-          <p style={{ color: colors.text }}>Chargement de vos clients...</p>
+      <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
+        {/* Header conversation */}
+        <div className="px-4 py-4" style={{ backgroundColor: colors.surface }}>
+          <div className="max-w-md mx-auto flex items-center justify-between">
+            <button 
+              onClick={() => setSelectedConversation(null)}
+              className="text-2xl"
+            >
+              ← 
+            </button>
+            <div className="flex-1 text-center">
+              <h2 className="text-lg font-bold" style={{ color: colors.text }}>
+                {selectedConversation.contact}
+              </h2>
+              <p className="text-sm" style={{ color: colors.textSecondary }}>
+                {selectedConversation.role}
+              </p>
+              <p className="text-xs" style={{ color: colors.textMuted }}>
+                📍 {selectedConversation.localisation}
+              </p>
+            </div>
+            <button 
+              onClick={() => handleAppeler(selectedConversation)}
+              className="text-2xl"
+              style={{ color: colors.primary }}
+            >
+              📞
+            </button>
+          </div>
+        </div>
+
+        {/* Info client */}
+        <div className="px-4 py-2">
+          <div className="max-w-md mx-auto">
+            <div 
+              className="p-3 rounded-xl text-center"
+              style={{ backgroundColor: colors.card }}
+            >
+              <div className="grid grid-cols-3 gap-4 text-xs">
+                <div>
+                  <p className="font-bold" style={{ color: colors.primary }}>{selectedConversation.commandes_total}</p>
+                  <p style={{ color: colors.textSecondary }}>Commandes</p>
+                </div>
+                <div>
+                  <p className="font-bold" style={{ color: colors.success }}>{Math.round(selectedConversation.montant_total / 1000)}K</p>
+                  <p style={{ color: colors.textSecondary }}>CFA total</p>
+                </div>
+                <div>
+                  <p className="font-bold" style={{ color: colors.info }}>
+                    {new Date(selectedConversation.client_depuis).getFullYear()}
+                  </p>
+                  <p style={{ color: colors.textSecondary }}>Client depuis</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="px-4 py-4 space-y-3" style={{ minHeight: 'calc(100vh - 300px)' }}>
+          <div className="max-w-md mx-auto">
+            {selectedConversation.messages.map(message => (
+              <div
+                key={message.id}
+                className={`mb-3 ${message.expediteur === 'Moi' ? 'text-right' : 'text-left'}`}
+              >
+                <div
+                  className={`inline-block p-3 rounded-xl max-w-xs ${
+                    message.expediteur === 'Moi'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-800'
+                  }`}
+                >
+                  <p className="text-sm">{message.texte}</p>
+                  <p className="text-xs mt-1 opacity-70">{message.heure}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Zone de saisie */}
+        <div className="fixed bottom-0 left-0 right-0 p-4" style={{ backgroundColor: colors.surface }}>
+          <div className="max-w-md mx-auto">
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Tapez votre message..."
+                className="flex-1 p-3 rounded-xl border"
+                style={{ backgroundColor: colors.card }}
+                onKeyPress={(e) => e.key === 'Enter' && handleEnvoyerMessage()}
+              />
+              <button
+                onClick={handleEnvoyerMessage}
+                className="px-4 py-3 rounded-xl text-white font-bold"
+                style={{ backgroundColor: colors.primary }}
+              >
+                ➤
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -335,286 +259,214 @@ const FarmerContactsPage = ({ currentUser, onNavigate }) => {
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
       {/* Header */}
-      <div className="sticky top-0 z-10" style={{ backgroundColor: colors.surface }}>
-        <div className="px-4 py-4">
-          <div className="max-w-md mx-auto flex items-center justify-between">
+      <div className="px-4 py-6" style={{ backgroundColor: colors.surface }}>
+        <div className="max-w-md mx-auto text-center">
+          <button 
+            onClick={() => onNavigate('home')}
+            className="text-3xl mb-4"
+          >
+            ← 
+          </button>
+          <div className="text-6xl mb-4">👨‍🌾</div>
+          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+            {activeTab === 'messages' ? 'Mes Messages' : 'Mes Clients'}
+          </h1>
+          <p className="mt-2 text-lg" style={{ color: colors.textSecondary }}>
+            {activeTab === 'messages' ? 'Discussions avec éleveurs' : 'Clients fidèles'}
+          </p>
+        </div>
+      </div>
+
+      {/* Onglets */}
+      <div className="px-4 py-4">
+        <div className="max-w-md mx-auto">
+          <div className="flex space-x-3">
             <button
-              onClick={() => onNavigate('home')}
-              className="p-2 rounded-full"
-              style={{ backgroundColor: colors.card }}
+              onClick={() => setActiveTab('messages')}
+              className={`flex-1 p-4 rounded-xl font-bold text-center transition-all ${
+                activeTab === 'messages' ? 'scale-105 shadow-lg' : ''
+              }`}
+              style={{ 
+                backgroundColor: activeTab === 'messages' ? colors.primary : colors.card,
+                color: activeTab === 'messages' ? 'white' : colors.text
+              }}
             >
-              <span className="text-xl">←</span>
+              <div className="text-3xl mb-2">💬</div>
+              <p>Messages</p>
+              <p className="text-xs mt-1">Discussions</p>
             </button>
-            <h1 className="text-lg font-bold" style={{ color: colors.text }}>
-              👨‍🌾 Mes Clients Éleveurs
-            </h1>
-            <div></div>
+            
+            <button
+              onClick={() => setActiveTab('clients')}
+              className={`flex-1 p-4 rounded-xl font-bold text-center transition-all ${
+                activeTab === 'clients' ? 'scale-105 shadow-lg' : ''
+              }`}
+              style={{ 
+                backgroundColor: activeTab === 'clients' ? colors.success : colors.card,
+                color: activeTab === 'clients' ? 'white' : colors.text
+              }}
+            >
+              <div className="text-3xl mb-2">🤝</div>
+              <p>Mes Clients</p>
+              <p className="text-xs mt-1">Contacts fidèles</p>
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Résumé clients */}
-        <div className="px-4 pb-2">
-          <div className="max-w-md mx-auto">
-            <div 
-              className="p-3 rounded-lg"
-              style={{ backgroundColor: colors.card }}
-            >
-              <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.success }}>
-                    {filteredEleveurs.filter(e => e.statut === 'actif').length}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>Actifs</p>
-                </div>
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.primary }}>
-                    {filteredEleveurs.filter(e => e.typeClient === 'premium').length}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>Premium</p>
-                </div>
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.warning }}>
-                    {filteredEleveurs.filter(e => e.statut === 'inactif').length}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>Inactifs</p>
-                </div>
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.text }}>
-                    {filteredEleveurs.reduce((sum, e) => sum + e.montantTotal, 0).toLocaleString()}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>FCFA Total</p>
+      {/* Contenu Messages */}
+      {activeTab === 'messages' && (
+        <div className="px-4">
+          <div className="max-w-md mx-auto space-y-3">
+            {conversations.map(conversation => (
+              <div
+                key={conversation.id}
+                onClick={() => setSelectedConversation(conversation)}
+                className="p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                style={{ backgroundColor: colors.card }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-bold text-lg" style={{ color: colors.text }}>
+                        {conversation.contact}
+                      </h3>
+                      {conversation.nonLu && (
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      )}
+                    </div>
+                    <p className="text-sm" style={{ color: colors.primary }}>
+                      {conversation.role}
+                    </p>
+                    <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
+                      {conversation.dernierMessage}
+                    </p>
+                    <p className="text-xs mt-1" style={{ color: colors.textMuted }}>
+                      📍 {conversation.localisation}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm" style={{ color: colors.textSecondary }}>
+                      {conversation.heure}
+                    </p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAppeler(conversation);
+                      }}
+                      className="text-xl mt-2"
+                      style={{ color: colors.primary }}
+                    >
+                      📞
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
+      )}
 
-        {/* Filtres */}
-        <div className="px-4 pb-4">
+      {/* Contenu Clients */}
+      {activeTab === 'clients' && (
+        <div className="px-4">
           <div className="max-w-md mx-auto">
-            <div className="flex flex-wrap gap-2">
-              {[
-                { key: 'tous', label: 'Tous', icon: '👨‍🌾' },
-                { key: 'premium', label: 'Premium', icon: '⭐' },
-                { key: 'regulier', label: 'Réguliers', icon: '🔄' },
-                { key: 'occasionnel', label: 'Occasionnels', icon: '📅' },
-                { key: 'inactifs', label: 'Inactifs', icon: '😴' },
-                { key: 'problemes', label: 'Problèmes', icon: '⚠️' }
-              ].map(f => (
-                <button
-                  key={f.key}
-                  onClick={() => setFilter(f.key)}
-                  className="px-3 py-2 rounded-full text-xs font-medium transition-colors"
-                  style={{
-                    backgroundColor: filter === f.key ? colors.primary : colors.card,
-                    color: filter === f.key ? 'white' : colors.text,
-                    border: `1px solid ${filter === f.key ? colors.primary : colors.border}`
+            <h2 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
+              🤝 Mes Meilleurs Clients
+            </h2>
+            
+            <div className="space-y-4">
+              {topClients.map(client => (
+                <div
+                  key={client.id}
+                  className="p-4 rounded-xl shadow-sm border-l-4"
+                  style={{ 
+                    backgroundColor: colors.card,
+                    borderLeftColor: getFideliteColor(client.fidelite)
                   }}
                 >
-                  {f.icon} {f.label}
-                </button>
+                  <div className="flex items-start space-x-4">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
+                      style={{ backgroundColor: getFideliteColor(client.fidelite), color: 'white' }}
+                    >
+                      👨‍🌾
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-bold text-lg" style={{ color: colors.text }}>
+                          {client.contact}
+                        </h3>
+                        <span 
+                          className="text-xs font-bold px-2 py-1 rounded-full"
+                          style={{ 
+                            backgroundColor: getFideliteColor(client.fidelite),
+                            color: 'white'
+                          }}
+                        >
+                          {getFideliteText(client.fidelite)}
+                        </span>
+                      </div>
+                      
+                      <p className="text-sm mb-2" style={{ color: colors.primary }}>
+                        {client.role}
+                      </p>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-xs mb-3">
+                        <div>
+                          <p className="font-bold" style={{ color: colors.success }}>
+                            {client.montant_total.toLocaleString()}F
+                          </p>
+                          <p style={{ color: colors.textSecondary }}>Total achats</p>
+                        </div>
+                        <div>
+                          <p className="font-bold" style={{ color: colors.primary }}>
+                            {client.commandes_total} commandes
+                          </p>
+                          <p style={{ color: colors.textSecondary }}>Depuis {new Date(client.client_depuis).getFullYear()}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setSelectedConversation(client)}
+                          className="flex-1 p-2 rounded-lg text-sm font-bold text-white"
+                          style={{ backgroundColor: colors.primary }}
+                        >
+                          💬 Message
+                        </button>
+                        <button
+                          onClick={() => handleAppeler(client)}
+                          className="p-2 rounded-lg text-sm font-bold text-white"
+                          style={{ backgroundColor: colors.success }}
+                        >
+                          📞
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Liste des éleveurs */}
-      <div className="px-4">
-        <div className="max-w-md mx-auto space-y-4">
-          {filteredEleveurs.map(eleveur => (
-            <div
-              key={eleveur.id}
-              className="p-4 rounded-xl shadow-lg border"
-              style={{
-                backgroundColor: colors.card,
-                borderColor: eleveur.statut === 'probleme' ? colors.error : 
-                           eleveur.typeClient === 'premium' ? colors.primary : colors.border,
-                borderWidth: eleveur.typeClient === 'premium' || eleveur.statut === 'probleme' ? '2px' : '1px'
-              }}
-            >
-              {/* En-tête */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span className="text-lg">👨‍🌾</span>
-                    <h3 className="font-bold text-base" style={{ color: colors.text }}>
-                      {eleveur.nom}
-                    </h3>
-                    {eleveur.typeClient === 'premium' && (
-                      <span className="text-lg">⭐</span>
-                    )}
-                  </div>
-                  <p className="text-sm font-medium" style={{ color: colors.primary }}>
-                    {eleveur.ferme}
-                  </p>
-                  <p className="text-sm" style={{ color: colors.textSecondary }}>
-                    📍 {eleveur.localisation} • {eleveur.specialiteElevage}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <span 
-                    className="px-2 py-1 rounded-full text-xs font-medium text-white"
-                    style={{ backgroundColor: getStatutColor(eleveur.statut) }}
-                  >
-                    {eleveur.statut}
-                  </span>
-                  <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>
-                    Fidélité {eleveur.fidelite}%
-                  </p>
-                </div>
-              </div>
-
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2 mb-3">
-                <span 
-                  className="px-2 py-1 rounded-full text-xs font-medium text-white"
-                  style={{ backgroundColor: getTypeClientColor(eleveur.typeClient) }}
-                >
-                  🏆 {getTypeClientText(eleveur.typeClient)}
-                </span>
-                <span 
-                  className="px-2 py-1 rounded-full text-xs font-medium text-white"
-                  style={{ backgroundColor: getFideliteColor(eleveur.fidelite) }}
-                >
-                  🎯 {eleveur.fidelite}% fidèle
-                </span>
-                <span 
-                  className="px-2 py-1 rounded-full text-xs font-medium"
-                  style={{ 
-                    backgroundColor: colors.surface,
-                    color: colors.textSecondary 
-                  }}
-                >
-                  {eleveur.tailleElevage}
-                </span>
-              </div>
-
-              {/* Statistiques client */}
-              <div className="mb-3">
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span style={{ color: colors.textSecondary }}>Commandes :</span>
-                    <p className="font-medium" style={{ color: colors.text }}>
-                      {eleveur.nombreCommandes}
-                    </p>
-                  </div>
-                  <div>
-                    <span style={{ color: colors.textSecondary }}>Total achats :</span>
-                    <p className="font-medium" style={{ color: colors.success }}>
-                      {eleveur.montantTotal.toLocaleString()} FCFA
-                    </p>
-                  </div>
-                  <div>
-                    <span style={{ color: colors.textSecondary }}>Moyenne :</span>
-                    <p className="font-medium" style={{ color: colors.text }}>
-                      {eleveur.moyenneCommande.toLocaleString()} FCFA
-                    </p>
-                  </div>
-                  <div>
-                    <span style={{ color: colors.textSecondary }}>Fréquence :</span>
-                    <p className="font-medium" style={{ color: colors.text }}>
-                      {eleveur.frequenceAchat}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Dernière commande */}
-              <div className="mb-3">
-                <div
-                  className="p-2 rounded-lg"
-                  style={{ backgroundColor: colors.surface }}
-                >
-                  <p className="text-sm font-medium mb-1" style={{ color: colors.text }}>
-                    Dernière commande :
-                  </p>
-                  <p className="text-xs" style={{ color: colors.textSecondary }}>
-                    📅 {eleveur.dernierAchat} • 
-                    💰 {eleveur.dernieresCommandes[0]?.montant.toLocaleString()} FCFA
-                  </p>
-                  <p className="text-xs" style={{ color: colors.textSecondary }}>
-                    🌾 {eleveur.dernieresCommandes[0]?.produits}
-                  </p>
-                </div>
-              </div>
-
-              {/* Produits préférés */}
-              <div className="mb-4">
-                <p className="text-sm font-medium mb-1" style={{ color: colors.text }}>
-                  🌾 Produits préférés :
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {eleveur.produitsPreferes.slice(0, 3).map((produit, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 rounded text-xs"
-                      style={{ 
-                        backgroundColor: colors.surface,
-                        color: colors.textSecondary 
-                      }}
-                    >
-                      {produit}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => handleContacterEleveur(eleveur)}
-                  className="py-2 rounded-lg font-medium text-white transition-colors text-sm"
-                  style={{ backgroundColor: colors.primary }}
-                >
-                  📞 Contacter
-                </button>
-                <button
-                  onClick={() => handleProposerOffre(eleveur)}
-                  className="py-2 rounded-lg font-medium text-white transition-colors text-sm"
-                  style={{ backgroundColor: colors.success }}
-                >
-                  💰 Offre
-                </button>
-                <button
-                  onClick={() => handleVoirProfil(eleveur)}
-                  className="py-2 rounded-lg font-medium transition-colors text-sm"
-                  style={{ 
-                    backgroundColor: colors.info,
-                    color: 'white'
-                  }}
-                >
-                  👤 Profil
-                </button>
-                <button
-                  onClick={() => handleAnalyserVentes(eleveur)}
-                  className="py-2 rounded-lg font-medium transition-colors text-sm"
-                  style={{ 
-                    backgroundColor: colors.surface,
-                    color: colors.text,
-                    border: `1px solid ${colors.border}`
-                  }}
-                >
-                  📈 Analyser
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Message d'aide */}
       <div className="px-4 py-6">
         <div className="max-w-md mx-auto">
           <div
-            className="p-4 rounded-lg text-center"
+            className="p-4 rounded-xl text-center"
             style={{ backgroundColor: colors.surface }}
           >
-            <p className="text-sm font-medium" style={{ color: colors.text }}>
-              👨‍🌾 Relation Client
+            <p className="text-lg font-bold" style={{ color: colors.text }}>
+              💡 Conseil
             </p>
-            <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>
-              Entretenez de bonnes relations avec vos éleveurs pour développer votre business
+            <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
+              {activeTab === 'messages' 
+                ? 'Répondez rapidement pour fidéliser vos clients éleveurs !'
+                : 'Contactez régulièrement vos meilleurs clients pour maintenir la relation !'
+              }
             </p>
           </div>
         </div>
