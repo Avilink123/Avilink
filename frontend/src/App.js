@@ -1627,7 +1627,11 @@ function App() {
         if (currentUser.role === 'acheteur') {
           return <AcheteurHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
         }
-        // Pour les fournisseurs : page d'accueil générale (en attendant leur schéma)
+        // Pour les fournisseurs : page d'accueil spécialisée selon votre schéma
+        if (currentUser.role === 'fournisseur') {
+          return <FournisseurHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        // Fallback pour autres rôles
         return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
     }
   };
