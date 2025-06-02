@@ -286,8 +286,51 @@
         - working: true
         - agent: "testing"
         - comment: "The PerformanceDashboardPage (Performance) is working correctly. The page displays performance metrics for the fournisseur's business. The page is accessible to fournisseurs via the 'Performance' button on the FournisseurHomePage. The UI is consistent with the rest of the application and follows the Orange Money Mali design guidelines."
+  - task: "ModernLoginModal"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/ModernLoginModal.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "testing"
+        - comment: "The ModernLoginModal has been successfully updated to include the FOURNISSEUR role. All three roles (ACHETEUR, AVICULTEUR, and FOURNISSEUR) are now available in the role selection grid. The UI is properly adjusted to accommodate the three options. The role selection buttons are visible and can be clicked to select a role during registration."
+
+  - task: "RegistrationPage"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/RegistrationPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "testing"
+        - comment: "The RegistrationPage now includes the FOURNISSEUR role in the role dropdown. All three roles (ACHETEUR, AVICULTEUR, and FOURNISSEUR) are available for selection. The registration form works correctly for all roles."
+
+  - task: "RegistrationFlow"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+        - agent: "testing"
+        - comment: "While the ModernLoginModal and RegistrationPage components correctly display the FOURNISSEUR role option, there appears to be an issue with the complete registration flow. When attempting to register as a FOURNISSEUR, the form submission does not redirect to the FournisseurHomePage as expected. The user is not properly logged in after registration. This suggests there might be an issue with the authentication or redirection logic for the FOURNISSEUR role."
+
+## agent_communication:
+    - agent: "testing"
+    - message: "I've tested the registration functionality with the new FOURNISSEUR role. The ModernLoginModal and RegistrationPage components have been successfully updated to include the FOURNISSEUR role option. However, there's an issue with the complete registration flow - when registering as a FOURNISSEUR, the user is not properly redirected to the FournisseurHomePage and doesn't appear to be logged in after registration. This suggests there might be an issue with the authentication or redirection logic specific to the FOURNISSEUR role. The UI changes for adding the FOURNISSEUR role option are working correctly, but the end-to-end registration flow needs to be fixed."
+
 ## test_plan:
   current_focus:
+    - "ModernLoginModal"
+    - "RegistrationPage"
+    - "RegistrationFlow"
     - "FeedMarketPage"
     - "VeterinaireContactsPage"
     - "FeedPricesPage"
@@ -298,7 +341,8 @@
     - "FeedOrdersPage"
     - "FarmerContactsPage"
     - "PerformanceDashboardPage"
-  stuck_tasks: []
+  stuck_tasks: 
+    - "RegistrationFlow"
   test_all: true
   test_priority: "high_first"
   backend_tested: true
