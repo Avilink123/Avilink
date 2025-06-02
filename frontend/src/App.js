@@ -1521,18 +1521,18 @@ function App() {
         if (!currentUser || currentUser.role !== 'fournisseur') {
           alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
           setCurrentPage('home');
-          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
-        return <div className="p-4"><h2 className="text-xl font-bold">📦 Gestion de mon Stock d'Aliments</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+        return <MyFeedProductsPage currentUser={currentUser} onNavigate={handleNavigate} />;
       
       case 'feed-orders':
         // Commandes aliments - Fournisseurs uniquement
         if (!currentUser || currentUser.role !== 'fournisseur') {
           alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
           setCurrentPage('home');
-          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
-        return <div className="p-4"><h2 className="text-xl font-bold">📋 Commandes d'Aliments Reçues</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+        return <FeedOrdersPage currentUser={currentUser} onNavigate={handleNavigate} />;
       
       case 'feed-prices':
         // Prix aliments - Éleveurs uniquement
