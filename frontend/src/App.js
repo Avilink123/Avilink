@@ -1777,6 +1777,60 @@ function App() {
           return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
         return <PerformanceDashboardPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'supplier-sales':
+        // Mes ventes - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <SupplierSalesPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'supplier-feed-prices':
+        // Prix du marché fournisseurs - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <SupplierFeedPricesPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'product-demand':
+        // Produits les plus demandés - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <ProductDemandPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'market-demand':
+        // Demande du marché - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <MarketDemandPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'supplier-advice':
+        // Conseils fournisseurs - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <SupplierAdvicePage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'supplier-contact-support':
+        // Contact support fournisseurs - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <SupplierContactSupportPage currentUser={currentUser} onNavigate={handleNavigate} />;
       
       case 'register':
         // Page d'inscription
