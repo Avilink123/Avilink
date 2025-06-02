@@ -312,15 +312,18 @@
 
   - task: "RegistrationFlow"
     implemented: true
-    working: false
+    working: true
     file: "/app/frontend/src/App.js"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
         - agent: "testing"
         - comment: "While the ModernLoginModal and RegistrationPage components correctly display the FOURNISSEUR role option, there appears to be an issue with the complete registration flow. When attempting to register as a FOURNISSEUR, the form submission does not redirect to the FournisseurHomePage as expected. The user is not properly logged in after registration. This suggests there might be an issue with the authentication or redirection logic for the FOURNISSEUR role."
+        - working: true
+        - agent: "testing"
+        - comment: "The registration flow has been fixed and now works correctly for all three roles. When registering as a FOURNISSEUR, the user is properly redirected to the FournisseurHomePage. The same is true for AVICULTEUR (redirected to AviculteurHomePage) and ACHETEUR (redirected to AcheteurHomePage). The API call to /api/users/register is now being made correctly, and the user is properly authenticated after registration."
 
 ## agent_communication:
     - agent: "testing"
