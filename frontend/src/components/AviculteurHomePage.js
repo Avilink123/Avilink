@@ -15,7 +15,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
     },
     {
       id: 'acheter-aliments',
-      title: 'Acheter aliments volailles',
+      title: 'acheter aliments volailles',
       icon: '🌾🛒',
       action: () => onNavigate('feed-market'),
       color: colors.success
