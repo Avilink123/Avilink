@@ -74,9 +74,7 @@ const VeterinaireContactsPage = ({ currentUser, onNavigate }) => {
         urgence24h: true,
         deplacement: true,
         tarifs: {
-          consultation: 10000,
-          deplacement: 15000,
-          urgence: 25000
+          consultation: 10000
         },
         services: [
           'Soins de base',
