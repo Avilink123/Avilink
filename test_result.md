@@ -331,21 +331,86 @@
     - agent: "testing"
     - message: "I've completed testing the registration flow for all three roles (FOURNISSEUR, AVICULTEUR, and ACHETEUR). The issue with the registration flow has been fixed. All three roles can now register successfully and are properly redirected to their respective home pages. The API call to /api/users/register is being made correctly, and the user is properly authenticated after registration. The registration flow is now working end-to-end for all roles."
 
+  - task: "VendreVolaillesPage"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/VendreVolaillesPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Need to verify the corrections: 'Prix total' → 'Prix unitaire', 'Coqs' → 'Pintades', 'Œufs de village' → 'Œufs fécondés'"
+
+  - task: "BuyFeedPage"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/BuyFeedPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "New page for buying feed for poultry, optimized for illiterate users with simple interface, big buttons, and direct phone calls"
+
+  - task: "BuyChicksPage"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/BuyChicksPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "New page for buying chicks and fertilized eggs, specialized for starting/expanding poultry farming"
+
+  - task: "MessagesPage"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/MessagesPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "New messaging system with simple conversation list, real-time chat, and direct call button"
+
+  - task: "MyPoultryStockPage"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/MyPoultryStockPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "New improved poultry stock management page with simple overview, total value, visual alerts, and direct actions"
+
+  - task: "AviculteurHomePage-Navigation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/AviculteurHomePage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Need to verify that AviculteurHomePage correctly points to the new pages: 'Acheter aliments volailles' → buy-feed, 'Acheter œufs fécondés/poussins' → buy-chicks, 'Messages' → messages, 'Mon stock de volailles' → my-poultry-stock"
+
 ## test_plan:
   current_focus:
-    - "ModernLoginModal"
-    - "RegistrationPage"
-    - "RegistrationFlow"
-    - "FeedMarketPage"
-    - "VeterinaireContactsPage"
-    - "FeedPricesPage"
-    - "FavoriteSellersPage"
-    - "ReceivedOrdersPage"
-    - "TopSellersPage"
-    - "MyFeedProductsPage"
-    - "FeedOrdersPage"
-    - "FarmerContactsPage"
-    - "PerformanceDashboardPage"
+    - "VendreVolaillesPage"
+    - "BuyFeedPage"
+    - "BuyChicksPage"
+    - "MessagesPage"
+    - "MyPoultryStockPage"
+    - "AviculteurHomePage-Navigation"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
