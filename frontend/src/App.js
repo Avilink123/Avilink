@@ -1765,18 +1765,18 @@ function App() {
         if (!currentUser || currentUser.role !== 'fournisseur') {
           alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
           setCurrentPage('home');
-          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
-        return <FarmerContactsPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <FarmerContactsPage currentUser={currentUser} onNavigate={handleNavigate} />;
 
       case 'performance-dashboard':
         // Page dashboard performance - Fournisseurs uniquement
         if (!currentUser || currentUser.role !== 'fournisseur') {
           alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
           setCurrentPage('home');
-          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
-        return <PerformanceDashboardPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <PerformanceDashboardPage currentUser={currentUser} onNavigate={handleNavigate} />;
       
       case 'register':
         // Page d'inscription
