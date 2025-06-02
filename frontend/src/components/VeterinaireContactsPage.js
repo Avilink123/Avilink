@@ -48,9 +48,7 @@ const VeterinaireContactsPage = ({ currentUser, onNavigate }) => {
         urgence24h: false,
         deplacement: true,
         tarifs: {
-          consultation: 12000,
-          deplacement: 20000,
-          urgence: 0
+          consultation: 12000
         },
         services: [
           'Diagnostic avancé',
