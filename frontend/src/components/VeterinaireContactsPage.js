@@ -100,9 +100,7 @@ const VeterinaireContactsPage = ({ currentUser, onNavigate }) => {
         urgence24h: false,
         deplacement: false,
         tarifs: {
-          consultation: 18000,
-          deplacement: 0,
-          urgence: 0
+          consultation: 18000
         },
         services: [
           'Reproduction assistée',
