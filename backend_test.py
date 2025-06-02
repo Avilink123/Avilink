@@ -599,7 +599,7 @@ def main():
     if success_aviculteur:
         print(f"✅ Registered new aviculteur: {registered_aviculteur['nom']} with role {registered_aviculteur['role']}")
     
-    # Test registering with role 'fournisseur' (should fail or be converted to another role)
+    # Test registering with role 'fournisseur' (should now work with the added FOURNISSEUR role)
     fournisseur_data = {
         "nom": "Test Fournisseur",
         "telephone": "7514",  # Will be made unique with timestamp
@@ -608,10 +608,44 @@ def main():
     }
     success_fournisseur, registered_fournisseur = tester.test_register(fournisseur_data)
     if success_fournisseur:
-        print(f"⚠️ Registered user with 'fournisseur' role: {registered_fournisseur['nom']} with role {registered_fournisseur['role']}")
-        print("   This should not be possible if 'fournisseur' role has been removed")
+        print(f"✅ Registered new fournisseur: {registered_fournisseur['nom']} with role {registered_fournisseur['role']}")
+        
+        # Save the fournisseur phone number for later login test
+        fournisseur_phone = registered_fournisseur['telephone']
+        
+        # Test login with the newly created fournisseur
+        tester_fournisseur = AviMarcheAPITester(backend_url)  # New tester instance
+        success_login, user_fournisseur = tester_fournisseur.test_login(fournisseur_phone)
+        
+        if success_login:
+            print(f"✅ Successfully logged in as fournisseur: {user_fournisseur['nom']}")
+            
+            # Test product creation as fournisseur (should work)
+            new_product = {
+                "titre": "Aliment Premium pour Volailles",
+                "description": "Aliment de haute qualité pour volailles, riche en protéines",
+                "type_produit": "amendements",
+                "prix": 2500,
+                "unite": "kg",
+                "quantite_disponible": 100,
+                "localisation": "Kayes",
+                "type_amendement": "Aliment volaille",
+                "composition": "Maïs, soja, calcium, vitamines"
+            }
+            
+            success_create, created_product = tester_fournisseur.test_create_product(new_product)
+            if success_create:
+                print(f"✅ Fournisseur can create products: {created_product['titre']}")
+                
+                # Clean up
+                if tester_fournisseur.test_product_id:
+                    tester_fournisseur.test_delete_product(tester_fournisseur.test_product_id)
+            else:
+                print("❌ Fournisseur cannot create products (unexpected)")
+        else:
+            print("❌ Login as fournisseur failed")
     else:
-        print("✅ Registration with 'fournisseur' role failed as expected")
+        print("❌ Registration with 'fournisseur' role failed (unexpected)")
     
     print("\n===== TESTING EXISTING USERS =====")
     
