@@ -31,6 +31,7 @@ import BuyFeedPage from "./components/BuyFeedPage";
 import BuyChicksPage from "./components/BuyChicksPage";
 import MessagesPage from "./components/MessagesPage";
 import MyPoultryStockPage from "./components/MyPoultryStockPage";
+import ContactSupportPage from "./components/ContactSupportPage";
 
 // Import des pages simplifiées pour illettrés
 import SimpleFinancialToolsPage from "./components/SimpleFinancialToolsPage";
