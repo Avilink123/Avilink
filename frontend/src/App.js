@@ -1593,7 +1593,13 @@ function App() {
       case 'health':
         return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'financial':
-        return <FinancialTools currentUser={currentUser} />;
+        // Page outils financiers simplifiés - Tous utilisateurs connectés
+        if (!currentUser) {
+          alert('Vous devez être connecté pour accéder aux outils financiers');
+          setCurrentPage('register');
+          return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
+        }
+        return <SimpleFinancialToolsPage currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'admin':
         return <AdminDashboard />;
       case 'download':
