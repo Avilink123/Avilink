@@ -32,6 +32,12 @@ import BuyChicksPage from "./components/BuyChicksPage";
 import MessagesPage from "./components/MessagesPage";
 import MyPoultryStockPage from "./components/MyPoultryStockPage";
 
+// Import des pages simplifiées pour illettrés
+import SimpleFinancialToolsPage from "./components/SimpleFinancialToolsPage";
+import SimplePricesPage from "./components/SimplePricesPage";
+import SimpleFeedPricesPage from "./components/SimpleFeedPricesPage";
+import PracticalAdvicePage from "./components/PracticalAdvicePage";
+
 // Import des pages ÉLEVEURS
 import FeedMarketPage from "./components/FeedMarketPage";
 import VeterinaireContactsPage from "./components/VeterinaireContactsPage";
