@@ -44,7 +44,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       value: '45',
       subtitle: 'Têtes disponibles',
       icon: '🐔📦',
-      action: () => onNavigate('myproducts'),
+      action: () => onNavigate('my-poultry-stock'),
       color: colors.primary
     },
     {
