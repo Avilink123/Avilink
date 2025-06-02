@@ -1589,7 +1589,8 @@ function App() {
         return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
       
       case 'prices':
-        return <ModernPriceMonitoring currentUser={currentUser} onNavigate={setCurrentPage} />;
+        // Page prix volailles simplifiée - Tous utilisateurs
+        return <SimplePricesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'health':
         return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'financial':
