@@ -1599,6 +1599,10 @@ function App() {
           return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
         return <PracticalAdvicePage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'prices':
+        // Page prix volailles simplifiée - Tous utilisateurs
+        return <SimplePricesPage currentUser={currentUser} onNavigate={handleNavigate} />;
       case 'financial':
         // Page outils financiers simplifiés - Tous utilisateurs connectés
         if (!currentUser) {
