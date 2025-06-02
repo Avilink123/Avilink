@@ -1,283 +1,257 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const SimpleFeedPricesPage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
-  const [prixAliments, setPrixAliments] = useState([]);
-  const [selectedFeed, setSelectedFeed] = useState('mais');
-  const [loading, setLoading] = useState(true);
+  const [selectedFeed, setSelectedFeed] = useState('maïs');
 
-  useEffect(() => {
-    // Données prix aliments simplifiées (simple pour illettrés)
-    const mockPrixAliments = {
-      mais: {
-        nom: 'Maïs concassé',
-        icon: '🌾',
-        prixActuel: 350,
-        evolution: '+20',
-        tendance: 'hausse',
-        historique: [
-          { semaine: 'Il y a 6 semaines', prix: 320 },
-          { semaine: 'Il y a 5 semaines', prix: 325 },
-          { semaine: 'Il y a 4 semaines', prix: 330 },
-          { semaine: 'Il y a 3 semaines', prix: 340 },
-          { semaine: 'Il y a 2 semaines', prix: 345 },
-          { semaine: 'Cette semaine', prix: 350 }
-        ],
-        conseil: 'Prix en hausse. Achetez maintenant avant que ça monte plus.'
-      },
-      soja: {
-        nom: 'Tourteau de soja',
-        icon: '🫘',
-        prixActuel: 450,
-        evolution: '-30',
-        tendance: 'baisse',
-        historique: [
-          { semaine: 'Il y a 6 semaines', prix: 480 },
-          { semaine: 'Il y a 5 semaines', prix: 475 },
-          { semaine: 'Il y a 4 semaines', prix: 470 },
-          { semaine: 'Il y a 3 semaines', prix: 465 },
-          { semaine: 'Il y a 2 semaines', prix: 455 },
-          { semaine: 'Cette semaine', prix: 450 }
-        ],
-        conseil: 'Prix en baisse. Bon moment pour acheter du soja.'
-      },
-      poisson: {
-        nom: 'Farine de poisson',
-        icon: '🐟',
-        prixActuel: 750,
-        evolution: '+50',
-        tendance: 'hausse',
-        historique: [
-          { semaine: 'Il y a 6 semaines', prix: 680 },
-          { semaine: 'Il y a 5 semaines', prix: 700 },
-          { semaine: 'Il y a 4 semaines', prix: 720 },
-          { semaine: 'Il y a 3 semaines', prix: 730 },
-          { semaine: 'Il y a 2 semaines', prix: 740 },
-          { semaine: 'Cette semaine', prix: 750 }
-        ],
-        conseil: 'Prix très cher maintenant. Cherchez d\'autres protéines.'
-      },
-      son: {
-        nom: 'Son de blé',
-        icon: '🌾',
-        prixActuel: 280,
-        evolution: '0',
-        tendance: 'stable',
-        historique: [
-          { semaine: 'Il y a 6 semaines', prix: 280 },
-          { semaine: 'Il y a 5 semaines', prix: 275 },
-          { semaine: 'Il y a 4 semaines', prix: 280 },
-          { semaine: 'Il y a 3 semaines', prix: 285 },
-          { semaine: 'Il y a 2 semaines', prix: 280 },
-          { semaine: 'Cette semaine', prix: 280 }
-        ],
-        conseil: 'Prix stable et abordable. Bon aliment de base.'
-      },
-      concentre: {
-        nom: 'Concentré ponte',
-        icon: '💊',
-        prixActuel: 520,
-        evolution: '+20',
-        tendance: 'hausse',
-        historique: [
-          { semaine: 'Il y a 6 semaines', prix: 480 },
-          { semaine: 'Il y a 5 semaines', prix: 490 },
-          { semaine: 'Il y a 4 semaines', prix: 500 },
-          { semaine: 'Il y a 3 semaines', prix: 510 },
-          { semaine: 'Il y a 2 semaines', prix: 515 },
-          { semaine: 'Cette semaine', prix: 520 }
-        ],
-        conseil: 'Prix monte mais ça améliore la ponte. Bon investissement.'
-      },
-      vitamines: {
-        nom: 'Prémix vitamines',
-        icon: '💉',
-        prixActuel: 1200,
-        evolution: '-50',
-        tendance: 'baisse',
-        historique: [
-          { semaine: 'Il y a 6 semaines', prix: 1280 },
-          { semaine: 'Il y a 5 semaines', prix: 1260 },
-          { semaine: 'Il y a 4 semaines', prix: 1240 },
-          { semaine: 'Il y a 3 semaines', prix: 1230 },
-          { semaine: 'Il y a 2 semaines', prix: 1210 },
-          { semaine: 'Cette semaine', prix: 1200 }
-        ],
-        conseil: 'Prix baisse. Bon moment pour acheter vitamines.'
-      }
-    };
-
-    setTimeout(() => {
-      setPrixAliments(mockPrixAliments);
-      setLoading(false);
-    }, 800);
-  }, []);
-
-  const currentFeed = prixAliments[selectedFeed];
-
-  const getTendanceColor = (tendance) => {
-    switch (tendance) {
-      case 'hausse': return colors.error; // Rouge pour hausse (mauvais pour acheteur)
-      case 'baisse': return colors.success; // Vert pour baisse (bon pour acheteur)
-      case 'stable': return colors.info;
-      default: return colors.textSecondary;
+  // Données simulation prix aliments - Ultra simple
+  const feedPrices = {
+    'maïs': {
+      name: 'Maïs',
+      icon: '🌽',
+      color: '#FFB74D',
+      currentPrice: 285,
+      unit: 'CFA/kg',
+      history: [
+        { semaine: 'Sem 1', prix: 250 },
+        { semaine: 'Sem 2', prix: 260 },
+        { semaine: 'Sem 3', prix: 270 },
+        { semaine: 'Sem 4', prix: 275 },
+        { semaine: 'Sem 5', prix: 280 },
+        { semaine: 'Sem 6', prix: 285 }
+      ]
+    },
+    'soja': {
+      name: 'Tourteau Soja',
+      icon: '🫘',
+      color: '#8BC34A',
+      currentPrice: 420,
+      unit: 'CFA/kg',
+      history: [
+        { semaine: 'Sem 1', prix: 390 },
+        { semaine: 'Sem 2', prix: 400 },
+        { semaine: 'Sem 3', prix: 410 },
+        { semaine: 'Sem 4', prix: 415 },
+        { semaine: 'Sem 5', prix: 418 },
+        { semaine: 'Sem 6', prix: 420 }
+      ]
+    },
+    'son': {
+      name: 'Son de Blé',
+      icon: '🌾',
+      color: '#FF7043',
+      currentPrice: 190,
+      unit: 'CFA/kg',
+      history: [
+        { semaine: 'Sem 1', prix: 180 },
+        { semaine: 'Sem 2', prix: 185 },
+        { semaine: 'Sem 3', prix: 188 },
+        { semaine: 'Sem 4', prix: 190 },
+        { semaine: 'Sem 5', prix: 190 },
+        { semaine: 'Sem 6', prix: 190 }
+      ]
+    },
+    'concentré': {
+      name: 'Concentré Ponte',
+      icon: '🥣',
+      color: '#AB47BC',
+      currentPrice: 380,
+      unit: 'CFA/kg',
+      history: [
+        { semaine: 'Sem 1', prix: 350 },
+        { semaine: 'Sem 2', prix: 360 },
+        { semaine: 'Sem 3', prix: 365 },
+        { semaine: 'Sem 4', prix: 370 },
+        { semaine: 'Sem 5', prix: 375 },
+        { semaine: 'Sem 6', prix: 380 }
+      ]
     }
   };
 
-  const getTendanceIcon = (tendance) => {
-    switch (tendance) {
-      case 'hausse': return '📈';
-      case 'baisse': return '📉';
-      case 'stable': return '➡️';
-      default: return '📊';
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
-        <div className="text-center">
-          <div className="text-6xl mb-4">📊</div>
-          <p className="text-xl" style={{ color: colors.text }}>Chargement des prix...</p>
-        </div>
-      </div>
-    );
-  }
+  const currentFeed = feedPrices[selectedFeed];
+  const maxPrice = Math.max(...currentFeed.history.map(h => h.prix)) + 20;
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
-      {/* Header simple */}
+      {/* Header ultra-simple */}
       <div className="px-4 py-6" style={{ backgroundColor: colors.surface }}>
-        <div className="max-w-md mx-auto">
+        <div className="max-w-md mx-auto text-center">
           <button 
             onClick={() => onNavigate('home')}
-            className="text-2xl mb-4"
+            className="text-3xl mb-4"
           >
             ← 
           </button>
-          <h1 className="text-2xl font-bold text-center" style={{ color: colors.text }}>
-            📊 Prix des Aliments
+          <div className="text-6xl mb-4">📊</div>
+          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+            Prix des Aliments
           </h1>
-          <p className="text-center mt-2" style={{ color: colors.textSecondary }}>
-            Suivez les prix pour acheter au bon moment
+          <p className="mt-2 text-lg" style={{ color: colors.textSecondary }}>
+            Suivez les prix pour bien acheter
           </p>
         </div>
       </div>
 
-      {/* Sélecteur d'aliment */}
+      {/* Sélection aliment - Gros boutons */}
       <div className="px-4 py-4">
         <div className="max-w-md mx-auto">
-          <div className="grid grid-cols-3 gap-2 mb-6">
-            {Object.entries(prixAliments).map(([key, feed]) => (
+          <h2 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
+            📋 Choisissez un aliment :
+          </h2>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {Object.entries(feedPrices).map(([key, feed]) => (
               <button
                 key={key}
                 onClick={() => setSelectedFeed(key)}
-                className="p-2 rounded-xl font-bold text-sm"
-                style={{
-                  backgroundColor: selectedFeed === key ? colors.primary : colors.card,
-                  color: selectedFeed === key ? 'white' : colors.text
+                className={`p-4 rounded-xl text-center transition-all ${
+                  selectedFeed === key ? 'scale-105 shadow-lg' : ''
+                }`}
+                style={{ 
+                  backgroundColor: selectedFeed === key ? feed.color : colors.card,
+                  color: selectedFeed === key ? 'white' : colors.text,
+                  border: selectedFeed === key ? `3px solid ${feed.color}` : `2px solid ${colors.border}`
                 }}
               >
-                <div className="text-xl mb-1">{feed.icon}</div>
-                <div className="text-xs">{feed.nom}</div>
+                <div className="text-3xl mb-2">{feed.icon}</div>
+                <p className="font-bold text-sm">{feed.name}</p>
+                <p className="text-xs mt-1">
+                  {selectedFeed === key ? '✅ Sélectionné' : 'Toucher pour voir'}
+                </p>
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Prix actuel */}
-      {currentFeed && (
-        <div className="px-4">
-          <div className="max-w-md mx-auto">
-            {/* Prix principal */}
-            <div className="p-4 rounded-xl mb-4 text-center" style={{ backgroundColor: colors.card }}>
-              <div className="text-4xl mb-2">{currentFeed.icon}</div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: colors.text }}>
-                {currentFeed.nom}
-              </h3>
-              <div className="text-3xl font-bold mb-2" style={{ color: colors.primary }}>
-                {currentFeed.prixActuel.toLocaleString()} FCFA
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="text-xl">{getTendanceIcon(currentFeed.tendance)}</span>
-                <span 
-                  className="text-lg font-bold"
-                  style={{ color: getTendanceColor(currentFeed.tendance) }}
-                >
-                  {currentFeed.evolution === '0' ? 'Stable' : `${currentFeed.evolution} FCFA`}
-                </span>
-              </div>
-              <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-                Prix par kg
-              </p>
+      {/* Prix actuel - Très visible */}
+      <div className="px-4 py-4">
+        <div className="max-w-md mx-auto">
+          <div 
+            className="p-6 rounded-xl text-center shadow-lg"
+            style={{ backgroundColor: currentFeed.color }}
+          >
+            <div className="text-5xl mb-3">{currentFeed.icon}</div>
+            <h3 className="text-xl font-bold text-white mb-2">
+              {currentFeed.name}
+            </h3>
+            <div className="text-4xl font-bold text-white mb-2">
+              {currentFeed.currentPrice} F
             </div>
+            <p className="text-lg text-white">
+              Prix par kg aujourd'hui
+            </p>
+          </div>
+        </div>
+      </div>
 
-            {/* Graphique simple */}
-            <div className="p-4 rounded-xl mb-4" style={{ backgroundColor: colors.card }}>
-              <h4 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
-                📊 Évolution des Prix
-              </h4>
-              
-              {/* Graphique avec barres simples */}
-              <div className="space-y-3">
-                {currentFeed.historique.map((point, index) => {
-                  const maxPrix = Math.max(...currentFeed.historique.map(p => p.prix));
-                  const width = (point.prix / maxPrix) * 100;
-                  const isLast = index === currentFeed.historique.length - 1;
-                  
-                  return (
-                    <div key={index} className="flex items-center space-x-3">
-                      <div className="w-24 text-xs" style={{ color: colors.textSecondary }}>
-                        {point.semaine}
-                      </div>
-                      <div className="flex-1">
-                        <div 
-                          className="h-6 rounded"
-                          style={{ 
-                            width: `${width}%`,
-                            backgroundColor: isLast ? colors.primary : colors.surface,
-                            minWidth: '20px'
-                          }}
-                        ></div>
-                      </div>
-                      <div className="w-16 text-sm font-bold text-right" style={{ color: colors.text }}>
-                        {point.prix.toLocaleString()}
-                      </div>
+      {/* Graphique ultra-simple */}
+      <div className="px-4 py-4">
+        <div className="max-w-md mx-auto">
+          <h3 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
+            📈 Histoire des Prix (6 dernières semaines)
+          </h3>
+          
+          <div 
+            className="p-4 rounded-xl"
+            style={{ backgroundColor: colors.card }}
+          >
+            {/* Graphique en barres horizontales ultra-simple */}
+            <div className="space-y-3">
+              {currentFeed.history.map((item, index) => {
+                const barWidth = (item.prix / maxPrice) * 100;
+                const isLatest = index === currentFeed.history.length - 1;
+                
+                return (
+                  <div key={index} className="flex items-center space-x-3">
+                    {/* Semaine */}
+                    <div className="w-12 text-xs font-bold" style={{ color: colors.text }}>
+                      {item.semaine}
                     </div>
-                  );
-                })}
-              </div>
+                    
+                    {/* Barre */}
+                    <div className="flex-1 relative">
+                      <div 
+                        className="h-8 rounded-lg flex items-center justify-end pr-2 transition-all"
+                        style={{ 
+                          width: `${barWidth}%`,
+                          backgroundColor: isLatest ? currentFeed.color : colors.primary,
+                          opacity: isLatest ? 1 : 0.7
+                        }}
+                      >
+                        <span className="text-white text-xs font-bold">
+                          {item.prix}F
+                        </span>
+                      </div>
+                      {isLatest && (
+                        <div className="absolute -top-1 -right-1">
+                          <span className="text-lg">👆</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Conseil d'achat */}
-            <div 
-              className="p-4 rounded-xl text-center"
-              style={{ 
-                backgroundColor: currentFeed.tendance === 'baisse' ? '#d4edda' : 
-                                 currentFeed.tendance === 'hausse' ? '#f8d7da' : '#d1ecf1'
-              }}
-            >
-              <p className="text-lg font-bold mb-2">💡 Conseil d'Achat</p>
-              <p className="text-sm font-medium">{currentFeed.conseil}</p>
+            {/* Légende simple */}
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: colors.border }}>
+              <div className="flex items-center justify-center space-x-4 text-xs">
+                <div className="flex items-center space-x-1">
+                  <div 
+                    className="w-3 h-3 rounded"
+                    style={{ backgroundColor: colors.primary }}
+                  ></div>
+                  <span style={{ color: colors.textSecondary }}>Semaines passées</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div 
+                    className="w-3 h-3 rounded"
+                    style={{ backgroundColor: currentFeed.color }}
+                  ></div>
+                  <span style={{ color: colors.textSecondary }}>Cette semaine 👆</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Message d'aide */}
+      {/* Conseil simple */}
+      <div className="px-4 py-4">
+        <div className="max-w-md mx-auto">
+          <div 
+            className="p-4 rounded-xl text-center"
+            style={{ backgroundColor: colors.surface }}
+          >
+            <div className="text-4xl mb-3">💡</div>
+            <h4 className="font-bold mb-2" style={{ color: colors.text }}>
+              Conseil du Jour
+            </h4>
+            <p className="text-sm" style={{ color: colors.textSecondary }}>
+              {selectedFeed === 'maïs' && 'Le maïs monte. Achetez maintenant si vous pouvez stocker.'}
+              {selectedFeed === 'soja' && 'Le soja est stable. Bon moment pour acheter.'}
+              {selectedFeed === 'son' && 'Le son de blé ne bouge pas. Prix correct.'}
+              {selectedFeed === 'concentré' && 'Le concentré monte lentement. Planifiez vos achats.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Message encouragement */}
       <div className="px-4 py-6">
         <div className="max-w-md mx-auto">
           <div
             className="p-4 rounded-xl text-center"
-            style={{ backgroundColor: colors.surface }}
+            style={{ backgroundColor: '#e8f5e8' }}
           >
-            <p className="text-lg font-bold" style={{ color: colors.text }}>
-              📊 Suivre les Prix
+            <div className="text-4xl mb-2">📊</div>
+            <p className="text-sm font-bold text-green-800 mb-1">
+              Suivez les prix chaque semaine !
             </p>
-            <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-              Achetez quand les prix baissent pour économiser de l'argent
+            <p className="text-xs text-green-700">
+              Acheter au bon moment vous fait économiser beaucoup d'argent
             </p>
           </div>
         </div>

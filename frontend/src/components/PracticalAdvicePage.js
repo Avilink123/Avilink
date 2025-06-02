@@ -3,345 +3,290 @@ import { useTheme } from '../contexts/ThemeContext';
 
 const PracticalAdvicePage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
-  const [selectedCategory, setSelectedCategory] = useState('conseils');
+  const [activeSection, setActiveSection] = useState('conseils');
 
-  const conseilsPratiques = [
+  // Conseils pratiques ultra-simples
+  const practicalAdvice = [
     {
-      id: '1',
-      titre: 'Nourrir correctement ses volailles',
-      icon: '🌾',
-      conseils: [
-        'Donnez à manger 2 fois par jour : matin et soir',
-        'Mélangez différents aliments : maïs, soja, vitamines',
-        'Laissez toujours de l\'eau propre',
-        'Un poulet mange environ 100g par jour',
-        'Augmentez la nourriture si elles pondent beaucoup'
-      ]
+      id: 1,
+      title: 'Nourrir ses volailles',
+      icon: '🍽️',
+      color: '#4CAF50',
+      advice: 'Donnez à manger 2 fois par jour : matin et soir. Toujours de l\'eau propre. 120g par poule par jour.'
     },
     {
-      id: '2',
-      titre: 'Garder ses volailles en bonne santé',
-      icon: '❤️',
-      conseils: [
-        'Nettoyez le poulailler toutes les semaines',
-        'Regardez vos volailles tous les jours',
-        'Séparez les volailles malades rapidement',
-        'Vaccinez selon les conseils du vétérinaire',
-        'Donnez des vitamines une fois par semaine'
-      ]
+      id: 2,
+      title: 'Garder ses volailles en santé',
+      icon: '💊',
+      color: '#2196F3',
+      advice: 'Nettoyez le poulailler chaque semaine. Vaccinez au bon moment. Séparez les poules malades.'
     },
     {
-      id: '3',
-      titre: 'Construire un bon poulailler',
+      id: 3,
+      title: 'Construire un bon poulailler',
       icon: '🏠',
-      conseils: [
-        'Protégez du soleil et de la pluie',
-        'Laissez circuler l\'air mais pas le vent fort',
-        'Comptez 4 volailles par mètre carré maximum',
-        'Mettez des perchoirs à 50cm du sol',
-        'Fermez la nuit pour éviter les voleurs'
-      ]
+      color: '#FF9800',
+      advice: 'Protégez du vent et de la pluie. 4 poules maximum par m². Pondoirs propres et sombres.'
     },
     {
-      id: '4',
-      titre: 'Améliorer la ponte des œufs',
+      id: 4,
+      title: 'Améliorer la ponte',
       icon: '🥚',
-      conseils: [
-        'Donnez du concentré ponte une fois par semaine',
-        'Laissez 14 heures de lumière par jour',
-        'Mettez des pondoirs confortables',
-        'Ramassez les œufs 2 fois par jour',
-        'Poules pondent mieux entre 6 mois et 2 ans'
-      ]
+      color: '#9C27B0',
+      advice: 'Lumière 14h par jour. Alimentation riche en calcium. Pondoirs confortables et calmes.'
     },
     {
-      id: '5',
-      titre: 'Élever des poussins',
-      icon: '🐣',
-      conseils: [
-        'Gardez les poussins au chaud (30°C)',
-        'Nourriture spéciale poussin les 8 premières semaines',
-        'Eau dans des petits abreuvoirs',
-        'Vaccinez à 1 semaine (Newcastle)',
-        'Séparez des grandes volailles'
-      ]
+      id: 5,
+      title: 'Élever les poussins',
+      icon: '🐤',
+      color: '#FFC107',
+      advice: 'Température 32°C la première semaine. Puis diminuer de 3°C chaque semaine. Nourriture spéciale poussin.'
     },
     {
-      id: '6',
-      titre: 'Vendre au bon prix',
+      id: 6,
+      title: 'Bien vendre ses volailles',
       icon: '💰',
-      conseils: [
-        'Pesez vos volailles avant de vendre',
-        'Vendez les poulets à 2-3 kg pour bon prix',
-        'Vendez les œufs frais (maximum 7 jours)',
-        'Négociez les prix selon la saison',
-        'Fidélisez vos bons clients'
-      ]
+      color: '#795548',
+      advice: 'Vendez les coqs à 2-3 mois. Les poules pondeuses à 5 mois. Pesez toujours avant de vendre.'
     }
   ];
 
-  const maladiesCommunes = [
+  // Maladies courantes - Très simplifié
+  const commonDiseases = [
     {
-      id: '1',
-      maladie: 'Newcastle (maladie mortelle)',
-      icon: '🦠',
-      symptomes: [
-        'Volailles qui toussent et éternuent',
-        'Difficultés à respirer',
-        'Tête tordue, ne tiennent pas debout',
-        'Diarrhée verte',
-        'Mort rapide (1-2 jours)'
-      ],
-      queFaire: [
-        '🚨 URGENCE ! Appelez vétérinaire immédiatement',
-        'Séparez toutes les volailles malades',
-        'Ne touchez pas sans gants',
-        'Brûlez les volailles mortes',
-        'Vaccinez les volailles saines'
-      ],
-      prevention: 'Vaccination obligatoire tous les 6 mois'
+      id: 1,
+      name: 'Diarrhée',
+      icon: '💧',
+      color: '#F44336',
+      symptoms: 'Selles liquides, volaille faible',
+      action: 'Isoler la volaille. Donner de l\'eau avec du sel et du sucre',
+      prevention: 'Eau propre toujours. Poulailler sec.'
     },
     {
-      id: '2',
-      maladie: 'Coccidiose (parasites intestinaux)',
+      id: 2,
+      name: 'Toux / Rhume',
+      icon: '🤧',
+      color: '#3F51B5',
+      symptoms: 'Volaille tousse, nez qui coule',
+      action: 'Mettre au chaud. Isoler des autres',
+      prevention: 'Éviter les courants d\'air froid'
+    },
+    {
+      id: 3,
+      name: 'Parasites externes',
       icon: '🐛',
-      symptomes: [
-        'Diarrhée avec du sang',
-        'Volailles fatiguées et tristes',
-        'Mangent moins',
-        'Maigrissent rapidement',
-        'Poussins plus touchés'
-      ],
-      queFaire: [
-        'Donnez des médicaments anti-coccidies',
-        'Nettoyez le poulailler à fond',
-        'Changez l\'eau tous les jours',
-        'Séparez les malades',
-        'Consultez vétérinaire si ça continue'
-      ],
-      prevention: 'Garder poulailler propre et sec'
+      color: '#607D8B',
+      symptoms: 'Volaille se gratte beaucoup, plumes abîmées',
+      action: 'Poudrer avec de la terre de diatomée',
+      prevention: 'Nettoyer le poulailler souvent'
     },
     {
-      id: '3',
-      maladie: 'Gumboro (maladie des poussins)',
-      icon: '🐣',
-      symptomes: [
-        'Poussins de 3-6 semaines touchés',
-        'Diarrhée blanche',
-        'Tremblements',
-        'Se cachent et mangent peu',
-        'Mort en 3-4 jours'
-      ],
-      queFaire: [
-        'Appelez vétérinaire rapidement',
-        'Donnez vitamines dans l\'eau',
-        'Gardez au chaud',
-        'Nourriture facile à digérer',
-        'Désinfectez tout'
-      ],
-      prevention: 'Vaccination à 2-3 semaines'
+      id: 4,
+      name: 'Arrêt de ponte',
+      icon: '🚫',
+      color: '#FF5722',
+      symptoms: 'Poule ne pond plus',
+      action: 'Vérifier alimentation et stress',
+      prevention: 'Bon pondoir, alimentation équilibrée'
     },
     {
-      id: '4',
-      maladie: 'Bronchite infectieuse',
-      icon: '😤',
-      symptomes: [
-        'Toux et difficultés respiratoires',
-        'Écoulement nasal',
-        'Baisse de ponte chez poules',
-        'Œufs déformés',
-        'Volailles fatiguées'
-      ],
-      queFaire: [
-        'Isolez les volailles malades',
-        'Donnez vitamines C et E',
-        'Gardez au chaud et au sec',
-        'Antibiotiques si prescrit par vétérinaire',
-        'Aérez bien le poulailler'
-      ],
-      prevention: 'Éviter courants d\'air froids'
-    },
-    {
-      id: '5',
-      maladie: 'Poux et puces',
-      icon: '🕷️',
-      symptomes: [
-        'Volailles se grattent beaucoup',
-        'Plumes abîmées',
-        'Irritations sur la peau',
-        'Baisse de ponte',
-        'Petites bêtes dans plumes'
-      ],
-      queFaire: [
-        'Poudrez avec poudre anti-poux',
-        'Nettoyez tout le poulailler',
-        'Changez la litière',
-        'Brûlez ancienne litière',
-        'Répétez traitement après 15 jours'
-      ],
-      prevention: 'Nettoyage régulier et litière propre'
+      id: 5,
+      name: 'Blessures aux pattes',
+      icon: '🦶',
+      color: '#8BC34A',
+      symptoms: 'Volaille boite, pattes gonflées',
+      action: 'Nettoyer la blessure, isoler',
+      prevention: 'Sol propre, pas d\'objets pointus'
     }
   ];
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
-      {/* Header simple */}
+      {/* Header ultra-simple */}
       <div className="px-4 py-6" style={{ backgroundColor: colors.surface }}>
-        <div className="max-w-md mx-auto">
+        <div className="max-w-md mx-auto text-center">
           <button 
             onClick={() => onNavigate('home')}
-            className="text-2xl mb-4"
+            className="text-3xl mb-4"
           >
             ← 
           </button>
-          <h1 className="text-2xl font-bold text-center" style={{ color: colors.text }}>
-            📚 Conseils Pratiques
+          <div className="text-6xl mb-4">📚</div>
+          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+            Conseils Pratiques
           </h1>
-          <p className="text-center mt-2" style={{ color: colors.textSecondary }}>
-            Tout savoir pour bien élever
+          <p className="mt-2 text-lg" style={{ color: colors.textSecondary }}>
+            Tout pour réussir en aviculture
           </p>
         </div>
       </div>
 
-      {/* Sélecteur de catégorie */}
+      {/* Navigation simple entre conseils et maladies */}
       <div className="px-4 py-4">
         <div className="max-w-md mx-auto">
-          <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="flex space-x-3">
             <button
-              onClick={() => setSelectedCategory('conseils')}
-              className="p-3 rounded-xl font-bold text-lg"
-              style={{
-                backgroundColor: selectedCategory === 'conseils' ? colors.primary : colors.card,
-                color: selectedCategory === 'conseils' ? 'white' : colors.text
+              onClick={() => setActiveSection('conseils')}
+              className={`flex-1 p-4 rounded-xl font-bold text-center transition-all ${
+                activeSection === 'conseils' ? 'scale-105 shadow-lg' : ''
+              }`}
+              style={{ 
+                backgroundColor: activeSection === 'conseils' ? colors.primary : colors.card,
+                color: activeSection === 'conseils' ? 'white' : colors.text
               }}
             >
-              💡 Conseils Pratiques
+              <div className="text-3xl mb-2">✅</div>
+              <p>Conseils Pratiques</p>
             </button>
+            
             <button
-              onClick={() => setSelectedCategory('maladies')}
-              className="p-3 rounded-xl font-bold text-lg"
-              style={{
-                backgroundColor: selectedCategory === 'maladies' ? colors.primary : colors.card,
-                color: selectedCategory === 'maladies' ? 'white' : colors.text
+              onClick={() => setActiveSection('maladies')}
+              className={`flex-1 p-4 rounded-xl font-bold text-center transition-all ${
+                activeSection === 'maladies' ? 'scale-105 shadow-lg' : ''
+              }`}
+              style={{ 
+                backgroundColor: activeSection === 'maladies' ? colors.error : colors.card,
+                color: activeSection === 'maladies' ? 'white' : colors.text
               }}
             >
-              🦠 Maladies Courantes
+              <div className="text-3xl mb-2">🩺</div>
+              <p>Maladies Courantes</p>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Contenu des conseils */}
-      {selectedCategory === 'conseils' && (
-        <div className="px-4">
-          <div className="max-w-md mx-auto space-y-4">
-            {conseilsPratiques.map(conseil => (
-              <div
-                key={conseil.id}
-                className="p-4 rounded-xl shadow-sm"
-                style={{ backgroundColor: colors.card }}
-              >
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="text-3xl">{conseil.icon}</div>
-                  <h3 className="text-lg font-bold" style={{ color: colors.text }}>
-                    {conseil.titre}
-                  </h3>
-                </div>
-                
-                <div className="space-y-2">
-                  {conseil.conseils.map((item, index) => (
-                    <div key={index} className="flex items-start space-x-2">
-                      <span className="text-green-500 mt-1">✅</span>
-                      <p className="text-sm flex-1" style={{ color: colors.text }}>
-                        {item}
+      {/* Section Conseils Pratiques */}
+      {activeSection === 'conseils' && (
+        <div className="px-4 py-4">
+          <div className="max-w-md mx-auto">
+            <h2 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
+              ✅ 6 Conseils Essentiels
+            </h2>
+            
+            <div className="space-y-4">
+              {practicalAdvice.map(advice => (
+                <div
+                  key={advice.id}
+                  className="p-4 rounded-xl shadow-sm"
+                  style={{ backgroundColor: colors.card }}
+                >
+                  <div className="flex items-start space-x-4">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
+                      style={{ backgroundColor: advice.color, color: 'white' }}
+                    >
+                      {advice.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg mb-2" style={{ color: colors.text }}>
+                        {advice.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed" style={{ color: colors.textSecondary }}>
+                        {advice.advice}
                       </p>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Contenu des maladies */}
-      {selectedCategory === 'maladies' && (
-        <div className="px-4">
-          <div className="max-w-md mx-auto space-y-4">
-            {maladiesCommunes.map(maladie => (
-              <div
-                key={maladie.id}
-                className="p-4 rounded-xl shadow-sm border-l-4"
-                style={{ 
-                  backgroundColor: colors.card,
-                  borderLeftColor: colors.error
-                }}
-              >
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="text-3xl">{maladie.icon}</div>
-                  <h3 className="text-lg font-bold" style={{ color: colors.text }}>
-                    {maladie.maladie}
-                  </h3>
-                </div>
-                
-                {/* Symptômes */}
-                <div className="mb-4">
-                  <h4 className="font-bold mb-2 text-red-600">🚨 Symptômes :</h4>
-                  <div className="space-y-1">
-                    {maladie.symptomes.map((symptome, index) => (
-                      <div key={index} className="flex items-start space-x-2">
-                        <span className="text-red-500 mt-1">•</span>
-                        <p className="text-sm flex-1" style={{ color: colors.text }}>
-                          {symptome}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Que faire */}
-                <div className="mb-4">
-                  <h4 className="font-bold mb-2 text-orange-600">🔧 Que faire :</h4>
-                  <div className="space-y-1">
-                    {maladie.queFaire.map((action, index) => (
-                      <div key={index} className="flex items-start space-x-2">
-                        <span className="text-orange-500 mt-1">→</span>
-                        <p className="text-sm flex-1" style={{ color: colors.text }}>
-                          {action}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Prévention */}
-                <div 
-                  className="p-3 rounded-lg"
-                  style={{ backgroundColor: colors.surface }}
+      {/* Section Maladies Courantes */}
+      {activeSection === 'maladies' && (
+        <div className="px-4 py-4">
+          <div className="max-w-md mx-auto">
+            <h2 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
+              🩺 5 Maladies Fréquentes
+            </h2>
+            
+            <div className="space-y-4">
+              {commonDiseases.map(disease => (
+                <div
+                  key={disease.id}
+                  className="p-4 rounded-xl shadow-sm border-2"
+                  style={{ 
+                    backgroundColor: colors.card,
+                    borderColor: disease.color
+                  }}
                 >
-                  <h4 className="font-bold mb-1 text-green-600">🛡️ Prévention :</h4>
-                  <p className="text-sm" style={{ color: colors.text }}>
-                    {maladie.prevention}
-                  </p>
+                  <div className="flex items-start space-x-4">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
+                      style={{ backgroundColor: disease.color, color: 'white' }}
+                    >
+                      {disease.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg mb-2" style={{ color: colors.text }}>
+                        {disease.name}
+                      </h3>
+                      
+                      {/* Symptômes */}
+                      <div className="mb-3">
+                        <p className="font-bold text-sm text-red-600 mb-1">🔍 Symptômes :</p>
+                        <p className="text-sm" style={{ color: colors.textSecondary }}>
+                          {disease.symptoms}
+                        </p>
+                      </div>
+                      
+                      {/* Que faire */}
+                      <div className="mb-3">
+                        <p className="font-bold text-sm text-blue-600 mb-1">💊 Que faire :</p>
+                        <p className="text-sm" style={{ color: colors.textSecondary }}>
+                          {disease.action}
+                        </p>
+                      </div>
+                      
+                      {/* Prévention */}
+                      <div>
+                        <p className="font-bold text-sm text-green-600 mb-1">🛡️ Prévention :</p>
+                        <p className="text-sm" style={{ color: colors.textSecondary }}>
+                          {disease.prevention}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Message d'aide */}
+      {/* Message important */}
       <div className="px-4 py-6">
         <div className="max-w-md mx-auto">
           <div
             className="p-4 rounded-xl text-center"
-            style={{ backgroundColor: colors.surface }}
+            style={{ backgroundColor: '#fff3e0' }}
           >
-            <p className="text-lg font-bold" style={{ color: colors.text }}>
-              📚 Apprenez Toujours
+            <div className="text-4xl mb-2">⚠️</div>
+            <p className="text-sm font-bold text-orange-800 mb-1">
+              Important !
             </p>
-            <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-              Plus vous savez, mieux vous élevez vos volailles et plus vous gagnez
+            <p className="text-xs text-orange-700">
+              Si votre volaille est très malade, contactez rapidement un vétérinaire. Ces conseils sont pour les cas légers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Encouragement */}
+      <div className="px-4 py-4">
+        <div className="max-w-md mx-auto">
+          <div
+            className="p-4 rounded-xl text-center"
+            style={{ backgroundColor: '#e8f5e8' }}
+          >
+            <div className="text-4xl mb-2">🎯</div>
+            <p className="text-sm font-bold text-green-800 mb-1">
+              Avec ces conseils, vous allez réussir !
+            </p>
+            <p className="text-xs text-green-700">
+              La pratique rend parfait. Commencez doucement et apprenez chaque jour.
             </p>
           </div>
         </div>

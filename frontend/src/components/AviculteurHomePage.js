@@ -4,12 +4,12 @@ import { useTheme } from '../contexts/ThemeContext';
 const AviculteurHomePage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
 
-  // Section 1: Actions Rapides (Priorité #1) - CONTENU EXACT DEMANDÉ
-  const actionsRapides = [
+  // Section 1: Actions principales pour éleveurs - INTERFACE ULTRA-SIMPLE
+  const actions = [
     {
-      id: 'vendre-volailles-oeufs',
+      id: 'vendre',
       title: 'Vendre volailles/œufs',
-      icon: '🐔🥚',
+      icon: '🐔💰',
       action: () => onNavigate('vendre-volailles'),
       color: colors.primary
     },
@@ -18,52 +18,43 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       title: 'Acheter aliments volailles',
       icon: '🌾🛒',
       action: () => onNavigate('buy-feed'),
-      color: colors.success
-    },
-    {
-      id: 'acheter-oeufs-poussins',
-      title: 'Acheter des œufs fécondés/poussins',
-      icon: '🥚🐣',
-      action: () => onNavigate('buy-chicks'),
       color: colors.warning
     },
     {
-      id: 'messages',
-      title: 'Messages',
-      icon: '💬📩',
-      action: () => onNavigate('messages'),
+      id: 'acheter-poussins',
+      title: 'Acheter poussins/œufs fécondés',
+      icon: '🐣🛒',
+      action: () => onNavigate('buy-chicks'),
       color: colors.info
+    },
+    {
+      id: 'messages',
+      title: 'Mes messages',
+      icon: '💬📱',
+      action: () => onNavigate('messages'),
+      color: colors.success
     }
   ];
 
-  // Section 2: Mon Élevage (Suivi de l'activité) - CONTENU EXACT DEMANDÉ
+  // Section 2: Mon élevage - DONNÉES SIMULÉES SIMPLES
   const monElevage = [
     {
-      id: 'stock-volailles',
-      title: 'Mon stock de volailles',
-      value: '45',
-      subtitle: 'Têtes disponibles',
-      icon: '🐔📦',
+      id: 'stock',
+      title: 'Mon stock',
+      value: '47',
+      subtitle: 'Volailles au total',
+      icon: '📦🐔',
       action: () => onNavigate('my-poultry-stock'),
       color: colors.primary
     },
     {
-      id: 'commandes-recues',
-      title: 'Commandes reçues',
-      value: '8',
-      subtitle: 'Nouvelles commandes',
-      icon: '📋✅',
-      action: () => onNavigate('orders'),
-      color: colors.success
-    },
-    {
-      id: 'outils-financiers',
-      title: 'Outils financiers',
-      value: '125k',
-      subtitle: 'FCFA ce mois',
+      id: 'valeur',
+      title: 'Valeur stock',
+      value: '185,000',
+      subtitle: 'CFA estimé',
       icon: '💰📊',
-      action: () => onNavigate('financial'),
-      color: colors.warning
+      action: () => onNavigate('my-poultry-stock'),
+      color: colors.success
     },
     {
       id: 'veterinaire',
@@ -103,7 +94,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       id: 'contact-support',
       title: 'Contact support',
       icon: '📞🆘',
-      action: () => alert('Support AviMarché Mali - Éleveurs\n📞 +223 XX XX XX XX\n📧 eleveurs@avimarche.ml\n\nServices spécialisés :\n🐔 Conseils élevage volailles\n💰 Aide vente et pricing\n🩺 Support vétérinaire\n🌾 Conseils alimentation\n\nHeures : Lundi-Samedi 8h-18h'),
+      action: () => onNavigate('contact-support'),
       color: colors.success
     }
   ];
@@ -119,160 +110,123 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
         minHeight: '100px'
       }}
     >
-      <div className="flex flex-col items-center space-y-2">
-        <div 
-          className="w-14 h-14 rounded-full flex items-center justify-center text-white text-lg"
-          style={{ backgroundColor: action.color }}
-        >
-          <span className="text-xl">{action.icon}</span>
-        </div>
-        <p className="text-sm font-bold text-center leading-tight" style={{ color: colors.text }}>
-          {action.title}
-        </p>
-      </div>
+      <div className="text-4xl mb-2">{action.icon}</div>
+      <h3 className="font-bold text-sm text-center leading-tight" style={{ color: colors.text }}>
+        {action.title}
+      </h3>
     </button>
   );
 
-  const renderElevageCard = (item) => (
+  const renderStatsCard = (stat) => (
     <button
-      key={item.id}
-      onClick={item.action}
+      key={stat.id}
+      onClick={stat.action}
       className="p-4 rounded-xl shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
-      style={{ 
-        backgroundColor: colors.card, 
-        border: `2px solid ${item.color}`,
-        minHeight: '100px'
-      }}
+      style={{ backgroundColor: colors.card }}
     >
-      <div className="flex flex-col items-center text-center space-y-2">
-        <div 
-          className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg"
-          style={{ backgroundColor: item.color }}
-        >
-          <span>{item.icon}</span>
+      <div className="text-center">
+        <div className="text-3xl mb-2">{stat.icon}</div>
+        <div className="text-2xl font-bold" style={{ color: stat.color }}>
+          {stat.value}
         </div>
-        <div>
-          <p className="text-xl font-bold" style={{ color: colors.text }}>
-            {item.value}
-          </p>
-          <p className="text-xs font-medium" style={{ color: colors.textSecondary }}>
-            {item.title}
-          </p>
-          <p className="text-xs" style={{ color: colors.textMuted }}>
-            {item.subtitle}
-          </p>
-        </div>
-      </div>
-    </button>
-  );
-
-  const renderTendanceCard = (item) => (
-    <button
-      key={item.id}
-      onClick={item.action}
-      className="p-4 rounded-xl shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
-      style={{ 
-        backgroundColor: colors.card, 
-        border: `2px solid ${item.color}`,
-        minHeight: '100px'
-      }}
-    >
-      <div className="flex flex-col items-center space-y-2">
-        <div 
-          className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg"
-          style={{ backgroundColor: item.color }}
-        >
-          <span className="text-lg">{item.icon}</span>
-        </div>
-        <p className="text-sm font-bold text-center leading-tight" style={{ color: colors.text }}>
-          {item.title}
+        <h4 className="font-bold text-sm mt-1" style={{ color: colors.text }}>
+          {stat.title}
+        </h4>
+        <p className="text-xs" style={{ color: colors.textSecondary }}>
+          {stat.subtitle}
         </p>
       </div>
     </button>
   );
 
   return (
-    <div 
-      className="min-h-screen pb-24" 
-      style={{ backgroundColor: colors.background }}
-    >
-      {/* Header de bienvenue */}
-      <div className="px-4 py-6">
+    <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
+      {/* Header accueil éleveur */}
+      <div className="px-4 py-6" style={{ backgroundColor: colors.surface }}>
+        <div className="max-w-md mx-auto text-center">
+          <div className="text-6xl mb-4">🐔</div>
+          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+            Bonjour {currentUser?.prenom || 'Éleveur'} !
+          </h1>
+          <p className="mt-2" style={{ color: colors.textSecondary }}>
+            Votre espace aviculture Mali
+          </p>
+        </div>
+      </div>
+
+      {/* Section 1: Actions principales */}
+      <div className="px-4 py-4">
         <div className="max-w-md mx-auto">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-2" style={{ color: colors.text }}>
-              🐔 Bienvenue Éleveur !
-            </h1>
-            <p className="text-sm" style={{ color: colors.textSecondary }}>
-              Bonjour {currentUser?.nom || 'Éleveur'} - Gérez votre élevage efficacement
-            </p>
+          <h2 className="text-lg font-bold mb-4" style={{ color: colors.text }}>
+            🎯 Actions Rapides
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            {actions.map(renderActionButton)}
           </div>
         </div>
       </div>
 
-      {/* SECTION 1: ACTION RAPIDE */}
-      <section className="px-4 py-4">
+      {/* Section 2: Mon élevage */}
+      <div className="px-4 py-4">
         <div className="max-w-md mx-auto">
-          <h2 className="text-lg font-bold mb-4 px-2" style={{ color: colors.text }}>
-            Action rapide
+          <h2 className="text-lg font-bold mb-4" style={{ color: colors.text }}>
+            🏠 Mon Élevage
           </h2>
-          <div 
-            className="p-4 rounded-xl shadow-sm"
-            style={{ backgroundColor: colors.surface, border: `2px solid ${colors.border}` }}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              {actionsRapides.map(renderActionButton)}
-            </div>
+          <div className="grid grid-cols-3 gap-3">
+            {monElevage.map(renderStatsCard)}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* SECTION 2: MON ÉLEVAGE */}
-      <section className="px-4 py-4">
+      {/* Section 3: Tendances et outils */}
+      <div className="px-4 py-4">
         <div className="max-w-md mx-auto">
-          <h2 className="text-lg font-bold mb-4 px-2" style={{ color: colors.text }}>
-            Mon elevage
+          <h2 className="text-lg font-bold mb-4" style={{ color: colors.text }}>
+            📈 Outils & Conseils
           </h2>
-          <div 
-            className="p-4 rounded-xl shadow-sm"
-            style={{ backgroundColor: colors.surface, border: `2px solid ${colors.border}` }}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              {monElevage.map(renderElevageCard)}
-            </div>
+          <div className="space-y-3">
+            {tendance.map(action => (
+              <button
+                key={action.id}
+                onClick={action.action}
+                className="w-full p-4 rounded-xl shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 text-left"
+                style={{ backgroundColor: colors.card }}
+              >
+                <div className="flex items-center space-x-4">
+                  <div 
+                    className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+                    style={{ backgroundColor: action.color, color: 'white' }}
+                  >
+                    {action.icon.split('')[0]}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-sm" style={{ color: colors.text }}>
+                      {action.title}
+                    </h3>
+                  </div>
+                  <div className="text-2xl" style={{ color: colors.textMuted }}>
+                    →
+                  </div>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
-      </section>
-
-      {/* SECTION 3: TENDANCE */}
-      <section className="px-4 py-4">
-        <div className="max-w-md mx-auto">
-          <h2 className="text-lg font-bold mb-4 px-2" style={{ color: colors.text }}>
-            Tendance
-          </h2>
-          <div 
-            className="p-4 rounded-xl shadow-sm"
-            style={{ backgroundColor: colors.surface, border: `2px solid ${colors.border}` }}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              {tendance.map(renderTendanceCard)}
-            </div>
-          </div>
-        </div>
-      </section>
+      </div>
 
       {/* Message d'encouragement */}
       <div className="px-4 py-6">
         <div className="max-w-md mx-auto">
-          <div 
-            className="p-4 rounded-lg text-center"
-            style={{ backgroundColor: colors.surface }}
+          <div
+            className="p-4 rounded-xl text-center"
+            style={{ backgroundColor: '#e8f5e8' }}
           >
-            <p className="text-sm font-medium" style={{ color: colors.text }}>
-              🌟 Votre élevage Mali prospère !
+            <div className="text-4xl mb-2">🌟</div>
+            <p className="text-sm font-bold text-green-800 mb-1">
+              Bonne journée d'élevage !
             </p>
-            <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>
-              Continuez votre excellent travail d'éleveur
+            <p className="text-xs text-green-700">
+              Utilisez AviMarché pour développer votre activité
             </p>
           </div>
         </div>
