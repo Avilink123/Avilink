@@ -179,20 +179,15 @@ const ReceivedOrdersPage = ({ currentUser, onNavigate }) => {
   };
 
   const handleContacterEleveur = (commande) => {
-    const action = commande.statut === 'probleme' ? 'Signaler le problème' : 
-                   commande.statut === 'en_transit' ? 'Demander suivi' : 
-                   'Nouvelle commande';
-
+    // Rediriger directement vers la messagerie avec l'éleveur
     alert(
-      `📞 Contacter ${commande.eleveur}\n\n` +
+      `💬 Ouvrir conversation avec ${commande.eleveur}\n\n` +
       `🏡 Ferme : ${commande.ferme}\n` +
-      `📍 Localisation : ${commande.localisation}\n` +
       `📱 Téléphone : ${commande.telephone}\n` +
-      `📅 Dernière commande : ${commande.date}\n` +
-      `💰 Montant : ${commande.montantTotal.toLocaleString()} FCFA\n\n` +
-      `🎯 Action : ${action}\n\n` +
-      `💬 Message suggéré :\n"Bonjour ${commande.eleveur}, concernant la commande ${commande.id}..."`
+      `📅 Commande : ${commande.id}\n\n` +
+      `Vous allez être redirigé vers la messagerie pour discuter avec cet éleveur.`
     );
+    onNavigate('messages');
   };
 
   const handleEvaluer = (commande) => {
