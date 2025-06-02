@@ -1552,15 +1552,7 @@ function App() {
         }
         return <FarmerContactsPage currentUser={currentUser} onNavigate={handleNavigate} />;
       
-      case 'performance-dashboard':
-        // Dashboard performance - Fournisseurs uniquement
-        if (!currentUser || currentUser.role !== 'fournisseur') {
-          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
-          setCurrentPage('home');
-          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
-        }
-        return <PerformanceDashboardPage currentUser={currentUser} onNavigate={handleNavigate} />;
-      
+
       case 'contacts':
         // Contacts pour acheteurs
         if (!currentUser || currentUser.role !== 'acheteur') {
