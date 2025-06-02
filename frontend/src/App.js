@@ -54,6 +54,18 @@ import MyFeedProductsPage from "./components/MyFeedProductsPage";
 import FeedOrdersPage from "./components/FeedOrdersPage";
 import FarmerContactsPage from "./components/FarmerContactsPage";
 import PerformanceDashboardPage from "./components/PerformanceDashboardPage";
+import SupplierFeedPricesPage from "./components/SupplierFeedPricesPage";
+import SupplierSalesPage from "./components/SupplierSalesPage";
+import ProductDemandPage from "./components/ProductDemandPage";
+import SupplierAdvicePage from "./components/SupplierAdvicePage";
+import SupplierContactSupportPage from "./components/SupplierContactSupportPage";
+import MarketDemandPage from "./components/MarketDemandPage";
+
+// Import des pages FOURNISSEURS
+import MyFeedProductsPage from "./components/MyFeedProductsPage";
+import FeedOrdersPage from "./components/FeedOrdersPage";
+import FarmerContactsPage from "./components/FarmerContactsPage";
+import PerformanceDashboardPage from "./components/PerformanceDashboardPage";
 
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
