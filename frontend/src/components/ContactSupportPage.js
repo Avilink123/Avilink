@@ -10,15 +10,11 @@ const ContactSupportPage = ({ currentUser, onNavigate }) => {
       id: 'message',
       title: 'Envoyer un message',
       icon: '💬',
-      description: 'Écrivez votre problème',
+      description: 'Écrivez votre problème à notre équipe',
       color: colors.primary,
       action: () => {
-        alert(
-          `💬 Message à l'équipe AviMarché\n\n` +
-          `Vous allez être dirigé vers la messagerie pour contacter notre équipe.\n\n` +
-          `Notre équipe vous répondra rapidement pour vous aider !`
-        );
-        onNavigate('messages');
+        // Rediriger vers messagerie avec conversation support
+        onNavigate('messages', { openSupport: true });
       }
     },
     {
@@ -30,7 +26,7 @@ const ContactSupportPage = ({ currentUser, onNavigate }) => {
       action: () => {
         alert(
           `📞 Appeler AviMarché Support\n\n` +
-          `📱 Numéro direct : +223 20 XX XX XX\n\n` +
+          `📱 Numéro direct : +223 20 22 44 55\n\n` +
           `⏰ Horaires :\n` +
           `Lundi - Vendredi : 8h - 18h\n` +
           `Samedi : 8h - 12h\n` +
@@ -48,7 +44,7 @@ const ContactSupportPage = ({ currentUser, onNavigate }) => {
       action: () => {
         alert(
           `💚 WhatsApp AviMarché\n\n` +
-          `📱 Numéro WhatsApp : +223 70 XX XX XX\n\n` +
+          `📱 Numéro WhatsApp : +223 70 11 22 33\n\n` +
           `💬 Message suggéré :\n` +
           `"Bonjour, j'ai besoin d'aide avec AviMarché. Mon nom est ${currentUser?.nom || '[Votre nom]'}"\n\n` +
           `⚡ Réponse rapide garantie !`
@@ -65,8 +61,8 @@ const ContactSupportPage = ({ currentUser, onNavigate }) => {
         alert(
           `🚨 URGENCE - Support AviMarché\n\n` +
           `Pour les problèmes urgents :\n\n` +
-          `📞 Ligne urgence : +223 90 XX XX XX\n` +
-          `💬 WhatsApp urgence : +223 91 XX XX XX\n\n` +
+          `📞 Ligne urgence : +223 90 11 22 33\n` +
+          `💬 WhatsApp urgence : +223 91 11 22 33\n\n` +
           `⏰ Disponible 24h/24\n\n` +
           `Exemples d'urgence :\n` +
           `• Impossible de vendre mes volailles\n` +

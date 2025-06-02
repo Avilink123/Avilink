@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
-const MessagesPage = ({ currentUser, onNavigate }) => {
+const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
   const { colors } = useTheme();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -9,8 +9,29 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
-    // Simulation conversations (simple pour illettrés)
+    // Conversation Support spéciale pour contacter l'admin
+    const supportConversation = {
+      id: 'support',
+      contact: 'Support AviMarché',
+      role: 'Équipe Support',
+      dernierMessage: 'Bonjour ! Comment pouvons-nous vous aider ?',
+      heure: 'Maintenant',
+      nonLu: false,
+      telephone: '+223 20 22 44 55',
+      isSupport: true,
+      messages: [
+        { 
+          id: '1', 
+          texte: 'Bonjour ! Je suis là pour vous aider avec toutes vos questions sur AviMarché. N\'hésitez pas à me poser vos questions !', 
+          expediteur: 'Support AviMarché', 
+          heure: 'Maintenant' 
+        }
+      ]
+    };
+
+    // Simulation conversations normales (simple pour illettrés)
     const mockConversations = [
+      supportConversation,
       {
         id: '1',
         contact: 'Mamadou Keita',
@@ -60,8 +81,13 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
     setTimeout(() => {
       setConversations(mockConversations);
       setLoading(false);
+      
+      // Si redirection depuis ContactSupportPage, ouvrir directement conversation support
+      if (params.openSupport) {
+        setSelectedConversation(supportConversation);
+      }
     }, 800);
-  }, []);
+  }, [params]);
 
   const handleEnvoyerMessage = () => {
     if (!newMessage.trim() || !selectedConversation) return;
@@ -73,12 +99,34 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
       heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
     };
 
+    // Réponse automatique du support
+    let supportResponse = null;
+    if (selectedConversation.isSupport) {
+      const responses = [
+        "Merci pour votre message ! Un membre de notre équipe va vous répondre très bientôt.",
+        "Nous avons bien reçu votre demande. Notre équipe étudie votre problème et vous répond rapidement.",
+        "Votre message est important pour nous. Nous vous contactons dans les plus brefs délais.",
+        "Merci de nous faire confiance ! Notre équipe technique traite votre demande en priorité."
+      ];
+      
+      supportResponse = {
+        id: (Date.now() + 1).toString(),
+        texte: responses[Math.floor(Math.random() * responses.length)],
+        expediteur: 'Support AviMarché',
+        heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      };
+    }
+
     const updatedConversations = conversations.map(conv => {
       if (conv.id === selectedConversation.id) {
+        const newMessages = supportResponse 
+          ? [...conv.messages, newMsg, supportResponse]
+          : [...conv.messages, newMsg];
+        
         return {
           ...conv,
-          messages: [...conv.messages, newMsg],
-          dernierMessage: newMessage,
+          messages: newMessages,
+          dernierMessage: supportResponse ? supportResponse.texte : newMessage,
           heure: 'Maintenant'
         };
       }
@@ -86,10 +134,15 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
     });
 
     setConversations(updatedConversations);
-    setSelectedConversation(prev => ({
-      ...prev,
-      messages: [...prev.messages, newMsg]
-    }));
+    
+    const updatedSelectedConv = {
+      ...selectedConversation,
+      messages: supportResponse 
+        ? [...selectedConversation.messages, newMsg, supportResponse]
+        : [...selectedConversation.messages, newMsg]
+    };
+    
+    setSelectedConversation(updatedSelectedConv);
     setNewMessage('');
   };
 
@@ -118,7 +171,7 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
     return (
       <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
         {/* Header conversation */}
-        <div className="px-4 py-4" style={{ backgroundColor: colors.surface }}>
+        <div className="px-4 py-4" style={{ backgroundColor: selectedConversation.isSupport ? '#e3f2fd' : colors.surface }}>
           <div className="max-w-md mx-auto flex items-center justify-between">
             <button 
               onClick={() => setSelectedConversation(null)}
@@ -127,12 +180,18 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
               ← 
             </button>
             <div className="flex-1 text-center">
-              <h2 className="text-lg font-bold" style={{ color: colors.text }}>
-                {selectedConversation.contact}
-              </h2>
-              <p className="text-sm" style={{ color: colors.textSecondary }}>
+              <div className="flex items-center justify-center space-x-2">
+                {selectedConversation.isSupport && <span className="text-2xl">🛡️</span>}
+                <h2 className="text-lg font-bold" style={{ color: colors.text }}>
+                  {selectedConversation.contact}
+                </h2>
+              </div>
+              <p className="text-sm" style={{ color: selectedConversation.isSupport ? '#1976d2' : colors.textSecondary }}>
                 {selectedConversation.role}
               </p>
+              {selectedConversation.isSupport && (
+                <p className="text-xs text-green-600 font-medium">🟢 En ligne - Réponse rapide</p>
+              )}
             </div>
             <button 
               onClick={() => handleAppeler(selectedConversation)}
@@ -156,9 +215,17 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
                   className={`inline-block p-3 rounded-xl max-w-xs ${
                     message.expediteur === 'Moi'
                       ? 'bg-blue-500 text-white'
+                      : message.expediteur === 'Support AviMarché'
+                      ? 'bg-green-100 text-green-800 border border-green-200'
                       : 'bg-gray-200 text-gray-800'
                   }`}
                 >
+                  {message.expediteur === 'Support AviMarché' && (
+                    <div className="flex items-center space-x-1 mb-1">
+                      <span className="text-xs">🛡️</span>
+                      <span className="text-xs font-bold">Support officiel</span>
+                    </div>
+                  )}
                   <p className="text-sm">{message.texte}</p>
                   <p className="text-xs mt-1 opacity-70">{message.heure}</p>
                 </div>
@@ -169,23 +236,32 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
 
         {/* Zone de saisie */}
         <div className="fixed bottom-0 left-0 right-0 p-4" style={{ backgroundColor: colors.surface }}>
-          <div className="max-w-md mx-auto flex space-x-2">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Tapez votre message..."
-              className="flex-1 p-3 rounded-xl border"
-              style={{ backgroundColor: colors.card }}
-              onKeyPress={(e) => e.key === 'Enter' && handleEnvoyerMessage()}
-            />
-            <button
-              onClick={handleEnvoyerMessage}
-              className="px-4 py-3 rounded-xl text-white font-bold"
-              style={{ backgroundColor: colors.primary }}
-            >
-              ➤
-            </button>
+          <div className="max-w-md mx-auto">
+            {selectedConversation.isSupport && (
+              <div className="text-center mb-2">
+                <p className="text-xs text-green-600 font-medium">
+                  ✨ Vous parlez avec l'équipe officielle AviMarché
+                </p>
+              </div>
+            )}
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder={selectedConversation.isSupport ? "Décrivez votre problème..." : "Tapez votre message..."}
+                className="flex-1 p-3 rounded-xl border"
+                style={{ backgroundColor: colors.card }}
+                onKeyPress={(e) => e.key === 'Enter' && handleEnvoyerMessage()}
+              />
+              <button
+                onClick={handleEnvoyerMessage}
+                className="px-4 py-3 rounded-xl text-white font-bold"
+                style={{ backgroundColor: selectedConversation.isSupport ? '#4caf50' : colors.primary }}
+              >
+                ➤
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -208,7 +284,7 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
             💬 Mes Messages
           </h1>
           <p className="text-center mt-2" style={{ color: colors.textSecondary }}>
-            Parlez avec vos clients et fournisseurs
+            Parlez avec vos clients, fournisseurs et notre équipe
           </p>
         </div>
       </div>
@@ -221,19 +297,31 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
               key={conversation.id}
               onClick={() => setSelectedConversation(conversation)}
               className="p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-              style={{ backgroundColor: colors.card }}
+              style={{ 
+                backgroundColor: conversation.isSupport ? '#e8f5e8' : colors.card,
+                border: conversation.isSupport ? '2px solid #4caf50' : 'none'
+              }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2">
+                    {conversation.isSupport && <span className="text-xl">🛡️</span>}
                     <h3 className="font-bold text-lg" style={{ color: colors.text }}>
                       {conversation.contact}
                     </h3>
                     {conversation.nonLu && (
                       <div className="w-3 h-3 rounded-full bg-red-500"></div>
                     )}
+                    {conversation.isSupport && (
+                      <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">
+                        OFFICIEL
+                      </span>
+                    )}
                   </div>
-                  <p className="text-sm" style={{ color: colors.primary }}>
+                  <p 
+                    className="text-sm" 
+                    style={{ color: conversation.isSupport ? '#2e7d32' : colors.primary }}
+                  >
                     {conversation.role}
                   </p>
                   <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
@@ -250,7 +338,7 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
                       handleAppeler(conversation);
                     }}
                     className="text-xl mt-2"
-                    style={{ color: colors.primary }}
+                    style={{ color: conversation.isSupport ? '#4caf50' : colors.primary }}
                   >
                     📞
                   </button>
@@ -272,7 +360,7 @@ const MessagesPage = ({ currentUser, onNavigate }) => {
               💡 Conseil
             </p>
             <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-              Répondez rapidement à vos messages pour faire de bons affaires
+              Répondez rapidement à vos messages pour faire de bons affaires. L'équipe Support est toujours là pour vous aider !
             </p>
           </div>
         </div>
