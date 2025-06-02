@@ -4,39 +4,39 @@ import { useTheme } from '../contexts/ThemeContext';
 const AviculteurHomePage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
 
-  // Section 1: Actions Rapides (Priorité #1)
+  // Section 1: Actions Rapides (Priorité #1) - CONTENU EXACT DEMANDÉ
   const actionsRapides = [
     {
-      id: 'vendre-volailles',
-      title: 'Vendre volailles',
-      icon: '🐔💰',
+      id: 'vendre-volailles-oeufs',
+      title: 'Vendre volailles/œufs',
+      icon: '🐔🥚',
       action: () => onNavigate('myproducts'),
       color: colors.primary
     },
     {
       id: 'acheter-aliments',
-      title: 'acheter aliments volailles',
+      title: 'Acheter aliments volailles',
       icon: '🌾🛒',
       action: () => onNavigate('feed-market'),
       color: colors.success
     },
     {
-      id: 'rappel-vaccin',
-      title: 'Rappel vaccin',
-      icon: '💉⏰',
-      action: () => alert('Prochaine vaccination prévue : Jeudi 15 Juin 2025\n\nVaccin Newcastle + Gumboro\nContactez votre vétérinaire'),
+      id: 'acheter-oeufs-poussins',
+      title: 'Acheter des œufs fécondés/poussins',
+      icon: '🥚🐣',
+      action: () => onNavigate('marketplace'),
       color: colors.warning
     },
     {
-      id: 'appeler-veterinaire',
-      title: 'Appeler veterinaire',
-      icon: '📞👨‍⚕️',
-      action: () => onNavigate('health'),
-      color: colors.error
+      id: 'messages',
+      title: 'Messages',
+      icon: '💬📩',
+      action: () => onNavigate('contacts'),
+      color: colors.info
     }
   ];
 
-  // Section 2: Mon Élevage (Suivi de l'activité)
+  // Section 2: Mon Élevage (Suivi de l'activité) - CONTENU EXACT DEMANDÉ
   const monElevage = [
     {
       id: 'stock-volailles',
@@ -48,13 +48,13 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       color: colors.primary
     },
     {
-      id: 'appels-recus',
-      title: 'appels reçus',
-      value: '12',
-      subtitle: 'Acheteurs intéressés',
-      icon: '📞📈',
-      action: () => onNavigate('contacts'),
-      color: colors.info
+      id: 'commandes-recues',
+      title: 'Commandes reçues',
+      value: '8',
+      subtitle: 'Nouvelles commandes',
+      icon: '📋✅',
+      action: () => onNavigate('orders'),
+      color: colors.success
     },
     {
       id: 'outils-financiers',
@@ -63,20 +63,20 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       subtitle: 'FCFA ce mois',
       icon: '💰📊',
       action: () => onNavigate('financial'),
-      color: colors.success
+      color: colors.warning
     },
     {
-      id: 'sante-animale',
-      title: 'santé animale',
-      value: '98%',
-      subtitle: 'Taux santé',
-      icon: '🏥💚',
+      id: 'veterinaire',
+      title: 'Vétérinaire',
+      value: '3',
+      subtitle: 'Contacts disponibles',
+      icon: '👨‍⚕️🩺',
       action: () => onNavigate('health'),
-      color: colors.warning
+      color: colors.error
     }
   ];
 
-  // Section 3: Tendance (Informations de marché et support)
+  // Section 3: Tendance - CONTENU EXACT DEMANDÉ
   const tendance = [
     {
       id: 'prix-volailles',
@@ -87,21 +87,21 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
     },
     {
       id: 'prix-aliments',
-      title: 'suivi prix des aliments pour volailles sur le marché',
+      title: 'Suivi des prix des aliments pour volailles sur le marché',
       icon: '📊🌾',
       action: () => onNavigate('feed-prices'),
       color: colors.warning
     },
     {
       id: 'conseils-guides',
-      title: 'conseils et guide pratiques pour aviculteurs',
+      title: 'Conseils et guides pratiques pour aviculteurs',
       icon: '📚🎓',
       action: () => onNavigate('health'),
       color: colors.info
     },
     {
       id: 'contact-support',
-      title: 'Contact Support',
+      title: 'Contact support',
       icon: '📞🆘',
       action: () => alert('Support AviMarché Mali - Éleveurs\n📞 +223 XX XX XX XX\n📧 eleveurs@avimarche.ml\n\nServices spécialisés :\n🐔 Conseils élevage volailles\n💰 Aide vente et pricing\n🩺 Support vétérinaire\n🌾 Conseils alimentation\n\nHeures : Lundi-Samedi 8h-18h'),
       color: colors.success
