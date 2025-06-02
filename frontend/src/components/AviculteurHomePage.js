@@ -29,7 +29,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
     },
     {
       id: 'appeler-veterinaire',
-      title: 'Appeler vétérinaire',
+      title: 'Appeler veterinaire',
       icon: '📞👨‍⚕️',
       action: () => onNavigate('health'),
       color: colors.error
