@@ -1588,7 +1588,7 @@ function App() {
           setCurrentPage('home');
           return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
         }
-        return <VeterinairePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <VeterinaireContactsPage currentUser={currentUser} onNavigate={setCurrentPage} />;
       
       case 'calculateur':
         // Page calculateur - Acheteurs uniquement
@@ -1598,6 +1598,90 @@ function App() {
           return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
         }
         return <CalculateurPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      // ===== PAGES ÉLEVEURS (AVICULTEURS) =====
+      case 'feed-market':
+        // Page marché des aliments - Aviculteurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <FeedMarketPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'feed-prices':
+        // Page prix des aliments - Aviculteurs et Fournisseurs
+        if (!currentUser || !['aviculteur', 'fournisseur'].includes(currentUser.role)) {
+          alert('Accès restreint : Cette section est réservée aux éleveurs et fournisseurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <FeedPricesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      // ===== PAGES ACHETEURS =====
+      case 'favorite-sellers':
+        // Page éleveurs favoris - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <FavoriteSellersPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'received-orders':
+        // Page stock reçu - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <ReceivedOrdersPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'top-sellers':
+        // Page classement éleveurs - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <TopSellersPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      // ===== PAGES FOURNISSEURS D'ALIMENTS =====
+      case 'my-feed-products':
+        // Page gestion stock aliments - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <MyFeedProductsPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'feed-orders':
+        // Page commandes aliments - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <FeedOrdersPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'farmer-contacts':
+        // Page clients éleveurs - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <FarmerContactsPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'performance-dashboard':
+        // Page dashboard performance - Fournisseurs uniquement
+        if (!currentUser || currentUser.role !== 'fournisseur') {
+          alert('Accès restreint : Cette section est réservée aux fournisseurs d\'aliments');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <PerformanceDashboardPage currentUser={currentUser} onNavigate={setCurrentPage} />;
       
       case 'register':
         // Page d'inscription
