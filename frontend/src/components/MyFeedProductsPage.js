@@ -1,545 +1,476 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const MyFeedProductsPage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
-  const [produits, setProduits] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('tous');
-  const [showAddForm, setShowAddForm] = useState(false);
-
-  useEffect(() => {
-    // Simulation données stock aliments du fournisseur
-    const mockProduits = [
-      {
-        id: '1',
-        titre: 'Maïs concassé premium',
-        type: 'cereales',
-        stockTotal: 500,
-        stockDisponible: 450,
-        stockReserve: 50,
-        prixUnitaire: 350,
-        unite: 'kg',
-        dateAjout: '2025-01-10',
-        derniereVente: '2025-01-18',
-        ventesTotales: 1250,
-        ventesRecentes: 75,
-        statut: 'disponible',
-        composition: 'Maïs jaune 100%, protéines 8%',
-        certification: 'Bio Mali',
-        commandesEnCours: [
-          { client: 'Mamadou K.', quantite: 25, date: '2025-01-19' },
-          { client: 'Fatoumata D.', quantite: 15, date: '2025-01-20' }
-        ],
-        alerteStock: false,
-        seuilAlerte: 100
-      },
-      {
-        id: '2',
-        titre: 'Tourteau de soja',
-        type: 'proteines',
-        stockTotal: 200,
-        stockDisponible: 15,
-        stockReserve: 25,
-        prixUnitaire: 450,
-        unite: 'kg',
-        dateAjout: '2025-01-12',
-        derniereVente: '2025-01-17',
-        ventesTotales: 680,
-        ventesRecentes: 40,
-        statut: 'stock_bas',
-        composition: 'Soja déshuilé, protéines 45%',
-        certification: 'Certifié AAFCO',
-        commandesEnCours: [
-          { client: 'Ibrahim C.', quantite: 20, date: '2025-01-21' }
-        ],
-        alerteStock: true,
-        seuilAlerte: 50
-      },
-      {
-        id: '3',
-        titre: 'Farine de poisson',
-        type: 'proteines',
-        stockTotal: 150,
-        stockDisponible: 120,
-        stockReserve: 30,
-        prixUnitaire: 750,
-        unite: 'kg',
-        dateAjout: '2025-01-08',
-        derniereVente: '2025-01-16',
-        ventesTotales: 450,
-        ventesRecentes: 30,
-        statut: 'disponible',
-        composition: 'Poisson 95%, protéines 60%',
-        certification: 'Export Grade',
-        commandesEnCours: [
-          { client: 'Aminata T.', quantite: 15, date: '2025-01-20' },
-          { client: 'Sekou T.', quantite: 10, date: '2025-01-22' }
-        ],
-        alerteStock: false,
-        seuilAlerte: 30
-      },
-      {
-        id: '4',
-        titre: 'Concentré ponte spécial',
-        type: 'complements',
-        stockTotal: 300,
-        stockDisponible: 280,
-        stockReserve: 20,
-        prixUnitaire: 520,
-        unite: 'kg',
-        dateAjout: '2025-01-15',
-        derniereVente: '2025-01-18',
-        ventesTotales: 340,
-        ventesRecentes: 20,
-        statut: 'disponible',
-        composition: 'Vitamines, minéraux, calcium',
-        certification: 'Vétérinaire approuvé',
-        commandesEnCours: [
-          { client: 'Mariam S.', quantite: 12, date: '2025-01-19' }
-        ],
-        alerteStock: false,
-        seuilAlerte: 50
-      },
-      {
-        id: '5',
-        titre: 'Prémix vitamines A-Z',
-        type: 'vitamines',
-        stockTotal: 50,
-        stockDisponible: 0,
-        stockReserve: 8,
-        prixUnitaire: 1200,
-        unite: 'kg',
-        dateAjout: '2025-01-05',
-        derniereVente: '2025-01-17',
-        ventesTotales: 120,
-        ventesRecentes: 15,
-        statut: 'rupture',
-        composition: 'Vitamines A,D,E,K,B complexe',
-        certification: 'Pharmaceutique',
-        commandesEnCours: [
-          { client: 'Boubacar K.', quantite: 5, date: '2025-01-25' }
-        ],
-        alerteStock: true,
-        seuilAlerte: 10
-      },
-      {
-        id: '6',
-        titre: 'Son de blé',
-        type: 'fibres',
-        stockTotal: 800,
-        stockDisponible: 720,
-        stockReserve: 80,
-        prixUnitaire: 280,
-        unite: 'kg',
-        dateAjout: '2025-01-01',
-        derniereVente: '2025-01-18',
-        ventesTotales: 2100,
-        ventesRecentes: 150,
-        statut: 'disponible',
-        composition: 'Son de blé 100%, fibres 12%',
-        certification: 'Local Mali',
-        commandesEnCours: [
-          { client: 'Moussa S.', quantite: 30, date: '2025-01-20' },
-          { client: 'Djénéba K.', quantite: 25, date: '2025-01-21' }
-        ],
-        alerteStock: false,
-        seuilAlerte: 200
-      }
-    ];
-
-    setTimeout(() => {
-      setProduits(mockProduits);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const filteredProduits = produits.filter(produit => {
-    if (filter === 'tous') return true;
-    if (filter === 'alerte') return produit.alerteStock;
-    if (filter === 'rupture') return produit.statut === 'rupture';
-    if (filter === 'disponible') return produit.statut === 'disponible';
-    return produit.type === filter;
+  const [activeTab, setActiveTab] = useState('stock');
+  const [showAddProduct, setShowAddProduct] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    type: 'aliment',
+    category: 'maïs',
+    quantity: '',
+    price: '',
+    description: ''
   });
 
-  const getStatutColor = (statut) => {
-    switch (statut) {
-      case 'disponible': return colors.success;
-      case 'stock_bas': return colors.warning;
-      case 'rupture': return colors.error;
+  // Stock simulation fournisseur
+  const [inventory, setInventory] = useState([
+    {
+      id: '1',
+      type: 'aliment',
+      category: 'maïs',
+      name: 'Maïs Concassé',
+      quantity: 450,
+      unit: 'kg',
+      price: 280,
+      status: 'disponible',
+      icon: '🌽',
+      color: '#FFB74D'
+    },
+    {
+      id: '2',
+      type: 'aliment',
+      category: 'soja',
+      name: 'Tourteau de Soja',
+      quantity: 120,
+      unit: 'kg',
+      price: 420,
+      status: 'stock_bas',
+      icon: '🫘',
+      color: '#8BC34A'
+    },
+    {
+      id: '3',
+      type: 'aliment',
+      category: 'concentré',
+      name: 'Concentré Ponte',
+      quantity: 80,
+      unit: 'kg',
+      price: 380,
+      status: 'disponible',
+      icon: '🥣',
+      color: '#AB47BC'
+    },
+    {
+      id: '4',
+      type: 'poussin',
+      category: 'poussins',
+      name: 'Poussins 1 jour',
+      quantity: 150,
+      unit: 'unités',
+      price: 650,
+      status: 'disponible',
+      icon: '🐤',
+      color: '#FFC107'
+    },
+    {
+      id: '5',
+      type: 'oeuf',
+      category: 'œufs_fécondés',
+      name: 'Œufs Fécondés',
+      quantity: 45,
+      unit: 'unités',
+      price: 350,
+      status: 'rupture',
+      icon: '🥚',
+      color: '#FF7043'
+    }
+  ]);
+
+  const categories = {
+    aliment: [
+      { value: 'maïs', label: 'Maïs', icon: '🌽' },
+      { value: 'soja', label: 'Tourteau Soja', icon: '🫘' },
+      { value: 'son', label: 'Son de Blé', icon: '🌾' },
+      { value: 'concentré', label: 'Concentré', icon: '🥣' },
+      { value: 'vitamines', label: 'Vitamines', icon: '💊' },
+      { value: 'farine_poisson', label: 'Farine Poisson', icon: '🐟' }
+    ],
+    poussin: [
+      { value: 'poussins', label: 'Poussins 1 jour', icon: '🐤' }
+    ],
+    oeuf: [
+      { value: 'œufs_fécondés', label: 'Œufs Fécondés', icon: '🥚' }
+    ]
+  };
+
+  const handleAddProduct = () => {
+    if (!newProduct.quantity || !newProduct.price) {
+      alert('Veuillez remplir la quantité et le prix');
+      return;
+    }
+
+    const category = categories[newProduct.type].find(c => c.value === newProduct.category);
+    const product = {
+      id: Date.now().toString(),
+      type: newProduct.type,
+      category: newProduct.category,
+      name: category.label,
+      quantity: parseInt(newProduct.quantity),
+      unit: newProduct.type === 'aliment' ? 'kg' : 'unités',
+      price: parseInt(newProduct.price),
+      status: 'disponible',
+      icon: category.icon,
+      color: '#4CAF50'
+    };
+
+    setInventory([...inventory, product]);
+    setNewProduct({ type: 'aliment', category: 'maïs', quantity: '', price: '', description: '' });
+    setShowAddProduct(false);
+    alert('✅ Produit ajouté avec succès !');
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'disponible': return '#4CAF50';
+      case 'stock_bas': return '#FF9800';
+      case 'rupture': return '#F44336';
       default: return colors.textSecondary;
     }
   };
 
-  const getStatutText = (statut) => {
-    switch (statut) {
-      case 'disponible': return 'Disponible';
-      case 'stock_bas': return 'Stock bas';
-      case 'rupture': return 'Rupture';
-      default: return statut;
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'disponible': return '✅ Disponible';
+      case 'stock_bas': return '⚠️ Stock bas';
+      case 'rupture': return '❌ Rupture';
+      default: return status;
     }
   };
 
-  const getStatutIcon = (statut) => {
-    switch (statut) {
-      case 'disponible': return '✅';
-      case 'stock_bas': return '⚠️';
-      case 'rupture': return '❌';
-      default: return '📦';
-    }
-  };
-
-  const getTypeIcon = (type) => {
-    const icons = {
-      cereales: '🌾',
-      proteines: '🐟',
-      complements: '💊',
-      fibres: '🌾',
-      vitamines: '💉'
-    };
-    return icons[type] || '🌾';
-  };
-
-  const handleModifierStock = (produit) => {
-    alert(
-      `📦 Modifier Stock - ${produit.titre}\n\n` +
-      `📊 Stock actuel :\n` +
-      `• Total : ${produit.stockTotal} ${produit.unite}\n` +
-      `• Disponible : ${produit.stockDisponible} ${produit.unite}\n` +
-      `• Réservé : ${produit.stockReserve} ${produit.unite}\n\n` +
-      `💰 Prix : ${produit.prixUnitaire} FCFA/${produit.unite}\n\n` +
-      `🔄 Actions possibles :\n` +
-      `• Ajouter du stock\n` +
-      `• Modifier le prix\n` +
-      `• Ajuster seuil d'alerte\n` +
-      `• Mettre en pause les ventes`
-    );
-  };
-
-  const handleVoirCommandes = (produit) => {
-    if (produit.commandesEnCours.length === 0) {
-      alert('📋 Aucune commande en cours pour ce produit');
-      return;
-    }
-
-    const commandesText = produit.commandesEnCours
-      .map(cmd => `• ${cmd.client} : ${cmd.quantite} ${produit.unite} (${cmd.date})`)
-      .join('\n');
-
-    alert(
-      `📋 Commandes en cours - ${produit.titre}\n\n` +
-      `${commandesText}\n\n` +
-      `📦 Total réservé : ${produit.stockReserve} ${produit.unite}\n` +
-      `🚚 Stock à préparer pour livraison`
-    );
-  };
-
-  const handleAnalyserVentes = (produit) => {
-    const tauxRotation = ((produit.ventesTotales / produit.stockTotal) * 100).toFixed(1);
-    const joursStock = Math.round(produit.stockDisponible / (produit.ventesRecentes / 30));
-
-    alert(
-      `📈 Analyse Ventes - ${produit.titre}\n\n` +
-      `📊 Performances :\n` +
-      `• Ventes totales : ${produit.ventesTotales} ${produit.unite}\n` +
-      `• Ventes récentes : ${produit.ventesRecentes} ${produit.unite} (30j)\n` +
-      `• Taux rotation : ${tauxRotation}%\n` +
-      `• Stock restant : ${joursStock} jours\n\n` +
-      `💰 Revenus :\n` +
-      `• Total : ${(produit.ventesTotales * produit.prixUnitaire).toLocaleString()} FCFA\n` +
-      `• Récent : ${(produit.ventesRecentes * produit.prixUnitaire).toLocaleString()} FCFA\n\n` +
-      `📅 Dernière vente : ${produit.derniereVente}`
-    );
-  };
-
-  const handleAjouterProduit = () => {
-    alert(
-      `➕ Ajouter Nouveau Produit\n\n` +
-      `📝 Informations requises :\n` +
-      `• Nom du produit\n` +
-      `• Type (céréales, protéines, etc.)\n` +
-      `• Quantité en stock\n` +
-      `• Prix par unité\n` +
-      `• Composition\n` +
-      `• Certifications\n\n` +
-      `📋 Le produit sera ajouté à votre catalogue et visible par les éleveurs`
-    );
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 mx-auto mb-4" style={{ borderColor: colors.primary }}></div>
-          <p style={{ color: colors.text }}>Chargement de votre stock...</p>
-        </div>
-      </div>
-    );
-  }
+  const totalValue = inventory.reduce((sum, item) => sum + (item.quantity * item.price), 0);
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
       {/* Header */}
-      <div className="sticky top-0 z-10" style={{ backgroundColor: colors.surface }}>
-        <div className="px-4 py-4">
-          <div className="max-w-md mx-auto flex items-center justify-between">
+      <div className="px-4 py-6" style={{ backgroundColor: colors.surface }}>
+        <div className="max-w-md mx-auto text-center">
+          <button 
+            onClick={() => onNavigate('home')}
+            className="text-3xl mb-4"
+          >
+            ← 
+          </button>
+          <div className="text-6xl mb-4">🌾</div>
+          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+            Mon Stock
+          </h1>
+          <p className="mt-2 text-lg" style={{ color: colors.textSecondary }}>
+            Gérez vos produits facilement
+          </p>
+        </div>
+      </div>
+
+      {/* Onglets */}
+      <div className="px-4 py-4">
+        <div className="max-w-md mx-auto">
+          <div className="flex space-x-3">
             <button
-              onClick={() => onNavigate('home')}
-              className="p-2 rounded-full"
-              style={{ backgroundColor: colors.card }}
+              onClick={() => setActiveTab('stock')}
+              className={`flex-1 p-3 rounded-xl font-bold text-center transition-all ${
+                activeTab === 'stock' ? 'scale-105 shadow-lg' : ''
+              }`}
+              style={{ 
+                backgroundColor: activeTab === 'stock' ? colors.primary : colors.card,
+                color: activeTab === 'stock' ? 'white' : colors.text
+              }}
             >
-              <span className="text-xl">←</span>
+              <div className="text-2xl mb-1">📦</div>
+              <p>Mon Stock</p>
             </button>
-            <h1 className="text-lg font-bold" style={{ color: colors.text }}>
-              📦 Mon Stock Aliments
-            </h1>
+            
             <button
-              onClick={handleAjouterProduit}
-              className="p-2 rounded-full"
-              style={{ backgroundColor: colors.primary }}
+              onClick={() => setActiveTab('publier')}
+              className={`flex-1 p-3 rounded-xl font-bold text-center transition-all ${
+                activeTab === 'publier' ? 'scale-105 shadow-lg' : ''
+              }`}
+              style={{ 
+                backgroundColor: activeTab === 'publier' ? colors.success : colors.card,
+                color: activeTab === 'publier' ? 'white' : colors.text
+              }}
             >
-              <span className="text-xl text-white">+</span>
+              <div className="text-2xl mb-1">📢</div>
+              <p>Publier</p>
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Résumé stock */}
-        <div className="px-4 pb-2">
-          <div className="max-w-md mx-auto">
-            <div 
-              className="p-3 rounded-lg"
-              style={{ backgroundColor: colors.card }}
-            >
-              <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.success }}>
-                    {filteredProduits.filter(p => p.statut === 'disponible').length}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>Disponibles</p>
-                </div>
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.warning }}>
-                    {filteredProduits.filter(p => p.alerteStock).length}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>Alertes</p>
-                </div>
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.error }}>
-                    {filteredProduits.filter(p => p.statut === 'rupture').length}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>Ruptures</p>
-                </div>
-                <div>
-                  <p className="font-bold text-lg" style={{ color: colors.primary }}>
-                    {filteredProduits.reduce((sum, p) => sum + p.commandesEnCours.length, 0)}
-                  </p>
-                  <p style={{ color: colors.textSecondary }}>Commandes</p>
-                </div>
+      {/* Résumé stock */}
+      <div className="px-4 py-4">
+        <div className="max-w-md mx-auto">
+          <div 
+            className="p-4 rounded-xl text-center"
+            style={{ backgroundColor: colors.card }}
+          >
+            <h3 className="font-bold mb-3" style={{ color: colors.text }}>
+              📊 Résumé de mon stock
+            </h3>
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <p className="text-2xl font-bold" style={{ color: colors.primary }}>
+                  {inventory.length}
+                </p>
+                <p className="text-xs" style={{ color: colors.textSecondary }}>Produits</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold" style={{ color: colors.success }}>
+                  {Math.round(totalValue / 1000)}K
+                </p>
+                <p className="text-xs" style={{ color: colors.textSecondary }}>Valeur (CFA)</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold" style={{ color: colors.warning }}>
+                  {inventory.filter(i => i.status === 'stock_bas' || i.status === 'rupture').length}
+                </p>
+                <p className="text-xs" style={{ color: colors.textSecondary }}>Alertes</p>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Filtres */}
-        <div className="px-4 pb-4">
+      {/* Contenu selon onglet */}
+      {activeTab === 'stock' && (
+        <div className="px-4 py-4">
           <div className="max-w-md mx-auto">
-            <div className="flex flex-wrap gap-2">
-              {[
-                { key: 'tous', label: 'Tous', icon: '📦' },
-                { key: 'disponible', label: 'Disponibles', icon: '✅' },
-                { key: 'alerte', label: 'Alertes', icon: '⚠️' },
-                { key: 'rupture', label: 'Ruptures', icon: '❌' },
-                { key: 'cereales', label: 'Céréales', icon: '🌾' },
-                { key: 'proteines', label: 'Protéines', icon: '🐟' }
-              ].map(f => (
-                <button
-                  key={f.key}
-                  onClick={() => setFilter(f.key)}
-                  className="px-3 py-2 rounded-full text-xs font-medium transition-colors"
-                  style={{
-                    backgroundColor: filter === f.key ? colors.primary : colors.card,
-                    color: filter === f.key ? 'white' : colors.text,
-                    border: `1px solid ${filter === f.key ? colors.primary : colors.border}`
+            <h2 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
+              📦 Mon Inventaire
+            </h2>
+            
+            <div className="space-y-3">
+              {inventory.map(item => (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-xl shadow-sm border-l-4"
+                  style={{ 
+                    backgroundColor: colors.card,
+                    borderLeftColor: getStatusColor(item.status)
                   }}
                 >
-                  {f.icon} {f.label}
-                </button>
+                  <div className="flex items-start space-x-4">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
+                      style={{ backgroundColor: item.color, color: 'white' }}
+                    >
+                      {item.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg mb-1" style={{ color: colors.text }}>
+                        {item.name}
+                      </h3>
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm" style={{ color: colors.textSecondary }}>
+                          {item.quantity} {item.unit}
+                        </p>
+                        <p className="font-bold text-lg" style={{ color: colors.primary }}>
+                          {item.price} F/{item.unit === 'kg' ? 'kg' : 'pièce'}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span 
+                          className="text-xs font-bold px-2 py-1 rounded-full"
+                          style={{ 
+                            backgroundColor: getStatusColor(item.status),
+                            color: 'white'
+                          }}
+                        >
+                          {getStatusText(item.status)}
+                        </span>
+                        <p className="text-xs font-bold" style={{ color: colors.textSecondary }}>
+                          Valeur: {(item.quantity * item.price).toLocaleString()} F
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Liste des produits */}
-      <div className="px-4">
-        <div className="max-w-md mx-auto space-y-4">
-          {filteredProduits.map(produit => (
-            <div
-              key={produit.id}
-              className="p-4 rounded-xl shadow-lg border"
-              style={{
-                backgroundColor: colors.card,
-                borderColor: produit.alerteStock ? colors.warning : colors.border,
-                borderWidth: produit.alerteStock ? '2px' : '1px'
-              }}
-            >
-              {/* En-tête */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span className="text-lg">{getTypeIcon(produit.type)}</span>
-                    <h3 className="font-bold text-base" style={{ color: colors.text }}>
-                      {produit.titre}
-                    </h3>
-                    {produit.alerteStock && (
-                      <span className="text-lg">⚠️</span>
-                    )}
-                  </div>
-                  <p className="text-sm" style={{ color: colors.textSecondary }}>
-                    {produit.composition}
+      {/* Section Publier */}
+      {activeTab === 'publier' && (
+        <div className="px-4 py-4">
+          <div className="max-w-md mx-auto">
+            <h2 className="text-lg font-bold mb-4 text-center" style={{ color: colors.text }}>
+              📢 Publier un Produit
+            </h2>
+
+            {!showAddProduct ? (
+              <div className="space-y-4">
+                <div 
+                  className="p-6 rounded-xl text-center"
+                  style={{ backgroundColor: colors.card }}
+                >
+                  <div className="text-5xl mb-4">📦</div>
+                  <h3 className="font-bold text-lg mb-2" style={{ color: colors.text }}>
+                    Ajouter un nouveau produit
+                  </h3>
+                  <p className="text-sm mb-4" style={{ color: colors.textSecondary }}>
+                    Publiez vos aliments, poussins ou œufs fécondés
                   </p>
-                  <p className="text-xs" style={{ color: colors.textMuted }}>
-                    {produit.certification}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <span 
-                    className="px-2 py-1 rounded-full text-xs font-medium text-white"
-                    style={{ backgroundColor: getStatutColor(produit.statut) }}
+                  <button
+                    onClick={() => setShowAddProduct(true)}
+                    className="w-full p-4 rounded-xl font-bold text-white"
+                    style={{ backgroundColor: colors.success }}
                   >
-                    {getStatutIcon(produit.statut)} {getStatutText(produit.statut)}
-                  </span>
-                  <p className="text-sm font-bold mt-1" style={{ color: colors.primary }}>
-                    {produit.prixUnitaire} FCFA/{produit.unite}
-                  </p>
-                </div>
-              </div>
-
-              {/* Stock */}
-              <div className="mb-3">
-                <div className="grid grid-cols-3 gap-2 text-sm">
-                  <div className="text-center">
-                    <p className="font-bold" style={{ color: colors.success }}>
-                      {produit.stockDisponible}
-                    </p>
-                    <p className="text-xs" style={{ color: colors.textSecondary }}>Disponible</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-bold" style={{ color: colors.warning }}>
-                      {produit.stockReserve}
-                    </p>
-                    <p className="text-xs" style={{ color: colors.textSecondary }}>Réservé</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-bold" style={{ color: colors.text }}>
-                      {produit.stockTotal}
-                    </p>
-                    <p className="text-xs" style={{ color: colors.textSecondary }}>Total</p>
-                  </div>
+                    ➕ Ajouter un produit
+                  </button>
                 </div>
 
-                {/* Barre de progression stock */}
-                <div className="mt-2">
-                  <div 
-                    className="w-full bg-gray-200 rounded-full h-2"
-                    style={{ backgroundColor: colors.surface }}
-                  >
-                    <div 
-                      className="h-2 rounded-full transition-all"
-                      style={{ 
-                        width: `${(produit.stockDisponible / produit.stockTotal) * 100}%`,
-                        backgroundColor: getStatutColor(produit.statut)
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Commandes en cours */}
-              {produit.commandesEnCours.length > 0 && (
-                <div className="mb-3">
-                  <p className="text-sm font-medium mb-1" style={{ color: colors.text }}>
-                    📋 Commandes en cours : {produit.commandesEnCours.length}
-                  </p>
-                  <div className="space-y-1">
-                    {produit.commandesEnCours.slice(0, 2).map((commande, index) => (
-                      <p key={index} className="text-xs" style={{ color: colors.textSecondary }}>
-                        • {commande.client} : {commande.quantite} {produit.unite} ({commande.date})
-                      </p>
+                {/* Produits récents */}
+                <div 
+                  className="p-4 rounded-xl"
+                  style={{ backgroundColor: colors.surface }}
+                >
+                  <h4 className="font-bold mb-3" style={{ color: colors.text }}>
+                    📋 Mes derniers produits publiés
+                  </h4>
+                  <div className="space-y-2">
+                    {inventory.slice(0, 3).map(item => (
+                      <div key={item.id} className="flex items-center space-x-3">
+                        <span className="text-xl">{item.icon}</span>
+                        <div className="flex-1">
+                          <p className="font-bold text-sm" style={{ color: colors.text }}>
+                            {item.name}
+                          </p>
+                          <p className="text-xs" style={{ color: colors.textSecondary }}>
+                            {item.quantity} {item.unit} - {item.price}F
+                          </p>
+                        </div>
+                        <span style={{ color: getStatusColor(item.status) }}>
+                          {item.status === 'disponible' ? '✅' : item.status === 'stock_bas' ? '⚠️' : '❌'}
+                        </span>
+                      </div>
                     ))}
-                    {produit.commandesEnCours.length > 2 && (
-                      <p className="text-xs" style={{ color: colors.textMuted }}>
-                        ... et {produit.commandesEnCours.length - 2} autres
-                      </p>
-                    )}
                   </div>
                 </div>
-              )}
+              </div>
+            ) : (
+              /* Formulaire ajout produit */
+              <div className="space-y-4">
+                <div 
+                  className="p-4 rounded-xl"
+                  style={{ backgroundColor: colors.card }}
+                >
+                  <h3 className="font-bold mb-4 text-center" style={{ color: colors.text }}>
+                    ➕ Nouveau Produit
+                  </h3>
 
-              {/* Ventes récentes */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span style={{ color: colors.textSecondary }}>Ventes récentes :</span>
-                  <span className="font-medium" style={{ color: colors.text }}>
-                    {produit.ventesRecentes} {produit.unite}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span style={{ color: colors.textSecondary }}>Revenus générés :</span>
-                  <span className="font-medium" style={{ color: colors.success }}>
-                    {(produit.ventesRecentes * produit.prixUnitaire).toLocaleString()} FCFA
-                  </span>
+                  {/* Type de produit */}
+                  <div className="mb-4">
+                    <label className="font-bold text-sm mb-2 block" style={{ color: colors.text }}>
+                      🏷️ Type de produit :
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {['aliment', 'poussin', 'oeuf'].map(type => (
+                        <button
+                          key={type}
+                          onClick={() => setNewProduct({...newProduct, type, category: categories[type][0].value})}
+                          className={`p-3 rounded-xl text-sm font-bold ${
+                            newProduct.type === type ? 'scale-105' : ''
+                          }`}
+                          style={{ 
+                            backgroundColor: newProduct.type === type ? colors.primary : colors.surface,
+                            color: newProduct.type === type ? 'white' : colors.text
+                          }}
+                        >
+                          {type === 'aliment' && '🌾 Aliment'}
+                          {type === 'poussin' && '🐤 Poussin'}
+                          {type === 'oeuf' && '🥚 Œuf'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Catégorie */}
+                  <div className="mb-4">
+                    <label className="font-bold text-sm mb-2 block" style={{ color: colors.text }}>
+                      📂 Catégorie :
+                    </label>
+                    <select
+                      value={newProduct.category}
+                      onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+                      className="w-full p-3 rounded-xl border"
+                      style={{ backgroundColor: colors.surface }}
+                    >
+                      {categories[newProduct.type].map(cat => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.icon} {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Quantité */}
+                  <div className="mb-4">
+                    <label className="font-bold text-sm mb-2 block" style={{ color: colors.text }}>
+                      📦 Quantité :
+                    </label>
+                    <input
+                      type="number"
+                      value={newProduct.quantity}
+                      onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})}
+                      placeholder={newProduct.type === 'aliment' ? "Ex: 100 kg" : "Ex: 50 unités"}
+                      className="w-full p-3 rounded-xl border"
+                      style={{ backgroundColor: colors.surface }}
+                    />
+                  </div>
+
+                  {/* Prix */}
+                  <div className="mb-6">
+                    <label className="font-bold text-sm mb-2 block" style={{ color: colors.text }}>
+                      💰 Prix par {newProduct.type === 'aliment' ? 'kg' : 'unité'} :
+                    </label>
+                    <input
+                      type="number"
+                      value={newProduct.price}
+                      onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                      placeholder="Ex: 280 CFA"
+                      className="w-full p-3 rounded-xl border"
+                      style={{ backgroundColor: colors.surface }}
+                    />
+                  </div>
+
+                  {/* Boutons */}
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => setShowAddProduct(false)}
+                      className="flex-1 p-3 rounded-xl font-bold"
+                      style={{ backgroundColor: colors.surface, color: colors.text }}
+                    >
+                      ❌ Annuler
+                    </button>
+                    <button
+                      onClick={handleAddProduct}
+                      className="flex-1 p-3 rounded-xl font-bold text-white"
+                      style={{ backgroundColor: colors.success }}
+                    >
+                      ✅ Publier
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              {/* Actions */}
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleModifierStock(produit)}
-                  className="flex-1 py-2 rounded-lg font-medium text-white transition-colors text-sm"
-                  style={{ backgroundColor: colors.primary }}
-                >
-                  ✏️ Modifier
-                </button>
-                <button
-                  onClick={() => handleVoirCommandes(produit)}
-                  className="px-3 py-2 rounded-lg font-medium transition-colors text-sm"
-                  style={{ 
-                    backgroundColor: colors.info,
-                    color: 'white'
-                  }}
-                >
-                  📋
-                </button>
-                <button
-                  onClick={() => handleAnalyserVentes(produit)}
-                  className="px-3 py-2 rounded-lg font-medium transition-colors text-sm"
-                  style={{ 
-                    backgroundColor: colors.surface,
-                    color: colors.text,
-                    border: `1px solid ${colors.border}`
-                  }}
-                >
-                  📈
-                </button>
-              </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Message d'aide */}
+      {/* Conseil du jour */}
       <div className="px-4 py-6">
         <div className="max-w-md mx-auto">
           <div
-            className="p-4 rounded-lg text-center"
-            style={{ backgroundColor: colors.surface }}
+            className="p-4 rounded-xl text-center"
+            style={{ backgroundColor: '#e8f5e8' }}
           >
-            <p className="text-sm font-medium" style={{ color: colors.text }}>
-              📦 Gestion de Stock
+            <div className="text-4xl mb-2">💡</div>
+            <p className="text-sm font-bold text-green-800 mb-1">
+              Conseil du jour
             </p>
-            <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>
-              Surveillez vos stocks et anticipez les ruptures pour maximiser vos ventes
+            <p className="text-xs text-green-700">
+              Mettez à jour vos stocks régulièrement pour attirer plus de clients !
             </p>
           </div>
         </div>
