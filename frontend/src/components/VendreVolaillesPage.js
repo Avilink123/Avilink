@@ -87,7 +87,7 @@ const VendreVolaillesPage = ({ currentUser, onNavigate }) => {
             {/* Prix */}
             <div className="p-4 rounded-xl" style={{ backgroundColor: colors.card }}>
               <label className="block font-bold mb-2" style={{ color: colors.text }}>
-                💰 Prix total (FCFA)
+                💰 Prix unitaire (FCFA)
               </label>
               <input
                 type="number"
