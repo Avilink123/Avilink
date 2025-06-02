@@ -1736,7 +1736,52 @@ function App() {
           setCurrentPage('home');
           return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
         }
-        return <TopSellersPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        return <TopSellersPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'buy-poultry':
+        // Page acheter volailles - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <BuyPoultryPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'buy-eggs':
+        // Page acheter œufs - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <BuyEggsPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'buyer-messages':
+        // Page messages acheteurs - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <BuyerMessagesPage currentUser={currentUser} onNavigate={handleNavigate} params={pageParams} />;
+
+      case 'buyer-orders':
+        // Page mes commandes acheteurs - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <BuyerOrdersPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
+      case 'buyer-contact-support':
+        // Page contact support acheteurs - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <BuyerContactSupportPage currentUser={currentUser} onNavigate={handleNavigate} />;
 
       // ===== PAGES FOURNISSEURS D'ALIMENTS =====
       case 'my-feed-products':
