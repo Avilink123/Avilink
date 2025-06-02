@@ -17,6 +17,7 @@ import AccessibleHeader from "./components/AccessibleHeader";
 import AccessibleHomePage from "./components/AccessibleHomePage";
 import AviculteurHomePage from "./components/AviculteurHomePage";
 import AcheteurHomePage from "./components/AcheteurHomePage";
+import FournisseurHomePage from "./components/FournisseurHomePage";
 import BottomNavigation from "./components/BottomNavigation";
 import RegistrationPage from "./components/RegistrationPage";
 
