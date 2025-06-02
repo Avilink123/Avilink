@@ -303,7 +303,7 @@ const ModernMarketplace = ({ currentUser, onNavigate }) => {
                     )}
 
                     <div className="border-t pt-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-3">
                         <div className="text-sm text-gray-600">
                           <div className="flex items-center space-x-1 mb-1">
                             <span>👤</span>
@@ -314,17 +314,40 @@ const ModernMarketplace = ({ currentUser, onNavigate }) => {
                             <span>{product.localisation}</span>
                           </div>
                         </div>
+                      </div>
 
-                        {currentUser?.role === 'acheteur' && (
+                      {/* Boutons d'action */}
+                      {currentUser && (
+                        <div className="flex space-x-2">
                           <ModernButton
-                            title="Contacter"
-                            icon="📞"
+                            title="📞 Appeler"
                             onClick={() => handleContact(product.vendeur)}
                             size="small"
                             variant="outline"
+                            className="flex-1"
                           />
-                        )}
-                      </div>
+                          <ModernButton
+                            title="💬 Message"
+                            onClick={() => handleSendMessage(product.vendeur, product)}
+                            size="small"
+                            variant="primary"
+                            className="flex-1"
+                          />
+                        </div>
+                      )}
+
+                      {/* Si pas connecté */}
+                      {!currentUser && (
+                        <div className="text-center">
+                          <p className="text-sm text-gray-500 mb-2">Connectez-vous pour contacter le vendeur</p>
+                          <ModernButton
+                            title="Se connecter"
+                            onClick={() => onNavigate('register')}
+                            size="small"
+                            variant="primary"
+                          />
+                        </div>
+                      )}
                     </div>
                   </ModernCard>
                 );
