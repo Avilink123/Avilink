@@ -10,7 +10,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       id: 'vendre-volailles-oeufs',
       title: 'Vendre volailles/œufs',
       icon: '🐔🥚',
-      action: () => onNavigate('myproducts'),
+      action: () => onNavigate('vendre-volailles'),
       color: colors.primary
     },
     {
@@ -71,7 +71,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       value: '3',
       subtitle: 'Contacts disponibles',
       icon: '👨‍⚕️🩺',
-      action: () => onNavigate('health'),
+      action: () => onNavigate('veterinaire-contacts'),
       color: colors.error
     }
   ];
