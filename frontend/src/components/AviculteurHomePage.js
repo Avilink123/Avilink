@@ -94,7 +94,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
     },
     {
       id: 'conseils-guides',
-      title: 'Conseils et guide pratiques pour aviculteurs',
+      title: 'conseils et guide pratiques pour aviculteurs',
       icon: '📚🎓',
       action: () => onNavigate('health'),
       color: colors.info
