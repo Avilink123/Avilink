@@ -330,6 +330,8 @@
     - message: "I've tested the registration functionality with the new FOURNISSEUR role. The ModernLoginModal and RegistrationPage components have been successfully updated to include the FOURNISSEUR role option. However, there's an issue with the complete registration flow - when registering as a FOURNISSEUR, the user is not properly redirected to the FournisseurHomePage and doesn't appear to be logged in after registration. This suggests there might be an issue with the authentication or redirection logic specific to the FOURNISSEUR role. The UI changes for adding the FOURNISSEUR role option are working correctly, but the end-to-end registration flow needs to be fixed."
     - agent: "testing"
     - message: "I've completed testing the registration flow for all three roles (FOURNISSEUR, AVICULTEUR, and ACHETEUR). The issue with the registration flow has been fixed. All three roles can now register successfully and are properly redirected to their respective home pages. The API call to /api/users/register is being made correctly, and the user is properly authenticated after registration. The registration flow is now working end-to-end for all roles."
+    - agent: "testing"
+    - message: "I'm now testing the newly implemented pages and improvements for AviMarché Mali. I'll be focusing on: 1) VendreVolaillesPage corrections ('Prix total' → 'Prix unitaire', 'Coqs' → 'Pintades', 'Œufs de village' → 'Œufs fécondés'), 2) New pages: BuyFeedPage, BuyChicksPage, MessagesPage, and MyPoultryStockPage, and 3) Navigation from AviculteurHomePage to these new pages. All these pages are designed to be accessible for illiterate users with simple interfaces, big buttons, and visual cues."
 
   - task: "VendreVolaillesPage"
     implemented: true
