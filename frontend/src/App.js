@@ -1592,7 +1592,13 @@ function App() {
         // Page prix volailles simplifiée - Tous utilisateurs
         return <SimplePricesPage currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'health':
-        return <ModernAnimalHealth currentUser={currentUser} onNavigate={setCurrentPage} />;
+        // Page conseils pratiques et maladies - Aviculteurs
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <PracticalAdvicePage currentUser={currentUser} onNavigate={setCurrentPage} />;
       case 'financial':
         // Page outils financiers simplifiés - Tous utilisateurs connectés
         if (!currentUser) {
