@@ -49,7 +49,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
     },
     {
       id: 'appels-recus',
-      title: 'Appels reçus',
+      title: 'appels reçus',
       value: '12',
       subtitle: 'Acheteurs intéressés',
       icon: '📞📈',
