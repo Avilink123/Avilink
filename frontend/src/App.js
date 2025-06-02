@@ -1646,6 +1646,15 @@ function App() {
         }
         return <MessagesPage currentUser={currentUser} onNavigate={handleNavigate} params={pageParams} />;
 
+      case 'contact-support':
+        // Page contact support - Aviculteurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
+        }
+        return <ContactSupportPage currentUser={currentUser} onNavigate={handleNavigate} />;
+
       case 'my-poultry-stock':
         // Page mon stock volailles - Aviculteurs uniquement
         if (!currentUser || currentUser.role !== 'aviculteur') {
