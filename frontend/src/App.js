@@ -1559,7 +1559,7 @@ function App() {
           setCurrentPage('home');
           return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
-        return <div className="p-4"><h2 className="text-xl font-bold">📊 Dashboard Performance Fournisseur</h2><div className="mt-4 space-y-4"><div className="bg-green-50 p-3 rounded"><h3 className="font-bold text-green-800">📈 Performances cette semaine</h3><p>• Satisfaction client : 92%</p><p>• Délais livraison : 1.2 jours (excellent)</p><p>• Qualité produits : 4.6/5 étoiles</p></div><div className="bg-blue-50 p-3 rounded"><h3 className="font-bold text-blue-800">🎯 Objectifs mensuels</h3><p>• Ventes : 285k/300k FCFA (95%)</p><p>• Nouveaux clients : 3/5 (60%)</p><p>• Stock rotation : Optimal</p></div></div><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+        return <PerformanceDashboardPage currentUser={currentUser} onNavigate={handleNavigate} />;
       
       case 'contacts':
         // Contacts pour acheteurs
