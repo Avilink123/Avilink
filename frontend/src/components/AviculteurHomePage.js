@@ -67,7 +67,7 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
     },
     {
       id: 'sante-animale',
-      title: 'Santé animale',
+      title: 'santé animale',
       value: '98%',
       subtitle: 'Taux santé',
       icon: '🏥💚',
