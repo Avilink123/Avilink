@@ -69,7 +69,10 @@ const CalculateurPage = ({ currentUser, onNavigate }) => {
           {/* Type de volaille */}
           <div className="p-4 rounded-xl" style={{ backgroundColor: colors.card }}>
             <h3 className="font-bold mb-3" style={{ color: colors.text }}>
-              Que voulez-vous acheter ?
+              {currentUser?.role === 'aviculteur' 
+                ? 'Que voulez-vous calculer ?' 
+                : 'Que voulez-vous acheter ?'
+              }
             </h3>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(typesVolailles).map(([key, type]) => (
