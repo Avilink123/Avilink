@@ -714,6 +714,20 @@ def run_tests():
     if not auth_success:
         print("\n⚠️ Improved Authentication test had some failures.")
     
+    # Test Messaging API
+    messaging_success = test_messaging_api(logged_in_users)
+    if not messaging_success:
+        print("\n⚠️ Messaging API test had some failures.")
+    
+    # Test WebSocket Connection
+    try:
+        websocket_success = test_websocket_connection(logged_in_users)
+        if not websocket_success:
+            print("\n⚠️ WebSocket Connection test had some failures.")
+    except Exception as e:
+        print(f"\n⚠️ WebSocket Connection test failed with error: {str(e)}")
+        test_results["failure"] += 1
+    
     # Print summary
     print("\n===== TEST SUMMARY =====")
     print(f"Total tests: {test_results['success'] + test_results['failure']}")
