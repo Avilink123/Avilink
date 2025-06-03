@@ -120,7 +120,7 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
         {/* Message de succès */}
         {success && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <CheckCircle size={20} />
+            ✅
             <div>
               <p className="font-semibold">Mot de passe configuré avec succès !</p>
               <p className="text-sm">Vous pouvez maintenant utiliser ce mot de passe pour vous connecter.</p>
