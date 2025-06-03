@@ -288,6 +288,51 @@ backend:
         - agent: "testing"
         - comment: "The WebSocket connection test failed with a timeout during the opening handshake. This could be due to the test environment not supporting WebSocket connections or the WebSocket server not being properly configured to accept connections from the test client. The WebSocket endpoint is implemented in the code, but we couldn't establish a connection to test its functionality."
 
+  - task: "Order-System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the new order system endpoints: POST /api/orders, GET /api/orders/sent, GET /api/orders/received, PUT /api/orders/{order_id}"
+        - working: true
+        - agent: "testing"
+        - comment: "The order system is working correctly. Users can create orders for products, view their sent and received orders, and update order status. The system correctly enforces security, preventing buyers from updating order status (only sellers can do this). When an order is created, the seller receives a notification. When an order is accepted, the buyer receives a notification and a conversation is automatically created between the buyer and seller."
+
+  - task: "Notification-System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the notification system: GET /api/notifications, POST /api/notifications/{notification_id}/mark-read"
+        - working: true
+        - agent: "testing"
+        - comment: "The notification system is working correctly. Users receive notifications for relevant events (new orders, order status updates), can retrieve their notifications, and can mark notifications as read. The system correctly tracks the read status of notifications."
+
+  - task: "Automatic-Conversation-Creation"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the automatic conversation creation when an order is accepted"
+        - working: true
+        - agent: "testing"
+        - comment: "The automatic conversation creation feature is working correctly. When a seller accepts an order, a conversation is automatically created between the buyer and seller, allowing them to communicate directly. The system also sends an initial message from the seller to the buyer to start the conversation."
+
 frontend:
   - task: "Improved-Authentication-Frontend"
     implemented: true
@@ -428,11 +473,14 @@ agent_communication:
     - message: "I've completed testing the two new features added to AviMarché Mali: the bidirectional feedback system and improved authentication. All tests passed successfully. The bidirectional feedback system allows buyers to rate farmers (ACHETEUR→AVICULTEUR) and farmers to rate suppliers (AVICULTEUR→FOURNISSEUR), with proper role constraints enforced. The API endpoints for creating ratings (POST /api/ratings), retrieving user ratings (GET /api/ratings/user/{user_id}), and getting rating summaries (GET /api/ratings/summary/{user_id}) all work as expected. The improved authentication system also works correctly, allowing users to register with a password, log in with either password or SMS, verify SMS codes, change their password, and toggle their SMS preferences. Both features are fully functional and ready for use."
     - agent: "testing"
     - message: "I've completed testing the new real-time messaging features in the AviMarché backend. Most of the messaging API endpoints are working correctly, including creating conversations, retrieving conversations, getting messages, sending messages, and marking messages as read. The user presence endpoint also works correctly. However, there are two issues: 1) The 'Get Online Users' endpoint is not working properly, likely because there are no active WebSocket connections in the test environment, and 2) The WebSocket connection test failed with a timeout during the opening handshake. This could be due to the test environment not supporting WebSocket connections or the WebSocket server not being properly configured to accept connections from the test client. The WebSocket endpoint is implemented in the code, but we couldn't establish a connection to test its functionality."
+    - agent: "testing"
+    - message: "I've completed testing the new order system and notification features in the AviMarché backend. All tests passed successfully. The order system allows users to create orders for products, view their sent and received orders, and update order status. The system correctly enforces security, preventing buyers from updating order status (only sellers can do this). When an order is created, the seller receives a notification. When an order is accepted, the buyer receives a notification and a conversation is automatically created between the buyer and seller. The notification system works correctly, allowing users to retrieve their notifications and mark them as read. The system correctly tracks the read status of notifications. All features are fully functional and ready for use."
 
 test_plan:
   current_focus:
-    - "Messaging-API"
-    - "WebSocket-Support"
+    - "Order-System"
+    - "Notification-System"
+    - "Automatic-Conversation-Creation"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
@@ -441,4 +489,4 @@ test_plan:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 3
+  test_sequence: 4
