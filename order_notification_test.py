@@ -6,7 +6,7 @@ from datetime import datetime
 import random
 
 # Get the backend URL
-BACKEND_URL = "https://3afd9d07-bf98-406e-bfa1-1905a275aa64.preview.emergentagent.com"
+BACKEND_URL = "https://9f78ae1e-177b-417a-aef1-b4a3354bc0b7.preview.emergentagent.com"
 API_URL = f"{BACKEND_URL}/api"
 
 print(f"Testing Order System and Notifications at: {API_URL}")
