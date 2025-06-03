@@ -307,6 +307,7 @@ frontend:
   current_focus:
     - "Bidirectional-Feedback-System"
     - "Improved-Authentication"
+    - "Improved-Authentication-Frontend"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
