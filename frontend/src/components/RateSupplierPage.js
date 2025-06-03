@@ -167,12 +167,11 @@ const RateSupplierPage = ({ onBack, currentUser }) => {
                   <button
                     key={star}
                     onClick={() => setRating(star)}
-                    className="transition-transform hover:scale-110"
+                    className="transition-transform hover:scale-110 text-3xl"
                   >
-                    <Star
-                      size={40}
-                      className={star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
-                    />
+                    <span className={star <= rating ? 'text-yellow-400' : 'text-gray-300'}>
+                      ⭐
+                    </span>
                   </button>
                 ))}
               </div>
