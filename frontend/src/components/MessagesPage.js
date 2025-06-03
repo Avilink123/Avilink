@@ -459,10 +459,13 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
             style={{ backgroundColor: colors.surface }}
           >
             <p className="text-lg font-bold" style={{ color: colors.text }}>
-              💡 Conseil
+              💡 Messagerie Moderne
             </p>
             <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-              Répondez rapidement à vos messages pour faire de bons affaires. L'équipe Support est toujours là pour vous aider !
+              • Messages instantanés en temps réel<br/>
+              • Statut de lecture des messages<br/>
+              • Support client 24h/7j<br/>
+              • Compatible réseau Mali
             </p>
           </div>
         </div>
