@@ -257,14 +257,23 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
             style={{ backgroundColor: colors.surface }}
           >
             <p className="text-lg font-bold" style={{ color: colors.text }}>
-              💡 Conseil
+              🔒 Achat Sécurisé
             </p>
             <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-              Achetez des poussins vaccinés et des œufs fécondés de qualité pour bien commencer
+              Commandez en toute sécurité ! Le vendeur recevra votre demande et pourra vous contacter seulement après avoir accepté votre commande.
             </p>
           </div>
         </div>
       </div>
+      
+      {/* Order Modal */}
+      <OrderModal
+        isOpen={showOrderModal}
+        onClose={() => setShowOrderModal(false)}
+        product={selectedProduct}
+        currentUser={currentUser}
+        onOrderSuccess={handleOrderSuccess}
+      />
     </div>
   );
 };
