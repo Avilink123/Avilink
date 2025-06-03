@@ -6,10 +6,14 @@ import time
 from datetime import datetime, timedelta
 import random
 import os
+import asyncio
+import websockets
+import threading
 
 # Get the backend URL from the frontend .env file
 BACKEND_URL = "https://3afd9d07-bf98-406e-bfa1-1905a275aa64.preview.emergentagent.com"
 API_URL = f"{BACKEND_URL}/api"
+WS_URL = f"wss://{BACKEND_URL.replace('https://', '')}/ws"
 
 print(f"Testing backend API at: {API_URL}")
 
