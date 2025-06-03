@@ -54,8 +54,15 @@ class User(BaseModel):
     telephone: str
     role: UserRole
     localisation: str
+    password: Optional[str] = None
+    use_sms: bool = False
+    sms_code: Optional[str] = None
+    sms_code_expires: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     is_active: bool = True
+    # Statistiques de feedback
+    rating_average: float = 0.0
+    rating_count: int = 0
 
 class UserCreate(BaseModel):
     nom: str
