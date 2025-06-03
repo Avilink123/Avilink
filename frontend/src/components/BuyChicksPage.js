@@ -211,14 +211,23 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
                 </div>
               </div>
 
-              {/* Bouton commander */}
-              <button
-                onClick={() => handleCommander(produit)}
-                className="w-full py-3 rounded-xl font-bold text-lg text-white"
-                style={{ backgroundColor: colors.primary }}
-              >
-                📞 Appeler pour commander
-              </button>
+              {/* Boutons d'action */}
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => handleCommander(produit)}
+                  className="flex-1 py-3 rounded-xl font-bold text-lg text-white"
+                  style={{ backgroundColor: colors.primary }}
+                >
+                  🛒 Commander
+                </button>
+                <button
+                  onClick={() => alert('Pour plus d\'informations, veuillez d\'abord passer commande. Le vendeur pourra alors vous contacter directement.')}
+                  className="px-4 py-3 rounded-xl font-bold text-lg text-white"
+                  style={{ backgroundColor: colors.textSecondary }}
+                >
+                  💬 Info
+                </button>
+              </div>
             </div>
           ))}
         </div>
