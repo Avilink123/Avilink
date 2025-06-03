@@ -194,10 +194,10 @@ const BuyFeedPage = ({ currentUser, onNavigate }) => {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex-1">
                   <h3 className="text-lg font-bold" style={{ color: colors.text }}>
-                    🌾 {aliment.nom}
+                    🌾 {aliment.titre}
                   </h3>
                   <p className="text-sm" style={{ color: colors.primary }}>
-                    👨‍🌾 {aliment.fournisseur}
+                    👨‍🌾 {aliment.vendeur_nom}
                   </p>
                   <p className="text-sm" style={{ color: colors.textSecondary }}>
                     📍 {aliment.localisation}
@@ -208,7 +208,7 @@ const BuyFeedPage = ({ currentUser, onNavigate }) => {
                     {aliment.prix}
                   </p>
                   <p className="text-sm" style={{ color: colors.textSecondary }}>
-                    FCFA/kg
+                    FCFA/{aliment.unite}
                   </p>
                 </div>
               </div>
@@ -227,19 +227,36 @@ const BuyFeedPage = ({ currentUser, onNavigate }) => {
                     📦 Stock disponible :
                   </span>
                   <span className="font-bold text-sm" style={{ color: colors.success }}>
-                    {aliment.stock} kg
+                    {aliment.quantite_disponible} {aliment.unite}
                   </span>
                 </div>
               </div>
 
-              {/* Bouton commander */}
-              <button
-                onClick={() => handleCommander(aliment)}
-                className="w-full py-3 rounded-xl font-bold text-lg text-white"
-                style={{ backgroundColor: colors.primary }}
-              >
-                📞 Appeler pour commander
-              </button>
+              {/* Boutons d'action */}
+              {!isOwner(aliment) ? (
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => handleCommander(aliment)}
+                    className="flex-1 py-3 rounded-xl font-bold text-lg text-white"
+                    style={{ backgroundColor: colors.primary }}
+                  >
+                    🛒 Commander
+                  </button>
+                  <button
+                    onClick={() => alert('Pour plus d\'informations, veuillez d\'abord passer commande. Le fournisseur pourra alors vous contacter directement.')}
+                    className="px-4 py-3 rounded-xl font-bold text-lg text-white"
+                    style={{ backgroundColor: colors.textSecondary }}
+                  >
+                    💬 Info
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center py-3 px-4 rounded-xl" style={{ backgroundColor: colors.background }}>
+                  <p className="text-sm font-medium" style={{ color: colors.textSecondary }}>
+                    📝 Votre produit
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>
