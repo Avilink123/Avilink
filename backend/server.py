@@ -326,6 +326,56 @@ class UserPresence(BaseModel):
     status: str = "online"  # online, offline, away
     last_seen: datetime = Field(default_factory=datetime.utcnow)
 
+# Modèles pour système de commandes sécurisé
+class OrderStatus(str, Enum):
+    PENDING = "pending"      # En attente de validation vendeur
+    ACCEPTED = "accepted"    # Acceptée par le vendeur
+    REJECTED = "rejected"    # Refusée par le vendeur
+    COMPLETED = "completed"  # Terminée
+    CANCELLED = "cancelled"  # Annulée
+
+class Order(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    product_id: str
+    product_title: str
+    product_price: float
+    quantity_requested: int
+    buyer_id: str
+    buyer_nom: str
+    buyer_role: str
+    seller_id: str
+    seller_nom: str
+    seller_role: str
+    status: OrderStatus = OrderStatus.PENDING
+    message_from_buyer: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    total_amount: float = 0.0
+    
+    def __init__(self, **data):
+        super().__init__(**data)
+        if self.total_amount == 0.0:
+            self.total_amount = self.product_price * self.quantity_requested
+
+class OrderCreate(BaseModel):
+    product_id: str
+    quantity_requested: int = 1
+    message_from_buyer: Optional[str] = None
+
+class OrderUpdate(BaseModel):
+    status: OrderStatus
+    response_message: Optional[str] = None
+
+class Notification(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    type: str  # "new_order", "order_accepted", "order_rejected"
+    title: str
+    message: str
+    related_id: Optional[str] = None  # order_id, product_id, etc.
+    read: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 # Gestionnaire des connexions WebSocket
 class ConnectionManager:
     def __init__(self):
