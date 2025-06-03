@@ -222,8 +222,7 @@ const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
               {/* Téléphone */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  <Phone className="inline w-4 h-4 mr-1" />
-                  Numéro de téléphone
+                  📞 Numéro de téléphone
                 </label>
                 <input
                   type="tel"
