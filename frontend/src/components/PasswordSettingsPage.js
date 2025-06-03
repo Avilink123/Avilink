@@ -280,8 +280,7 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
                 </>
               ) : (
                 <>
-                  <Lock size={20} />
-                  {hasPassword ? 'Changer le Mot de Passe' : 'Créer le Mot de Passe'}
+                  🔒 {hasPassword ? 'Changer le Mot de Passe' : 'Créer le Mot de Passe'}
                 </>
               )}
             </button>
