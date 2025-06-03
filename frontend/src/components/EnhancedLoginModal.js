@@ -379,9 +379,9 @@ const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg"
                         >
-                          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                          {showPassword ? '🙈' : '👁️'}
                         </button>
                       </div>
                     </div>
