@@ -301,7 +301,7 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
         </div>
 
         {/* Messages */}
-        <div className="px-4 py-4 space-y-3 pb-32" style={{ minHeight: 'calc(100vh - 250px)' }}>
+        <div className="px-4 py-4 space-y-3 pb-40" style={{ minHeight: 'calc(100vh - 280px)' }}>
           <div className="max-w-md mx-auto">
             {messages[selectedConversation.id]?.map(message => (
               <div
