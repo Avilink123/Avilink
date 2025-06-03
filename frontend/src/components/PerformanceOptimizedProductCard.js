@@ -137,17 +137,15 @@ const PerformanceOptimizedProductCard = memo(({
           {!isOwner && (
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
               <button
-                onClick={handleCall}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-semibold text-center flex items-center justify-center space-x-1 transition-colors"
-                title={`Appeler ${product.vendeur_nom}`}
+                onClick={handleContact}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors"
+                title="Commander ce produit"
               >
-                <span>📞</span>
-                <span className="hidden md:inline">{product.vendeur_telephone}</span>
-                <span className="md:hidden">Appeler</span>
+                🛒 Commander
               </button>
               <button
                 onClick={handleContact}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors"
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors"
                 title="Plus d'informations"
               >
                 💬 Info
