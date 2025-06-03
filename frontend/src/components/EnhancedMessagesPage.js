@@ -400,15 +400,23 @@ const EnhancedMessagesPage = ({ currentUser, onNavigate, params = {} }) => {
             💬 Messages
           </h1>
           <p className="text-center mt-2" style={{ color: colors.textSecondary }}>
-            Conversations en temps réel
+            {fallbackMode ? 'Messages synchronisés' : 'Conversations en temps réel'}
           </p>
-          {!isConnected && (
-            <div className="text-center mt-2">
+          <div className="text-center mt-2">
+            {!isConnected ? (
               <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
-                ⚠️ Mode hors ligne - Reconnexion en cours...
+                ⚠️ Reconnexion en cours...
               </span>
-            </div>
-          )}
+            ) : fallbackMode ? (
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                📱 Mode compatible
+              </span>
+            ) : (
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                ⚡ Temps réel activé
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
