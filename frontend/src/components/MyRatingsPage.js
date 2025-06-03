@@ -90,8 +90,7 @@ const MyRatingsPage = ({ onBack, currentUser }) => {
         {ratingsSummary && (
           <div className="bg-white rounded-xl p-6 shadow-lg">
             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <Award className={`text-${color}-600`} size={24} />
-              Résumé de votre Réputation
+              🏆 Résumé de votre Réputation
             </h2>
 
             {ratingsSummary.nombre_evaluations > 0 ? (
