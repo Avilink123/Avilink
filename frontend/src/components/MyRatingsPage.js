@@ -158,11 +158,12 @@ const MyRatingsPage = ({ onBack, currentUser }) => {
                       <div className="flex items-center gap-2">
                         <div className="flex">
                           {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
+                            <span
                               key={star}
-                              size={16}
-                              className={star <= rating.note ? 'text-yellow-400 fill-current' : 'text-gray-300'}
-                            />
+                              className={star <= rating.note ? 'text-yellow-400' : 'text-gray-300'}
+                            >
+                              ⭐
+                            </span>
                           ))}
                         </div>
                         <span className="text-sm text-gray-600">({rating.note}/5)</span>
