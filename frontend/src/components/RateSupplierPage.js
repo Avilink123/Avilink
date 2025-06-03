@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Star, Send, User, Package } from 'lucide-react';
 
 const RateSupplierPage = ({ onBack, currentUser }) => {
   const [suppliers, setSuppliers] = useState([]);
