@@ -282,7 +282,7 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
               )}
             </div>
             <button 
-              onClick={() => handleAppeler(selectedConversation)}
+              onClick={() => handleCall(selectedConversation)}
               className="text-2xl"
               style={{ color: colors.primary }}
             >
