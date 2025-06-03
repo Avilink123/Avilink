@@ -270,14 +270,23 @@ const BuyFeedPage = ({ currentUser, onNavigate }) => {
             style={{ backgroundColor: colors.surface }}
           >
             <p className="text-lg font-bold" style={{ color: colors.text }}>
-              💡 Conseil
+              🔒 Achat Sécurisé
             </p>
             <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-              Choisissez des aliments de qualité pour avoir des volailles en bonne santé
+              Commandez en toute sécurité ! Le fournisseur recevra votre demande et pourra vous contacter seulement après avoir accepté votre commande.
             </p>
           </div>
         </div>
       </div>
+      
+      {/* Order Modal */}
+      <OrderModal
+        isOpen={showOrderModal}
+        onClose={() => setShowOrderModal(false)}
+        product={selectedProduct}
+        currentUser={currentUser}
+        onOrderSuccess={handleOrderSuccess}
+      />
     </div>
   );
 };
