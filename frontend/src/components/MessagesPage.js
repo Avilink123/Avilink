@@ -1,158 +1,246 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
   const { colors } = useTheme();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [messages, setMessages] = useState({});
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
+  const [isConnected, setIsConnected] = useState(true);
 
-  useEffect(() => {
-    // Conversation Support spéciale pour contacter l'admin
-    const supportConversation = {
-      id: 'support',
-      contact: 'Support AviMarché',
-      role: 'Équipe Support',
-      dernierMessage: 'Bonjour ! Comment pouvons-nous vous aider ?',
-      heure: 'Maintenant',
-      nonLu: false,
-      telephone: '+223 20 22 44 55',
-      isSupport: true,
-      messages: [
-        { 
-          id: '1', 
-          texte: 'Bonjour ! Je suis là pour vous aider avec toutes vos questions sur AviMarché. N\'hésitez pas à me poser vos questions !', 
-          expediteur: 'Support AviMarché', 
-          heure: 'Maintenant' 
-        }
-      ]
-    };
+  // Load conversations from backend
+  const loadConversations = async () => {
+    if (!currentUser) return;
 
-    // Simulation conversations normales (simple pour illettrés)
-    const mockConversations = [
-      supportConversation,
-      {
-        id: '1',
-        contact: 'Mamadou Keita',
-        role: 'Acheteur',
-        dernierMessage: 'Je veux 10 poules pondeuses',
-        heure: '10:30',
-        nonLu: true,
-        telephone: '+223 76 12 34 56',
-        messages: [
-          { id: '1', texte: 'Bonjour, avez-vous des poules pondeuses ?', expediteur: 'Mamadou Keita', heure: '10:25' },
-          { id: '2', texte: 'Oui, j\'ai de belles poules qui pondent bien', expediteur: 'Moi', heure: '10:27' },
-          { id: '3', texte: 'Je veux 10 poules pondeuses', expediteur: 'Mamadou Keita', heure: '10:30' }
-        ]
-      },
-      {
-        id: '2',
-        contact: 'Fatoumata Diarra',
-        role: 'Fournisseur',
-        dernierMessage: 'Votre commande de maïs est prête',
-        heure: 'Hier',
-        nonLu: false,
-        telephone: '+223 65 43 21 98',
-        messages: [
-          { id: '1', texte: 'Bonjour, je veux commander du maïs', expediteur: 'Moi', heure: 'Hier 15:00' },
-          { id: '2', texte: 'Combien de kg voulez-vous ?', expediteur: 'Fatoumata Diarra', heure: 'Hier 15:10' },
-          { id: '3', texte: '50 kg de maïs s\'il vous plaît', expediteur: 'Moi', heure: 'Hier 15:12' },
-          { id: '4', texte: 'Votre commande de maïs est prête', expediteur: 'Fatoumata Diarra', heure: 'Hier 16:00' }
-        ]
-      },
-      {
-        id: '3',
-        contact: 'Ibrahim Coulibaly',
-        role: 'Acheteur',
-        dernierMessage: 'Merci pour les belles pintades',
-        heure: 'Lundi',
-        nonLu: false,
-        telephone: '+223 78 87 65 43',
-        messages: [
-          { id: '1', texte: 'Vos pintades sont-elles disponibles ?', expediteur: 'Ibrahim Coulibaly', heure: 'Lundi 09:00' },
-          { id: '2', texte: 'Oui, j\'ai 5 pintades à vendre', expediteur: 'Moi', heure: 'Lundi 09:30' },
-          { id: '3', texte: 'Je viens les chercher cet après-midi', expediteur: 'Ibrahim Coulibaly', heure: 'Lundi 10:00' },
-          { id: '4', texte: 'Merci pour les belles pintades', expediteur: 'Ibrahim Coulibaly', heure: 'Lundi 17:00' }
-        ]
-      }
-    ];
-
-    setTimeout(() => {
-      setConversations(mockConversations);
-      setLoading(false);
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API}/conversations?user_id=${currentUser.id}`);
+      const realConversations = response.data || [];
       
-      // Si redirection depuis ContactSupportPage, ouvrir directement conversation support
-      if (params.openSupport) {
-        setSelectedConversation(supportConversation);
-      }
-    }, 800);
-  }, [params]);
-
-  const handleEnvoyerMessage = () => {
-    if (!newMessage.trim() || !selectedConversation) return;
-
-    const newMsg = {
-      id: Date.now().toString(),
-      texte: newMessage,
-      expediteur: 'Moi',
-      heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-    };
-
-    // Réponse automatique du support
-    let supportResponse = null;
-    if (selectedConversation.isSupport) {
-      const responses = [
-        "Merci pour votre message ! Un membre de notre équipe va vous répondre très bientôt.",
-        "Nous avons bien reçu votre demande. Notre équipe étudie votre problème et vous répond rapidement.",
-        "Votre message est important pour nous. Nous vous contactons dans les plus brefs délais.",
-        "Merci de nous faire confiance ! Notre équipe technique traite votre demande en priorité."
-      ];
-      
-      supportResponse = {
-        id: (Date.now() + 1).toString(),
-        texte: responses[Math.floor(Math.random() * responses.length)],
-        expediteur: 'Support AviMarché',
-        heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      // Add support conversation as first item
+      const supportConversation = {
+        id: 'support',
+        type: 'support',
+        participants: [currentUser.id, 'support'],
+        participants_details: [
+          { id: currentUser.id, nom: currentUser.nom, role: currentUser.role },
+          { id: 'support', nom: 'Support AviMarché', role: 'Équipe Support' }
+        ],
+        last_message: 'Bonjour ! Comment pouvons-nous vous aider ?',
+        last_message_timestamp: new Date().toISOString(),
+        last_message_sender: 'support',
+        unread_count: { [currentUser.id]: 0 },
+        isSupport: true
       };
+
+      const allConversations = [supportConversation, ...realConversations];
+      setConversations(allConversations);
+      
+    } catch (error) {
+      console.error('Error loading conversations:', error);
+      // Fallback to demo data if backend fails
+      setConversations(getDemoConversations());
+    } finally {
+      setLoading(false);
     }
-
-    const updatedConversations = conversations.map(conv => {
-      if (conv.id === selectedConversation.id) {
-        const newMessages = supportResponse 
-          ? [...conv.messages, newMsg, supportResponse]
-          : [...conv.messages, newMsg];
-        
-        return {
-          ...conv,
-          messages: newMessages,
-          dernierMessage: supportResponse ? supportResponse.texte : newMessage,
-          heure: 'Maintenant'
-        };
-      }
-      return conv;
-    });
-
-    setConversations(updatedConversations);
-    
-    const updatedSelectedConv = {
-      ...selectedConversation,
-      messages: supportResponse 
-        ? [...selectedConversation.messages, newMsg, supportResponse]
-        : [...selectedConversation.messages, newMsg]
-    };
-    
-    setSelectedConversation(updatedSelectedConv);
-    setNewMessage('');
   };
 
-  const handleAppeler = (conversation) => {
-    alert(
-      `📞 Appeler ${conversation.contact}\n\n` +
-      `👤 ${conversation.role}\n` +
-      `☎️ ${conversation.telephone}\n\n` +
-      `Appuyez sur le numéro pour composer`
+  // Load messages for a specific conversation
+  const loadMessages = async (conversationId) => {
+    if (!currentUser || !conversationId) return;
+
+    // Handle support conversation with demo messages
+    if (conversationId === 'support') {
+      const supportMessages = [
+        {
+          id: '1',
+          conversation_id: 'support',
+          sender_id: 'support',
+          sender_nom: 'Support AviMarché',
+          recipient_id: currentUser.id,
+          recipient_nom: currentUser.nom,
+          content: 'Bonjour ! Je suis là pour vous aider avec toutes vos questions sur AviMarché. N\'hésitez pas à me poser vos questions !',
+          status: 'read',
+          timestamp: new Date().toISOString()
+        }
+      ];
+      setMessages(prev => ({ ...prev, [conversationId]: supportMessages }));
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${API}/conversations/${conversationId}/messages?user_id=${currentUser.id}&limit=50`);
+      const conversationMessages = response.data || [];
+      setMessages(prev => ({ ...prev, [conversationId]: conversationMessages }));
+      
+      // Mark messages as read
+      await axios.post(`${API}/conversations/${conversationId}/mark-read?user_id=${currentUser.id}`);
+      
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      setMessages(prev => ({ ...prev, [conversationId]: [] }));
+    }
+  };
+
+  // Send a message
+  const sendMessage = async (conversationId, recipientId, content) => {
+    if (!currentUser || !content.trim()) return;
+
+    try {
+      // Handle support messages
+      if (conversationId === 'support') {
+        const newMsg = {
+          id: Date.now().toString(),
+          conversation_id: 'support',
+          sender_id: currentUser.id,
+          sender_nom: currentUser.nom,
+          recipient_id: 'support',
+          recipient_nom: 'Support AviMarché',
+          content: content.trim(),
+          status: 'sent',
+          timestamp: new Date().toISOString()
+        };
+
+        // Add user message
+        setMessages(prev => ({
+          ...prev,
+          [conversationId]: [...(prev[conversationId] || []), newMsg]
+        }));
+
+        // Auto-response from support
+        setTimeout(() => {
+          const responses = [
+            "Merci pour votre message ! Un membre de notre équipe va vous répondre très bientôt.",
+            "Nous avons bien reçu votre demande. Notre équipe étudie votre problème et vous répond rapidement.",
+            "Votre message est important pour nous. Nous vous contactons dans les plus brefs délais.",
+            "Merci de nous faire confiance ! Notre équipe technique traite votre demande en priorité."
+          ];
+          
+          const supportResponse = {
+            id: (Date.now() + 1).toString(),
+            conversation_id: 'support',
+            sender_id: 'support',
+            sender_nom: 'Support AviMarché',
+            recipient_id: currentUser.id,
+            recipient_nom: currentUser.nom,
+            content: responses[Math.floor(Math.random() * responses.length)],
+            status: 'sent',
+            timestamp: new Date().toISOString()
+          };
+
+          setMessages(prev => ({
+            ...prev,
+            [conversationId]: [...(prev[conversationId] || []), supportResponse]
+          }));
+        }, 2000);
+
+        return newMsg;
+      }
+
+      // Real conversation
+      const response = await axios.post(`${API}/messages?sender_id=${currentUser.id}`, {
+        conversation_id: conversationId,
+        recipient_id: recipientId,
+        content: content.trim()
+      });
+
+      const newMessage = response.data;
+      setMessages(prev => ({
+        ...prev,
+        [conversationId]: [...(prev[conversationId] || []), newMessage]
+      }));
+
+      return newMessage;
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setIsConnected(false);
+      return null;
+    }
+  };
+
+  // Get demo conversations for fallback
+  const getDemoConversations = () => {
+    return [
+      {
+        id: 'support',
+        type: 'support',
+        participants: [currentUser.id, 'support'],
+        participants_details: [
+          { id: currentUser.id, nom: currentUser.nom, role: currentUser.role },
+          { id: 'support', nom: 'Support AviMarché', role: 'Équipe Support' }
+        ],
+        last_message: 'Bonjour ! Comment pouvons-nous vous aider ?',
+        last_message_timestamp: new Date().toISOString(),
+        last_message_sender: 'support',
+        unread_count: { [currentUser.id]: 0 },
+        isSupport: true
+      },
+      {
+        id: 'demo1',
+        type: 'direct',
+        participants: [currentUser.id, 'demo1'],
+        participants_details: [
+          { id: currentUser.id, nom: currentUser.nom, role: currentUser.role },
+          { id: 'demo1', nom: 'Mamadou Keita', role: 'Acheteur' }
+        ],
+        last_message: 'Je veux 10 poules pondeuses',
+        last_message_timestamp: new Date(Date.now() - 3600000).toISOString(),
+        last_message_sender: 'demo1',
+        unread_count: { [currentUser.id]: 1 }
+      }
+    ];
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      loadConversations();
+      
+      // If redirected from support page, open support conversation
+      if (params.openSupport) {
+        const supportConv = {
+          id: 'support',
+          type: 'support',
+          participants_details: [
+            { id: 'support', nom: 'Support AviMarché', role: 'Équipe Support' }
+          ],
+          isSupport: true
+        };
+        setSelectedConversation(supportConv);
+        loadMessages('support');
+      }
+    }
+  }, [currentUser, params]);
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedConversation || !currentUser) return;
+
+    const otherParticipant = selectedConversation.participants_details?.find(
+      p => p.id !== currentUser.id
     );
+    
+    if (!otherParticipant) return;
+
+    const success = await sendMessage(
+      selectedConversation.id, 
+      otherParticipant.id, 
+      newMessage
+    );
+
+    if (success) {
+      setNewMessage('');
+    }
+  };
+
+  const handleCall = (conversation) => {
+    const participant = conversation.participants_details?.find(p => p.id !== currentUser?.id);
+    const phone = participant?.telephone || '+223 20 22 44 55';
+    window.open(`tel:${phone}`, '_self');
   };
 
   if (loading) {
