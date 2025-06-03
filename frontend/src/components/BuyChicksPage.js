@@ -189,10 +189,10 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex-1">
                   <h3 className="text-lg font-bold" style={{ color: colors.text }}>
-                    🐣 {produit.nom}
+                    🐣 {produit.titre}
                   </h3>
                   <p className="text-sm" style={{ color: colors.primary }}>
-                    👨‍🌾 {produit.vendeur}
+                    👨‍🌾 {produit.vendeur_nom}
                   </p>
                   <p className="text-sm" style={{ color: colors.textSecondary }}>
                     📍 {produit.localisation}
@@ -203,7 +203,7 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
                     {produit.prix}
                   </p>
                   <p className="text-sm" style={{ color: colors.textSecondary }}>
-                    FCFA/pièce
+                    FCFA/{produit.unite}
                   </p>
                 </div>
               </div>
@@ -222,7 +222,7 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
                     📦 Stock disponible :
                   </span>
                   <span className="font-bold text-sm" style={{ color: colors.success }}>
-                    {produit.stock} pièces
+                    {produit.quantite_disponible} {produit.unite}
                   </span>
                 </div>
               </div>
