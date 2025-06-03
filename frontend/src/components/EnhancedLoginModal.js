@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ModernCard from './ModernCard';
 import ModernButton from './ModernButton';
 import { BACKGROUND_IMAGES, REGIONS_MALI } from '../constants';
-import { Phone, Lock, MessageSquare, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
