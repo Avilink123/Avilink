@@ -1937,6 +1937,18 @@ function App() {
                 <p><strong>Rôle:</strong> {currentUser.role}</p>
                 <p><strong>Localisation:</strong> {currentUser.localisation || 'Non renseigné'}</p>
               </div>
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h3 className="font-semibold mb-3">Sécurité et Authentification</h3>
+                <button 
+                  onClick={() => setCurrentPage('password-settings')} 
+                  className="w-full p-3 bg-blue-600 text-white rounded-lg mb-2 hover:bg-blue-700 transition-colors"
+                >
+                  🔒 Configurer mot de passe
+                </button>
+                <p className="text-sm text-gray-600">
+                  {currentUser.password ? 'Modifier votre mot de passe' : 'Créer un mot de passe pour connexion rapide'}
+                </p>
+              </div>
               <button onClick={() => setCurrentPage('home')} className="w-full p-3 bg-green-600 text-white rounded">
                 Retour à l'accueil
               </button>
