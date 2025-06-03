@@ -1049,6 +1049,222 @@ async def get_financial_summary(user_id: str, days: int = 30):
         principales_depenses=sorted([{"categorie": k, "montant": v} for k, v in cat_depenses.items()], key=lambda x: x["montant"], reverse=True)[:5]
     )
 
+# ROUTES POUR SYSTÈME DE COMMANDES SÉCURISÉ
+
+# Créer une nouvelle commande
+@api_router.post("/orders", response_model=Order)
+async def create_order(order_data: OrderCreate, buyer_id: str = Query(...)):
+    """Créer une nouvelle commande pour un produit"""
+    try:
+        buyer = await get_current_user(buyer_id)
+        
+        # Récupérer le produit
+        product = await db.products.find_one({"id": order_data.product_id})
+        if not product:
+            raise HTTPException(status_code=404, detail="Produit non trouvé")
+        
+        # Récupérer le vendeur
+        seller = await get_current_user(product["vendeur_id"])
+        if not seller:
+            raise HTTPException(status_code=404, detail="Vendeur non trouvé")
+        
+        # Vérifier que l'acheteur n'est pas le vendeur
+        if buyer_id == product["vendeur_id"]:
+            raise HTTPException(status_code=400, detail="Vous ne pouvez pas commander votre propre produit")
+        
+        # Créer la commande
+        order = Order(
+            product_id=order_data.product_id,
+            product_title=product["titre"],
+            product_price=product["prix"],
+            quantity_requested=order_data.quantity_requested,
+            buyer_id=buyer_id,
+            buyer_nom=buyer.nom,
+            buyer_role=buyer.role,
+            seller_id=product["vendeur_id"],
+            seller_nom=product["vendeur_nom"],
+            seller_role=seller.role,
+            message_from_buyer=order_data.message_from_buyer
+        )
+        
+        await db.orders.insert_one(order.dict())
+        
+        # Créer une notification pour le vendeur
+        notification = Notification(
+            user_id=product["vendeur_id"],
+            type="new_order",
+            title="Nouvelle commande reçue",
+            message=f"{buyer.nom} veut commander {order_data.quantity_requested} x {product['titre']}",
+            related_id=order.id
+        )
+        
+        await db.notifications.insert_one(notification.dict())
+        
+        # Envoyer notification en temps réel
+        await manager.send_personal_message(product["vendeur_id"], {
+            "type": "new_order_notification",
+            "order": order.dict(),
+            "notification": notification.dict()
+        })
+        
+        return order
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la création de la commande: {str(e)}")
+
+# Récupérer les commandes d'un utilisateur (en tant qu'acheteur)
+@api_router.get("/orders/sent", response_model=List[Order])
+async def get_sent_orders(user_id: str = Query(...)):
+    """Récupérer les commandes envoyées par l'utilisateur"""
+    try:
+        user = await get_current_user(user_id)
+        orders = await db.orders.find({"buyer_id": user_id}).sort("created_at", -1).to_list(50)
+        return [Order(**order) for order in orders]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la récupération des commandes: {str(e)}")
+
+# Récupérer les commandes reçues par un vendeur
+@api_router.get("/orders/received", response_model=List[Order])
+async def get_received_orders(user_id: str = Query(...)):
+    """Récupérer les commandes reçues par le vendeur"""
+    try:
+        user = await get_current_user(user_id)
+        orders = await db.orders.find({"seller_id": user_id}).sort("created_at", -1).to_list(50)
+        return [Order(**order) for order in orders]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la récupération des commandes: {str(e)}")
+
+# Mettre à jour le statut d'une commande (vendeur uniquement)
+@api_router.put("/orders/{order_id}", response_model=Order)
+async def update_order_status(order_id: str, order_update: OrderUpdate, user_id: str = Query(...)):
+    """Mettre à jour le statut d'une commande (vendeur uniquement)"""
+    try:
+        user = await get_current_user(user_id)
+        
+        # Récupérer la commande
+        order = await db.orders.find_one({"id": order_id})
+        if not order:
+            raise HTTPException(status_code=404, detail="Commande non trouvée")
+        
+        # Vérifier que l'utilisateur est le vendeur
+        if order["seller_id"] != user_id:
+            raise HTTPException(status_code=403, detail="Seul le vendeur peut modifier cette commande")
+        
+        # Mettre à jour la commande
+        update_data = {
+            "status": order_update.status,
+            "updated_at": datetime.utcnow()
+        }
+        
+        await db.orders.update_one({"id": order_id}, {"$set": update_data})
+        
+        # Récupérer la commande mise à jour
+        updated_order = await db.orders.find_one({"id": order_id})
+        order_obj = Order(**updated_order)
+        
+        # Créer notification pour l'acheteur
+        notification_title = ""
+        notification_message = ""
+        
+        if order_update.status == OrderStatus.ACCEPTED:
+            notification_title = "Commande acceptée"
+            notification_message = f"Votre commande pour {order['product_title']} a été acceptée par {order['seller_nom']}"
+            
+            # Créer automatiquement une conversation entre acheteur et vendeur
+            conversation = Conversation(
+                type=ConversationType.DIRECT,
+                participants=[order["buyer_id"], order["seller_id"]],
+                participants_details=[
+                    {"id": order["buyer_id"], "nom": order["buyer_nom"], "role": order["buyer_role"]},
+                    {"id": order["seller_id"], "nom": order["seller_nom"], "role": order["seller_role"]}
+                ],
+                title=f"Commande: {order['product_title']}",
+                unread_count={order["buyer_id"]: 0, order["seller_id"]: 0}
+            )
+            
+            # Vérifier si la conversation existe déjà
+            existing_conversation = await db.conversations.find_one({
+                "type": "direct",
+                "participants": {"$all": [order["buyer_id"], order["seller_id"]], "$size": 2}
+            })
+            
+            if not existing_conversation:
+                await db.conversations.insert_one(conversation.dict())
+                
+                # Message automatique de début de conversation
+                initial_message = Message(
+                    conversation_id=conversation.id,
+                    sender_id=order["seller_id"],
+                    sender_nom=order["seller_nom"],
+                    recipient_id=order["buyer_id"],
+                    recipient_nom=order["buyer_nom"],
+                    content=f"Bonjour ! J'ai accepté votre commande pour {order['product_title']}. Nous pouvons maintenant discuter des détails."
+                )
+                await db.messages.insert_one(initial_message.dict())
+                
+                # Notifier le nouveau message
+                await manager.send_personal_message(order["buyer_id"], {
+                    "type": "new_message",
+                    "message": initial_message.dict(),
+                    "conversation_id": conversation.id
+                })
+            
+        elif order_update.status == OrderStatus.REJECTED:
+            notification_title = "Commande refusée"
+            notification_message = f"Votre commande pour {order['product_title']} a été refusée par {order['seller_nom']}"
+        
+        # Créer la notification
+        notification = Notification(
+            user_id=order["buyer_id"],
+            type="order_status_update",
+            title=notification_title,
+            message=notification_message,
+            related_id=order_id
+        )
+        
+        await db.notifications.insert_one(notification.dict())
+        
+        # Envoyer notification en temps réel
+        await manager.send_personal_message(order["buyer_id"], {
+            "type": "order_status_notification",
+            "order": order_obj.dict(),
+            "notification": notification.dict()
+        })
+        
+        return order_obj
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la mise à jour de la commande: {str(e)}")
+
+# Récupérer les notifications d'un utilisateur
+@api_router.get("/notifications", response_model=List[Notification])
+async def get_user_notifications(user_id: str = Query(...)):
+    """Récupérer les notifications d'un utilisateur"""
+    try:
+        user = await get_current_user(user_id)
+        notifications = await db.notifications.find({"user_id": user_id}).sort("created_at", -1).limit(20).to_list(20)
+        return [Notification(**notif) for notif in notifications]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la récupération des notifications: {str(e)}")
+
+# Marquer une notification comme lue
+@api_router.post("/notifications/{notification_id}/mark-read")
+async def mark_notification_read(notification_id: str, user_id: str = Query(...)):
+    """Marquer une notification comme lue"""
+    try:
+        user = await get_current_user(user_id)
+        
+        # Vérifier que la notification appartient à l'utilisateur
+        notification = await db.notifications.find_one({"id": notification_id, "user_id": user_id})
+        if not notification:
+            raise HTTPException(status_code=404, detail="Notification non trouvée")
+        
+        await db.notifications.update_one({"id": notification_id}, {"$set": {"read": True}})
+        return {"message": "Notification marquée comme lue"}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la mise à jour de la notification: {str(e)}")
+
 # ROUTES POUR SYSTÈME DE MESSAGERIE EN TEMPS RÉEL
 
 # WebSocket endpoint pour la messagerie en temps réel
