@@ -1964,6 +1964,44 @@ function App() {
             </div>
           </div>
         );
+      // ===== NOUVELLES PAGES FEEDBACK BIDIRECTIONNEL =====
+      case 'rate-farmer':
+        // Page noter un éleveur - Acheteurs uniquement
+        if (!currentUser || currentUser.role !== 'acheteur') {
+          alert('Accès restreint : Cette section est réservée aux acheteurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <RateFarmerPage currentUser={currentUser} onBack={() => setCurrentPage('home')} />;
+
+      case 'rate-supplier':
+        // Page noter un fournisseur - Éleveurs uniquement
+        if (!currentUser || currentUser.role !== 'aviculteur') {
+          alert('Accès restreint : Cette section est réservée aux éleveurs');
+          setCurrentPage('home');
+          return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
+        }
+        return <RateSupplierPage currentUser={currentUser} onBack={() => setCurrentPage('home')} />;
+
+      case 'my-ratings':
+        // Page voir mes évaluations - Tous les utilisateurs connectés
+        if (!currentUser) {
+          alert('Vous devez être connecté pour voir vos évaluations');
+          setCurrentPage('register');
+          return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
+        }
+        return <MyRatingsPage currentUser={currentUser} onBack={() => setCurrentPage('home')} />;
+
+      // ===== NOUVELLES PAGES AUTHENTIFICATION AMÉLIORÉE =====
+      case 'password-settings':
+        // Page configuration mot de passe - Tous les utilisateurs connectés
+        if (!currentUser) {
+          alert('Vous devez être connecté pour configurer un mot de passe');
+          setCurrentPage('register');
+          return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
+        }
+        return <PasswordSettingsPage currentUser={currentUser} onBack={() => setCurrentPage('profile')} />;
+
       default:
         // Pour les non-connectés : afficher la page d'inscription
         if (!currentUser) {
