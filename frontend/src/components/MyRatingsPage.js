@@ -171,8 +171,7 @@ const MyRatingsPage = ({ onBack, currentUser }) => {
                     </div>
                     <div className="text-right text-sm text-gray-500">
                       <div className="flex items-center gap-1">
-                        <Clock size={14} />
-                        {formatDate(rating.date_evaluation)}
+                        🕐 {formatDate(rating.date_evaluation)}
                       </div>
                     </div>
                   </div>
