@@ -397,9 +397,9 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
                   <div className="flex items-center space-x-2">
                     {conversation.isSupport && <span className="text-xl">🛡️</span>}
                     <h3 className="font-bold text-lg" style={{ color: colors.text }}>
-                      {conversation.contact}
+                      {conversation.participants_details.find(p => p.id !== currentUser?.id)?.nom}
                     </h3>
-                    {conversation.nonLu && (
+                    {conversation.unread_count?.[currentUser?.id] > 0 && (
                       <div className="w-3 h-3 rounded-full bg-red-500"></div>
                     )}
                     {conversation.isSupport && (
@@ -412,15 +412,15 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
                     className="text-sm" 
                     style={{ color: conversation.isSupport ? '#2e7d32' : colors.primary }}
                   >
-                    {conversation.role}
+                    {conversation.participants_details.find(p => p.id !== currentUser?.id)?.role}
                   </p>
                   <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
-                    {conversation.dernierMessage}
+                    {conversation.last_message}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm" style={{ color: colors.textSecondary }}>
-                    {conversation.heure}
+                    {new Date(conversation.last_message_timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                   </p>
                   <button
                     onClick={(e) => {
