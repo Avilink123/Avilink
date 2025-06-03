@@ -324,9 +324,20 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
                     </div>
                   )}
                   <p className="text-sm">{message.content}</p>
-                  <p className="text-xs mt-1 opacity-70">
-                    {new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                  </p>
+                  <div className="flex items-center justify-between mt-1">
+                    <p className="text-xs opacity-70">
+                      {new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                    {message.sender_id === currentUser?.id && (
+                      <span className={`text-xs ml-2 ${
+                        message.status === 'read' ? 'text-blue-400' : 
+                        message.status === 'delivered' ? 'text-green-400' : 'text-gray-400'
+                      }`}>
+                        {message.status === 'read' ? '✓✓' : 
+                         message.status === 'delivered' ? '✓✓' : '✓'}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
