@@ -102,6 +102,12 @@
 - ✅ **Guide visuel 4 étapes** - Instructions simples avec emojis
 - ✅ **Accès support direct** - Bouton d'aide immédiatement accessible
 
+**🧮 CORRECTION ACCÈS CALCULATRICE:**
+- ✅ **Problème résolu** - Calculatrice maintenant accessible aux éleveurs
+- ✅ **Accès élargi** - Éleveurs ET acheteurs peuvent utiliser la calculatrice
+- ✅ **Interface adaptée** - Texte change selon le rôle (production vs achat)
+- ✅ **Fonctionnalité complète** - Calculs de rentabilité pour tous les utilisateurs
+
 **🇲🇱 ADAPTATION MALI:**
 - Interface simple avec icônes universelles (🛒, ✅, ❌, 🔔)
 - Messages clairs en français accessible
