@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Lock, Eye, EyeOff, Shield, CheckCircle } from 'lucide-react';
 
 const PasswordSettingsPage = ({ onBack, currentUser }) => {
   const [currentPassword, setCurrentPassword] = useState('');
