@@ -1,5 +1,6 @@
-import React, { memo, useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback, useState } from 'react';
 import { optimizeImage } from '../utils/performance';
+import OrderModal from './OrderModal';
 
 const PerformanceOptimizedProductCard = memo(({ 
   product, 
@@ -9,6 +10,8 @@ const PerformanceOptimizedProductCard = memo(({
   onDelete,
   lazy = true 
 }) => {
+  const [showOrderModal, setShowOrderModal] = useState(false);
+
   // Memoize expensive calculations
   const productIcon = useMemo(() => {
     const icons = {
@@ -57,9 +60,14 @@ const PerformanceOptimizedProductCard = memo(({
     onDelete?.(product.id);
   }, [onDelete, product.id]);
 
-  const handleCall = useCallback(() => {
-    window.open(`tel:${product.vendeur_telephone}`, '_self');
-  }, [product.vendeur_telephone]);
+  const handleOrder = useCallback(() => {
+    setShowOrderModal(true);
+  }, []);
+
+  const handleOrderSuccess = useCallback((order) => {
+    // Show success message
+    alert(`✅ Commande envoyée avec succès !\n\nVotre commande de ${order.quantity_requested} x ${order.product_title} a été envoyée au vendeur.\n\nVous recevrez une notification quand le vendeur aura répondu.`);
+  }, []);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
