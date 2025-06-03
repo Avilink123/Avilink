@@ -352,7 +352,7 @@ const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <MessageSquare size={16} />
+                        💬
                         <div>
                           <div className="font-medium">Connexion par SMS</div>
                           <div className="text-xs text-gray-500">Recevoir un code de vérification par SMS</div>
