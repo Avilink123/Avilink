@@ -93,15 +93,13 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
   });
 
   const handleCommander = (produit) => {
-    alert(
-      `📞 Appeler ${produit.vendeur}\n\n` +
-      `🐣 ${produit.nom}\n` +
-      `💰 ${produit.prix} FCFA/pièce\n` +
-      `📍 ${produit.localisation}\n` +
-      `📦 Stock : ${produit.stock} pièces\n\n` +
-      `☎️ Téléphone :\n${produit.telephone}\n\n` +
-      `💬 Dire : "Je veux acheter ${produit.nom}"`
-    );
+    setSelectedProduct(produit);
+    setShowOrderModal(true);
+  };
+
+  const handleOrderSuccess = (order) => {
+    setShowOrderModal(false);
+    alert(`✅ Commande envoyée avec succès !\n\nVotre commande de ${order.quantity_requested} x ${order.product_title} a été envoyée au vendeur.\n\nVous recevrez une notification quand le vendeur aura répondu.`);
   };
 
   if (loading) {
