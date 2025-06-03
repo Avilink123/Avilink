@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Star, Send, User, Package } from 'lucide-react';
 
 const RateFarmerPage = ({ onBack, currentUser }) => {
   const [farmers, setFarmers] = useState([]);
