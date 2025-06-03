@@ -472,6 +472,9 @@ backend:
         - working: true
         - agent: "testing"
         - comment: "The automatic conversation creation feature is working correctly. When a seller accepts an order, a conversation is automatically created between the buyer and seller, allowing them to communicate directly. The system also sends an initial message from the seller to the buyer to start the conversation."
+        - working: true
+        - agent: "testing"
+        - comment: "Created a dedicated test script to thoroughly test the automatic conversation creation feature. Confirmed that when a seller accepts an order, a conversation is automatically created between the buyer and seller, and an initial message is sent from the seller to the buyer. This feature works correctly for all user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR)."
 
 frontend:
   - task: "Improved-Authentication-Frontend"
