@@ -65,6 +65,8 @@ class UserCreate(BaseModel):
 
 class UserLogin(BaseModel):
     telephone: str
+    password: Optional[str] = None
+    use_sms: bool = False
 
 class Product(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
