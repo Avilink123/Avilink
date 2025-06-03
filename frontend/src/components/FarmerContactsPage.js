@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import EnhancedMessagesPage from './EnhancedMessagesPage';
 
 const FarmerContactsPage = ({ currentUser, onNavigate }) => {
-  const { colors } = useTheme();
-  const [activeTab, setActiveTab] = useState('messages');
+  // Les fournisseurs utilisent maintenant la même messagerie temps réel que tous les autres utilisateurs
+  return (
+    <EnhancedMessagesPage 
+      currentUser={currentUser} 
+      onNavigate={onNavigate}
+      params={{ 
+        title: '👥 Mes Clients Éleveurs',
+        subtitle: 'Discutez avec vos clients éleveurs'
+      }}
+    />
+  );
+};
 
-  // Simulation messages avec éleveurs
-  const conversations = [
+export default FarmerContactsPage;
     {
       id: '1',
       contact: 'Amadou Traoré',
