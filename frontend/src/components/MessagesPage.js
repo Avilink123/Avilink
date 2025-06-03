@@ -271,11 +271,11 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
               <div className="flex items-center justify-center space-x-2">
                 {selectedConversation.isSupport && <span className="text-2xl">🛡️</span>}
                 <h2 className="text-lg font-bold" style={{ color: colors.text }}>
-                  {selectedConversation.contact}
+                  {selectedConversation.participants_details.find(p => p.id !== currentUser?.id)?.nom}
                 </h2>
               </div>
               <p className="text-sm" style={{ color: selectedConversation.isSupport ? '#1976d2' : colors.textSecondary }}>
-                {selectedConversation.role}
+                {selectedConversation.participants_details.find(p => p.id !== currentUser?.id)?.role}
               </p>
               {selectedConversation.isSupport && (
                 <p className="text-xs text-green-600 font-medium">🟢 En ligne - Réponse rapide</p>
