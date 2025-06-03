@@ -103,9 +103,9 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
         <div className="flex items-center gap-4">
           <button 
             onClick={onBack}
-            className={`p-2 hover:bg-${color}-700 rounded-lg transition-colors`}
+            className={`p-2 hover:bg-${color}-700 rounded-lg transition-colors text-2xl`}
           >
-            <ArrowLeft size={24} />
+            ←
           </button>
           <div>
             <h1 className="text-xl font-bold">Configuration Mot de Passe</h1>
