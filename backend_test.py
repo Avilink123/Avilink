@@ -8,7 +8,7 @@ import random
 import os
 
 # Get the backend URL from the frontend .env file
-BACKEND_URL = "https://1706a834-d950-4813-b008-cd6d7afd76d9.preview.emergentagent.com"
+BACKEND_URL = "https://3afd9d07-bf98-406e-bfa1-1905a275aa64.preview.emergentagent.com"
 API_URL = f"{BACKEND_URL}/api"
 
 print(f"Testing backend API at: {API_URL}")
