@@ -334,7 +334,7 @@ const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Lock size={16} />
+                        🔒
                         <div>
                           <div className="font-medium">Connexion par mot de passe</div>
                           <div className="text-xs text-gray-500">Plus rapide si vous avez configuré un mot de passe</div>
