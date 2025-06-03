@@ -129,15 +129,21 @@ export const WebSocketProvider = ({ children, currentUser }) => {
       setSocket(null);
       setIsConnected(false);
     }
+    stopPollingFallback();
   };
 
   const sendMessage = (message) => {
-    if (socket && isConnected) {
+    if (socket && isConnected && !fallbackMode) {
       socket.send(JSON.stringify(message));
     }
+    // In fallback mode, messages are sent via REST API directly
   };
 
   const sendTypingIndicator = (conversationId, isTyping) => {
+    if (fallbackMode) {
+      // Skip typing indicators in fallback mode
+      return;
+    }
     sendMessage({
       type: 'typing',
       conversation_id: conversationId,
@@ -157,44 +163,54 @@ export const WebSocketProvider = ({ children, currentUser }) => {
         break;
 
       case 'typing':
-        // Handle typing indicator
-        setTypingUsers(prev => ({
-          ...prev,
-          [data.conversation_id]: {
-            ...prev[data.conversation_id],
-            [data.user_id]: data.is_typing ? data.user_nom : null
+        // Handle typing indicator (only in WebSocket mode)
+        if (!fallbackMode) {
+          setTypingUsers(prev => ({
+            ...prev,
+            [data.conversation_id]: {
+              ...prev[data.conversation_id],
+              [data.user_id]: data.is_typing ? data.user_nom : null
+            }
+          }));
+          
+          // Clear typing indicator after timeout
+          if (data.is_typing) {
+            setTimeout(() => {
+              setTypingUsers(prev => ({
+                ...prev,
+                [data.conversation_id]: {
+                  ...prev[data.conversation_id],
+                  [data.user_id]: null
+                }
+              }));
+            }, 3000);
           }
-        }));
-        
-        // Clear typing indicator after timeout
-        if (data.is_typing) {
-          setTimeout(() => {
-            setTypingUsers(prev => ({
-              ...prev,
-              [data.conversation_id]: {
-                ...prev[data.conversation_id],
-                [data.user_id]: null
-              }
-            }));
-          }, 3000);
         }
         break;
 
       case 'user_presence':
-        // Handle user presence updates
-        if (data.status === 'online') {
-          setOnlineUsers(prev => [...prev.filter(u => u.user_id !== data.user_id), {
-            user_id: data.user_id,
-            status: 'online'
-          }]);
-        } else {
-          setOnlineUsers(prev => prev.filter(u => u.user_id !== data.user_id));
+        // Handle user presence updates (only in WebSocket mode)
+        if (!fallbackMode) {
+          if (data.status === 'online') {
+            setOnlineUsers(prev => [...prev.filter(u => u.user_id !== data.user_id), {
+              user_id: data.user_id,
+              status: 'online'
+            }]);
+          } else {
+            setOnlineUsers(prev => prev.filter(u => u.user_id !== data.user_id));
+          }
         }
         break;
 
       case 'messages_read':
         // Handle read receipts
         window.dispatchEvent(new CustomEvent('messagesRead', { detail: data }));
+        break;
+
+      case 'new_order_notification':
+      case 'order_status_notification':
+        // Handle order notifications
+        window.dispatchEvent(new CustomEvent('newNotification', { detail: data }));
         break;
 
       default:
@@ -217,6 +233,7 @@ export const WebSocketProvider = ({ children, currentUser }) => {
     isConnected,
     onlineUsers,
     typingUsers,
+    fallbackMode,
     sendMessage,
     sendTypingIndicator,
     connect,
