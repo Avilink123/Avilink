@@ -174,8 +174,7 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
             {hasPassword && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  <Lock className="inline w-4 h-4 mr-1" />
-                  Mot de passe actuel
+                  🔒 Mot de passe actuel
                 </label>
                 <div className="relative">
                   <input
@@ -189,9 +188,9 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
                   <button
                     type="button"
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg"
                   >
-                    {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showCurrentPassword ? '🙈' : '👁️'}
                   </button>
                 </div>
               </div>
