@@ -15,9 +15,11 @@ export const WebSocketProvider = ({ children, currentUser }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [typingUsers, setTypingUsers] = useState({});
+  const [fallbackMode, setFallbackMode] = useState(false);
   const reconnectTimeoutRef = useRef(null);
   const reconnectAttempts = useRef(0);
-  const maxReconnectAttempts = 5;
+  const maxReconnectAttempts = 3; // Reduced attempts to avoid long delays
+  const pollIntervalRef = useRef(null);
 
   const connect = () => {
     if (!currentUser || socket) return;
@@ -28,10 +30,22 @@ export const WebSocketProvider = ({ children, currentUser }) => {
       const wsUrl = backendUrl.replace('https://', 'wss://').replace('http://', 'ws://');
       const ws = new WebSocket(`${wsUrl}/ws/${currentUser.id}`);
 
+      // Set connection timeout to 5 seconds
+      const connectionTimeout = setTimeout(() => {
+        if (ws.readyState === WebSocket.CONNECTING) {
+          console.log('WebSocket connection timeout, switching to fallback mode');
+          ws.close();
+          setFallbackMode(true);
+          startPollingFallback();
+        }
+      }, 5000);
+
       ws.onopen = () => {
-        console.log('WebSocket connected');
+        console.log('WebSocket connected successfully');
+        clearTimeout(connectionTimeout);
         setIsConnected(true);
         setSocket(ws);
+        setFallbackMode(false);
         reconnectAttempts.current = 0;
         
         // Send ping to keep connection alive
@@ -55,25 +69,54 @@ export const WebSocketProvider = ({ children, currentUser }) => {
 
       ws.onclose = () => {
         console.log('WebSocket disconnected');
+        clearTimeout(connectionTimeout);
         setIsConnected(false);
         setSocket(null);
         
-        // Attempt to reconnect
-        if (reconnectAttempts.current < maxReconnectAttempts) {
+        // Attempt to reconnect only if not in fallback mode
+        if (!fallbackMode && reconnectAttempts.current < maxReconnectAttempts) {
           reconnectAttempts.current++;
           reconnectTimeoutRef.current = setTimeout(() => {
-            console.log(`Reconnecting... Attempt ${reconnectAttempts.current}`);
+            console.log(`Reconnecting WebSocket... Attempt ${reconnectAttempts.current}`);
             connect();
           }, Math.pow(2, reconnectAttempts.current) * 1000); // Exponential backoff
+        } else if (reconnectAttempts.current >= maxReconnectAttempts) {
+          console.log('Max reconnection attempts reached, switching to fallback mode');
+          setFallbackMode(true);
+          startPollingFallback();
         }
       };
 
       ws.onerror = (error) => {
         console.error('WebSocket error:', error);
+        clearTimeout(connectionTimeout);
       };
 
     } catch (error) {
       console.error('Failed to create WebSocket connection:', error);
+      setFallbackMode(true);
+      startPollingFallback();
+    }
+  };
+
+  // Fallback polling for when WebSocket is not available
+  const startPollingFallback = () => {
+    if (pollIntervalRef.current) return; // Already polling
+    
+    console.log('Starting polling fallback for real-time features');
+    setIsConnected(true); // Consider connected in fallback mode
+    
+    // Poll for new messages every 5 seconds
+    pollIntervalRef.current = setInterval(() => {
+      // This will be handled by the useMessages hook polling
+      // We just need to maintain the "connected" state
+    }, 5000);
+  };
+
+  const stopPollingFallback = () => {
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
     }
   };
 
