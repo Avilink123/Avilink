@@ -316,7 +316,7 @@ const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Phone size={16} />
+                        📞
                         <div>
                           <div className="font-medium">Connexion simple</div>
                           <div className="text-xs text-gray-500">Avec votre numéro de téléphone uniquement</div>
