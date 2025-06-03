@@ -397,8 +397,8 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
           {conversations.map(conversation => (
             <div
               key={conversation.id}
-              onClick={() => setSelectedConversation(conversation)}
-              className="p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => handleSelectConversation(conversation)}
+              className="p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
               style={{ 
                 backgroundColor: conversation.isSupport ? '#e8f5e8' : colors.card,
                 border: conversation.isSupport ? '2px solid #4caf50' : 'none'
