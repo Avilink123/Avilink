@@ -101,8 +101,7 @@ const RateSupplierPage = ({ onBack, currentUser }) => {
         {/* Sélection du fournisseur */}
         <div className="bg-white rounded-xl p-6 shadow-lg">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <User className="text-blue-600" size={24} />
-            Choisir le Fournisseur
+            👤 Choisir le Fournisseur
           </h2>
           
           <div className="grid gap-3">
