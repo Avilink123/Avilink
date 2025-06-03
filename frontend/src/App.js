@@ -1660,7 +1660,7 @@ function App() {
           setCurrentPage('register');
           return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
         }
-        return <EnhancedMessagesPage currentUser={currentUser} onNavigate={handleNavigate} params={pageParams} />;
+        return <MessagesPage currentUser={currentUser} onNavigate={handleNavigate} params={pageParams} />;
 
       case 'contact-support':
         // Page contact support - Aviculteurs uniquement
