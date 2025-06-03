@@ -423,7 +423,7 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleAppeler(conversation);
+                      handleCall(conversation);
                     }}
                     className="text-xl mt-2"
                     style={{ color: conversation.isSupport ? '#4caf50' : colors.primary }}
