@@ -158,7 +158,7 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
             {[
               { key: 'tous', label: 'Tout', icon: '🐣' },
               { key: 'poussins', label: 'Poussins', icon: '🐣' },
-              { key: 'oeufs', label: 'Œufs fécondés', icon: '🥚' }
+              { key: 'fecondes', label: 'Œufs fécondés', icon: '🥚' }
             ].map(f => (
               <button
                 key={f.key}
