@@ -7,6 +7,8 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
   const [produits, setProduits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('tous');
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   useEffect(() => {
     // Simulation données poussins et œufs fécondés (simple pour illettrés)
