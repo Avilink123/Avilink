@@ -11,8 +11,10 @@ import ModernMyProducts from "./components/ModernMyProducts";
 import ModernPriceMonitoring from "./components/ModernPriceMonitoring";
 import ModernAnimalHealth from "./components/ModernAnimalHealth";
 
-// Import des nouveaux composants accessibles
+// Import des nouveaux composants accessibles et contexts
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { WebSocketProvider } from "./contexts/WebSocketContext";
+import { ErrorBoundary } from "./utils/performance";
 import AccessibleHeader from "./components/AccessibleHeader";
 import AccessibleHomePage from "./components/AccessibleHomePage";
 import AviculteurHomePage from "./components/AviculteurHomePage";
@@ -30,6 +32,7 @@ import CalculateurPage from "./components/CalculateurPage";
 import BuyFeedPage from "./components/BuyFeedPage";
 import BuyChicksPage from "./components/BuyChicksPage";
 import MessagesPage from "./components/MessagesPage";
+import EnhancedMessagesPage from "./components/EnhancedMessagesPage";
 import MyPoultryStockPage from "./components/MyPoultryStockPage";
 import ContactSupportPage from "./components/ContactSupportPage";
 
@@ -74,6 +77,10 @@ import MyRatingsPage from "./components/MyRatingsPage";
 // Import des nouvelles pages AUTHENTIFICATION AMÉLIORÉE
 import EnhancedLoginModal from "./components/EnhancedLoginModal";
 import PasswordSettingsPage from "./components/PasswordSettingsPage";
+
+// Import des composants de performance
+import LoadingSpinner from "./components/LoadingSpinner";
+import PerformanceOptimizedProductCard from "./components/PerformanceOptimizedProductCard";
 
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
