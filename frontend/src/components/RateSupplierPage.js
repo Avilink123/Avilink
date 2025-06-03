@@ -122,7 +122,7 @@ const RateSupplierPage = ({ onBack, currentUser }) => {
                     <p className="text-sm text-gray-500">{supplier.localisation}</p>
                     {supplier.rating_average > 0 && (
                       <div className="flex items-center gap-1 mt-1">
-                        <Star className="text-yellow-400 fill-current" size={16} />
+                        <span className="text-yellow-400">⭐</span>
                         <span className="text-sm">{supplier.rating_average}/5 ({supplier.rating_count} avis)</span>
                       </div>
                     )}
