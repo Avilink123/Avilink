@@ -91,6 +91,20 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       color: colors.info
     },
     {
+      id: 'noter-fournisseur',
+      title: 'Noter un fournisseur d\'aliments',
+      icon: '⭐📝',
+      action: () => onNavigate('rate-supplier'),
+      color: colors.primary
+    },
+    {
+      id: 'mes-evaluations',
+      title: 'Voir mes évaluations reçues',
+      icon: '📊⭐',
+      action: () => onNavigate('my-ratings'),
+      color: colors.warning
+    },
+    {
       id: 'contact-support',
       title: 'Contact support',
       icon: '📞🆘',
