@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useWebSocket } from '../contexts/WebSocketContext';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -10,6 +11,55 @@ export const useMessages = (currentUser) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const cache = useRef(new Map());
+  const { fallbackMode, isConnected } = useWebSocket();
+  const pollIntervalRef = useRef(null);
+  const lastPollTime = useRef(new Date());
+
+  // Start polling for new messages in fallback mode
+  const startMessagePolling = useCallback(() => {
+    if (pollIntervalRef.current || !fallbackMode || !currentUser) return;
+    
+    console.log('Starting message polling in fallback mode');
+    pollIntervalRef.current = setInterval(async () => {
+      try {
+        // Poll for new conversations
+        const response = await axios.get(`${API}/conversations?user_id=${currentUser.id}`);
+        const updatedConversations = response.data;
+        
+        // Check for new messages in each conversation
+        for (const conv of updatedConversations) {
+          if (conv.last_message_timestamp && new Date(conv.last_message_timestamp) > lastPollTime.current) {
+            // New message detected, refresh this conversation's messages
+            if (messages[conv.id]) {
+              const messagesResponse = await axios.get(
+                `${API}/conversations/${conv.id}/messages?user_id=${currentUser.id}&limit=50`
+              );
+              const newMessages = messagesResponse.data;
+              
+              setMessages(prev => ({
+                ...prev,
+                [conv.id]: newMessages
+              }));
+            }
+          }
+        }
+        
+        setConversations(updatedConversations);
+        lastPollTime.current = new Date();
+        
+      } catch (error) {
+        console.error('Error polling for messages:', error);
+      }
+    }, 3000); // Poll every 3 seconds in fallback mode
+  }, [fallbackMode, currentUser, messages]);
+
+  const stopMessagePolling = useCallback(() => {
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+      console.log('Stopped message polling');
+    }
+  }, []);
 
   // Load conversations with caching
   const loadConversations = useCallback(async () => {
