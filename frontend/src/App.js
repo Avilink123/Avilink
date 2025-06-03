@@ -2042,7 +2042,7 @@ function App() {
           currentUser={currentUser}
         />
         
-        <LoginModal
+        <EnhancedLoginModal
           isOpen={showLoginModal}
           onClose={() => setShowLoginModal(false)}
           onLogin={handleLogin}
