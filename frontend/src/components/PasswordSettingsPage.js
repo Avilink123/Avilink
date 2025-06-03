@@ -139,8 +139,7 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
         {/* Informations actuelles */}
         <div className="bg-white rounded-xl p-6 shadow-lg">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <Shield className={`text-${color}-600`} size={24} />
-            État Actuel
+            🛡️ État Actuel
           </h2>
           
           <div className="space-y-3">
