@@ -145,8 +145,7 @@ const MyRatingsPage = ({ onBack, currentUser }) => {
         {userRatings.length > 0 && (
           <div className="bg-white rounded-xl p-6 shadow-lg">
             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <MessageSquare className={`text-${color}-600`} size={24} />
-              Dernières Évaluations
+              💬 Dernières Évaluations
             </h2>
 
             <div className="space-y-4">
