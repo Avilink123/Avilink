@@ -11,7 +11,16 @@ import websockets
 import threading
 
 # Get the backend URL from the frontend .env file
-BACKEND_URL = "https://9f78ae1e-177b-417a-aef1-b4a3354bc0b7.preview.emergentagent.com"
+try:
+    with open('/app/frontend/.env', 'r') as f:
+        for line in f:
+            if line.startswith('REACT_APP_BACKEND_URL='):
+                BACKEND_URL = line.strip().split('=')[1].strip('"\'')
+                break
+except Exception as e:
+    print(f"Error reading frontend/.env: {e}")
+    BACKEND_URL = "https://9f78ae1e-177b-417a-aef1-b4a3354bc0b7.preview.emergentagent.com"
+
 API_URL = f"{BACKEND_URL}/api"
 WS_URL = f"wss://{BACKEND_URL.replace('https://', '')}/ws"
 
