@@ -245,7 +245,7 @@ def test_products_api(logged_in_users):
             log_test(f"Product Delete - {role}", False, f"Error deleting product as {role}: {str(e)}")
             all_success = False
     
-    return all_success
+    return all_success, created_products
 
 # 6. Test Admin Endpoints
 def test_admin_endpoints():
@@ -658,87 +658,6 @@ def test_improved_authentication():
     
     return all_success
 
-# Main test function
-def run_tests():
-    print("\n===== TESTING AVIMARCHÉ MALI BACKEND API =====\n")
-    
-    # Test API Root
-    api_root_success = test_api_root()
-    if not api_root_success:
-        print("\n❌ API Root test failed. Stopping tests.")
-        return
-    
-    # Test MongoDB Connection
-    mongodb_success = test_mongodb_connection()
-    if not mongodb_success:
-        print("\n❌ MongoDB Connection test failed. Stopping tests.")
-        return
-    
-    # Test User Registration
-    registration_success, test_users = test_user_registration()
-    if not registration_success:
-        print("\n⚠️ User Registration test had some failures. Continuing with available users.")
-    
-    # Test User Login
-    login_success, logged_in_users = test_user_login(test_users)
-    if not login_success:
-        print("\n⚠️ User Login test had some failures. Continuing with available logged-in users.")
-    
-    # Test Products API
-    products_success = test_products_api(logged_in_users)
-    if not products_success:
-        print("\n⚠️ Products API test had some failures.")
-    
-    # Test Admin Endpoints
-    admin_success = test_admin_endpoints()
-    if not admin_success:
-        print("\n⚠️ Admin Endpoints test had some failures.")
-    
-    # Test Additional Modules
-    modules_success = test_additional_modules(logged_in_users)
-    if not modules_success:
-        print("\n⚠️ Additional Modules test had some failures.")
-    
-    # Test ACHETEUR Functionality
-    acheteur_success = test_acheteur_functionality(logged_in_users)
-    if not acheteur_success:
-        print("\n⚠️ ACHETEUR Functionality test had some failures.")
-    
-    # Test Bidirectional Feedback System
-    feedback_success = test_feedback_system(logged_in_users)
-    if not feedback_success:
-        print("\n⚠️ Bidirectional Feedback System test had some failures.")
-    
-    # Test Improved Authentication
-    auth_success = test_improved_authentication()
-    if not auth_success:
-        print("\n⚠️ Improved Authentication test had some failures.")
-    
-    # Test Messaging API
-    messaging_success = test_messaging_api(logged_in_users)
-    if not messaging_success:
-        print("\n⚠️ Messaging API test had some failures.")
-    
-    # Test WebSocket Connection
-    try:
-        websocket_success = test_websocket_connection(logged_in_users)
-        if not websocket_success:
-            print("\n⚠️ WebSocket Connection test had some failures.")
-    except Exception as e:
-        print(f"\n⚠️ WebSocket Connection test failed with error: {str(e)}")
-        test_results["failure"] += 1
-    
-    # Print summary
-    print("\n===== TEST SUMMARY =====")
-    print(f"Total tests: {test_results['success'] + test_results['failure']}")
-    print(f"Passed: {test_results['success']}")
-    print(f"Failed: {test_results['failure']}")
-    
-    if test_results['failure'] == 0:
-        print("\n✅ All tests passed! The backend API is working correctly.")
-    else:
-        print(f"\n⚠️ {test_results['failure']} tests failed. See above for details.")
-
 # 11. Test Messaging API
 def test_messaging_api(logged_in_users):
     all_success = True
@@ -936,6 +855,302 @@ def test_websocket_connection(logged_in_users):
         all_success = False
     
     return all_success
+
+# 13. Test Order System
+def test_order_system(logged_in_users, created_products):
+    all_success = True
+    
+    # We need at least an ACHETEUR and an AVICULTEUR with a product for testing
+    if "acheteur" not in logged_in_users or "aviculteur" not in logged_in_users:
+        log_test("Order System", False, "Missing required users (ACHETEUR and AVICULTEUR) for testing")
+        return False
+    
+    buyer_user = logged_in_users["acheteur"]
+    seller_user = logged_in_users["aviculteur"]
+    
+    # Create a test product if none exists
+    product = None
+    if "aviculteur" in created_products and created_products["aviculteur"]:
+        product = created_products["aviculteur"][0]
+    
+    if not product:
+        try:
+            product_data = {
+                "titre": "Test Product for Order",
+                "description": "Test product created for order testing",
+                "type_produit": "volaille_vivante",
+                "prix": 1000,
+                "unite": "pièce",
+                "quantite_disponible": 10,
+                "localisation": "Test Location",
+                "race_volaille": "Test Race",
+                "age_semaines": 10,
+                "poids_moyen": 2.5
+            }
+            
+            response = requests.post(f"{API_URL}/products?vendeur_id={seller_user['token']}", json=product_data)
+            
+            if response.status_code == 200 and "id" in response.json():
+                log_test("Order System - Create Test Product", True, "Successfully created test product for order", response)
+                product = response.json()
+            else:
+                log_test("Order System - Create Test Product", False, "Failed to create test product for order", response)
+                return False
+        except Exception as e:
+            log_test("Order System - Create Test Product", False, f"Error creating test product for order: {str(e)}")
+            return False
+    
+    # Test creating an order
+    try:
+        order_data = {
+            "product_id": product["id"],
+            "quantity_requested": 2,
+            "message_from_buyer": "Test order message"
+        }
+        
+        response = requests.post(f"{API_URL}/orders?buyer_id={buyer_user['token']}", json=order_data)
+        
+        if response.status_code == 200 and "id" in response.json():
+            log_test("Order System - Create Order", True, "Successfully created order", response)
+            order = response.json()
+        else:
+            log_test("Order System - Create Order", False, "Failed to create order", response)
+            return False
+    except Exception as e:
+        log_test("Order System - Create Order", False, f"Error creating order: {str(e)}")
+        return False
+    
+    # Test getting sent orders (buyer)
+    try:
+        response = requests.get(f"{API_URL}/orders/sent?user_id={buyer_user['token']}")
+        
+        if response.status_code == 200 and isinstance(response.json(), list) and len(response.json()) > 0:
+            log_test("Order System - Get Sent Orders", True, "Successfully retrieved sent orders", response)
+        else:
+            log_test("Order System - Get Sent Orders", False, "Failed to retrieve sent orders", response)
+            all_success = False
+    except Exception as e:
+        log_test("Order System - Get Sent Orders", False, f"Error retrieving sent orders: {str(e)}")
+        all_success = False
+    
+    # Test getting received orders (seller)
+    try:
+        response = requests.get(f"{API_URL}/orders/received?user_id={seller_user['token']}")
+        
+        if response.status_code == 200 and isinstance(response.json(), list) and len(response.json()) > 0:
+            log_test("Order System - Get Received Orders", True, "Successfully retrieved received orders", response)
+        else:
+            log_test("Order System - Get Received Orders", False, "Failed to retrieve received orders", response)
+            all_success = False
+    except Exception as e:
+        log_test("Order System - Get Received Orders", False, f"Error retrieving received orders: {str(e)}")
+        all_success = False
+    
+    # Test getting seller notifications (should have a new order notification)
+    try:
+        response = requests.get(f"{API_URL}/notifications?user_id={seller_user['token']}")
+        
+        if response.status_code == 200 and isinstance(response.json(), list) and len(response.json()) > 0:
+            log_test("Order System - Seller Notifications", True, "Seller received notification about new order", response)
+            seller_notification = response.json()[0]
+        else:
+            log_test("Order System - Seller Notifications", False, "Seller did not receive notification about new order", response)
+            all_success = False
+    except Exception as e:
+        log_test("Order System - Seller Notifications", False, f"Error retrieving seller notifications: {str(e)}")
+        all_success = False
+    
+    # Test order security (buyer trying to update order)
+    try:
+        update_data = {
+            "status": "accepted",
+            "response_message": "Security test"
+        }
+        
+        response = requests.put(f"{API_URL}/orders/{order['id']}?user_id={buyer_user['token']}", json=update_data)
+        
+        if response.status_code != 200:
+            log_test("Order System - Security", True, "Correctly prevented buyer from updating order status", response)
+        else:
+            log_test("Order System - Security", False, "Incorrectly allowed buyer to update order status", response)
+            all_success = False
+    except Exception as e:
+        log_test("Order System - Security", False, f"Error testing order security: {str(e)}")
+        all_success = False
+    
+    # Test updating order status to accepted
+    try:
+        update_data = {
+            "status": "accepted",
+            "response_message": "Order accepted"
+        }
+        
+        response = requests.put(f"{API_URL}/orders/{order['id']}?user_id={seller_user['token']}", json=update_data)
+        
+        if response.status_code == 200 and "id" in response.json() and response.json()["status"] == "accepted":
+            log_test("Order System - Update Status", True, "Successfully updated order status to accepted", response)
+        else:
+            log_test("Order System - Update Status", False, "Failed to update order status to accepted", response)
+            all_success = False
+            return all_success  # Can't continue if update fails
+    except Exception as e:
+        log_test("Order System - Update Status", False, f"Error updating order status: {str(e)}")
+        all_success = False
+        return all_success  # Can't continue if update fails
+    
+    # Give the system time to create notifications and conversation
+    time.sleep(1)
+    
+    # Test if buyer received notification about order acceptance
+    try:
+        response = requests.get(f"{API_URL}/notifications?user_id={buyer_user['token']}")
+        
+        if response.status_code == 200 and isinstance(response.json(), list) and len(response.json()) > 0:
+            log_test("Order System - Buyer Notifications", True, "Buyer received notification about order acceptance", response)
+            buyer_notification = response.json()[0]
+        else:
+            log_test("Order System - Buyer Notifications", False, "Buyer did not receive notification about order acceptance", response)
+            all_success = False
+    except Exception as e:
+        log_test("Order System - Buyer Notifications", False, f"Error retrieving buyer notifications: {str(e)}")
+        all_success = False
+    
+    # Test if a conversation was created
+    try:
+        response = requests.get(f"{API_URL}/conversations?user_id={buyer_user['token']}")
+        
+        if response.status_code == 200 and isinstance(response.json(), list):
+            conversations = response.json()
+            
+            # Check if there's a conversation with the seller
+            seller_conversations = [
+                conv for conv in conversations 
+                if seller_user['user']['id'] in conv['participants']
+            ]
+            
+            if seller_conversations:
+                log_test("Order System - Conversation Creation", True, "Conversation was automatically created after order acceptance", response)
+            else:
+                log_test("Order System - Conversation Creation", False, "No conversation was created with the seller", response)
+                all_success = False
+        else:
+            log_test("Order System - Conversation Creation", False, "Failed to retrieve conversations", response)
+            all_success = False
+    except Exception as e:
+        log_test("Order System - Conversation Creation", False, f"Error checking conversation creation: {str(e)}")
+        all_success = False
+    
+    # Test marking a notification as read
+    if 'buyer_notification' in locals():
+        try:
+            response = requests.post(f"{API_URL}/notifications/{buyer_notification['id']}/mark-read?user_id={buyer_user['token']}")
+            
+            if response.status_code == 200 and "message" in response.json():
+                log_test("Order System - Mark Notification Read", True, "Successfully marked notification as read", response)
+                
+                # Verify notification was marked as read
+                verify_response = requests.get(f"{API_URL}/notifications?user_id={buyer_user['token']}")
+                
+                if verify_response.status_code == 200:
+                    notifications = verify_response.json()
+                    notification_marked = any(n["id"] == buyer_notification["id"] and n["read"] for n in notifications)
+                    
+                    log_test("Order System - Verify Notification Marked", notification_marked, 
+                             "Successfully verified notification was marked as read" if notification_marked else "Failed to verify notification was marked as read")
+            else:
+                log_test("Order System - Mark Notification Read", False, "Failed to mark notification as read", response)
+                all_success = False
+        except Exception as e:
+            log_test("Order System - Mark Notification Read", False, f"Error marking notification as read: {str(e)}")
+            all_success = False
+    
+    return all_success
+
+# Main test function
+def run_tests():
+    print("\n===== TESTING AVIMARCHÉ MALI BACKEND API =====\n")
+    
+    # Test API Root
+    api_root_success = test_api_root()
+    if not api_root_success:
+        print("\n❌ API Root test failed. Stopping tests.")
+        return
+    
+    # Test MongoDB Connection
+    mongodb_success = test_mongodb_connection()
+    if not mongodb_success:
+        print("\n❌ MongoDB Connection test failed. Stopping tests.")
+        return
+    
+    # Test User Registration
+    registration_success, test_users = test_user_registration()
+    if not registration_success:
+        print("\n⚠️ User Registration test had some failures. Continuing with available users.")
+    
+    # Test User Login
+    login_success, logged_in_users = test_user_login(test_users)
+    if not login_success:
+        print("\n⚠️ User Login test had some failures. Continuing with available logged-in users.")
+    
+    # Test Products API
+    products_success, created_products = test_products_api(logged_in_users)
+    if not products_success:
+        print("\n⚠️ Products API test had some failures.")
+    
+    # Test Admin Endpoints
+    admin_success = test_admin_endpoints()
+    if not admin_success:
+        print("\n⚠️ Admin Endpoints test had some failures.")
+    
+    # Test Additional Modules
+    modules_success = test_additional_modules(logged_in_users)
+    if not modules_success:
+        print("\n⚠️ Additional Modules test had some failures.")
+    
+    # Test ACHETEUR Functionality
+    acheteur_success = test_acheteur_functionality(logged_in_users)
+    if not acheteur_success:
+        print("\n⚠️ ACHETEUR Functionality test had some failures.")
+    
+    # Test Bidirectional Feedback System
+    feedback_success = test_feedback_system(logged_in_users)
+    if not feedback_success:
+        print("\n⚠️ Bidirectional Feedback System test had some failures.")
+    
+    # Test Improved Authentication
+    auth_success = test_improved_authentication()
+    if not auth_success:
+        print("\n⚠️ Improved Authentication test had some failures.")
+    
+    # Test Messaging API
+    messaging_success = test_messaging_api(logged_in_users)
+    if not messaging_success:
+        print("\n⚠️ Messaging API test had some failures.")
+    
+    # Test Order System
+    order_success = test_order_system(logged_in_users, created_products)
+    if not order_success:
+        print("\n⚠️ Order System test had some failures.")
+    
+    # Test WebSocket Connection
+    try:
+        websocket_success = test_websocket_connection(logged_in_users)
+        if not websocket_success:
+            print("\n⚠️ WebSocket Connection test had some failures.")
+    except Exception as e:
+        print(f"\n⚠️ WebSocket Connection test failed with error: {str(e)}")
+        test_results["failure"] += 1
+    
+    # Print summary
+    print("\n===== TEST SUMMARY =====")
+    print(f"Total tests: {test_results['success'] + test_results['failure']}")
+    print(f"Passed: {test_results['success']}")
+    print(f"Failed: {test_results['failure']}")
+    
+    if test_results['failure'] == 0:
+        print("\n✅ All tests passed! The backend API is working correctly.")
+    else:
+        print(f"\n⚠️ {test_results['failure']} tests failed. See above for details.")
 
 if __name__ == "__main__":
     run_tests()
