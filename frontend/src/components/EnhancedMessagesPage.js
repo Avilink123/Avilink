@@ -452,11 +452,13 @@ const EnhancedMessagesPage = ({ currentUser, onNavigate, params = {} }) => {
             style={{ backgroundColor: colors.surface }}
           >
             <p className="text-lg font-bold" style={{ color: colors.text }}>
-              💡 Messagerie en temps réel
+              💡 Messagerie pour tous
             </p>
             <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-              Discutez instantanément avec les éleveurs, acheteurs et notre équipe support. 
-              Les messages sont synchronisés en temps réel !
+              {fallbackMode 
+                ? "Discutez avec les éleveurs, acheteurs et fournisseurs. Messages synchronisés automatiquement !"
+                : "Discutez instantanément avec les éleveurs, acheteurs et notre équipe support. Les messages sont synchronisés en temps réel !"
+              }
             </p>
           </div>
         </div>
