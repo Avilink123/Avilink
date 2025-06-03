@@ -96,7 +96,7 @@ const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
 
   const resetForm = () => {
     setFormData({ nom: '', telephone: '', role: 'acheteur', localisation: 'Bamako', password: '', sms_code: '' });
-    setLoginMethod('simple');
+    setLoginMethod('password');
     setAwaitingSms(false);
     setSmsData(null);
     setShowPassword(false);
