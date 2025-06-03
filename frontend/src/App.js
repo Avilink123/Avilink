@@ -81,6 +81,7 @@ import PasswordSettingsPage from "./components/PasswordSettingsPage";
 // Import des composants de performance
 import LoadingSpinner from "./components/LoadingSpinner";
 import PerformanceOptimizedProductCard from "./components/PerformanceOptimizedProductCard";
+import NotificationsPage from "./components/NotificationsPage";
 
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
