@@ -11,73 +11,91 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
   const [showOrderModal, setShowOrderModal] = useState(false);
 
   useEffect(() => {
-    // Simulation données poussins et œufs fécondés (simple pour illettrés)
+    // Simulation données poussins et œufs fécondés (protégées)
     const mockProduits = [
       {
-        id: '1',
-        nom: 'Poussins 1 jour',
-        vendeur: 'Mamadou Keita',
+        id: 'chick_1',
+        titre: 'Poussins 1 jour',
+        vendeur_nom: 'Mamadou Keita',
+        vendeur_id: 'vendor_1',
         prix: 500,
-        stock: 50,
+        unite: 'pièce',
+        quantite_disponible: 50,
         localisation: 'Sikasso',
-        telephone: '+223 76 12 34 56',
-        type: 'poussins',
-        description: 'Poussins en bonne santé, vaccinés'
+        type_produit: 'volaille_vivante',
+        sous_type: 'poussins',
+        description: 'Poussins en bonne santé, vaccinés',
+        created_at: new Date().toISOString()
       },
       {
-        id: '2',
-        nom: 'Œufs fécondés de poules',
-        vendeur: 'Fatoumata Diarra',
+        id: 'egg_1',
+        titre: 'Œufs fécondés de poules',
+        vendeur_nom: 'Fatoumata Diarra',
+        vendeur_id: 'vendor_2',
         prix: 200,
-        stock: 100,
+        unite: 'pièce',
+        quantite_disponible: 100,
         localisation: 'Bamako',
-        telephone: '+223 65 43 21 98',
-        type: 'oeufs',
-        description: 'Œufs fécondés de poules locales'
+        type_produit: 'oeufs',
+        sous_type: 'fecondes',
+        description: 'Œufs fécondés de poules locales',
+        created_at: new Date().toISOString()
       },
       {
-        id: '3',
-        nom: 'Poussins pintades',
-        vendeur: 'Ibrahim Coulibaly',
+        id: 'chick_2',
+        titre: 'Poussins pintades',
+        vendeur_nom: 'Ibrahim Coulibaly',
+        vendeur_id: 'vendor_3',
         prix: 800,
-        stock: 30,
+        unite: 'pièce',
+        quantite_disponible: 30,
         localisation: 'Ségou',
-        telephone: '+223 78 87 65 43',
-        type: 'poussins',
-        description: 'Poussins de pintades résistantes'
+        type_produit: 'volaille_vivante',
+        sous_type: 'poussins',
+        description: 'Jeunes pintades résistantes',
+        created_at: new Date().toISOString()
       },
       {
-        id: '4',
-        nom: 'Œufs fécondés pintades',
-        vendeur: 'Aminata Touré',
+        id: 'egg_2',
+        titre: 'Œufs de pintades fécondés',
+        vendeur_nom: 'Aminata Touré',
+        vendeur_id: 'vendor_4',
         prix: 300,
-        stock: 60,
+        unite: 'pièce',
+        quantite_disponible: 60,
         localisation: 'Mopti',
-        telephone: '+223 69 78 45 12',
-        type: 'oeufs',
-        description: 'Œufs fécondés de pintades'
+        type_produit: 'oeufs',
+        sous_type: 'fecondes',
+        description: 'Œufs de pintades pour élevage',
+        created_at: new Date().toISOString()
       },
       {
-        id: '5',
-        nom: 'Poussins canards',
-        vendeur: 'Sekou Traoré',
+        id: 'chick_3',
+        titre: 'Poussins coqs locaux',
+        vendeur_nom: 'Sekou Traoré',
+        vendeur_id: 'vendor_5',
         prix: 600,
-        stock: 25,
+        unite: 'pièce',
+        quantite_disponible: 40,
         localisation: 'Kayes',
-        telephone: '+223 72 85 96 30',
-        type: 'poussins',
-        description: 'Poussins de canards du fleuve'
+        type_produit: 'volaille_vivante',
+        sous_type: 'poussins',
+        description: 'Poussins de race locale robuste',
+        created_at: new Date().toISOString()
       },
       {
-        id: '6',
-        nom: 'Œufs fécondés race améliorée',
-        vendeur: 'Mariam Sidibé',
-        prix: 250,
-        stock: 80,
+        id: 'chick_4',
+        titre: 'Poussins poulets chair',
+        vendeur_nom: 'Mariam Sidibé',
+        vendeur_id: 'vendor_6',
+        prix: 450,
+        unite: 'pièce',
+        quantite_disponible: 80,
         localisation: 'Bamako',
-        telephone: '+223 77 99 88 77',
-        type: 'oeufs',
-        description: 'Œufs de race améliorée très productive'
+        type_produit: 'volaille_vivante',
+        sous_type: 'poussins',
+        description: 'Poussins spécialisés pour la viande',
+        created_at: new Date().toISOString()
       }
     ];
 
