@@ -69,6 +69,8 @@ class UserCreate(BaseModel):
     telephone: str
     role: UserRole
     localisation: str
+    password: Optional[str] = None
+    use_sms: bool = False
 
 class UserLogin(BaseModel):
     telephone: str
