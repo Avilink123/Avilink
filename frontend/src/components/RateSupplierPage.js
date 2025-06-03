@@ -227,8 +227,7 @@ const RateSupplierPage = ({ onBack, currentUser }) => {
                 </>
               ) : (
                 <>
-                  <Send size={20} />
-                  Envoyer l'Évaluation
+                  📨 Envoyer l'Évaluation
                 </>
               )}
             </button>
