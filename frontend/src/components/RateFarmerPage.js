@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Star, Send, User, Package } from 'lucide-react';
 
 const RateFarmerPage = ({ onBack, currentUser }) => {
   const [farmers, setFarmers] = useState([]);
@@ -78,9 +79,9 @@ const RateFarmerPage = ({ onBack, currentUser }) => {
         <div className="flex items-center gap-4">
           <button 
             onClick={onBack}
-            className="p-2 hover:bg-green-700 rounded-lg transition-colors text-2xl"
+            className="p-2 hover:bg-green-700 rounded-lg transition-colors"
           >
-            ←
+            <ArrowLeft size={24} />
           </button>
           <div>
             <h1 className="text-xl font-bold">Noter un Éleveur</h1>
@@ -101,7 +102,8 @@ const RateFarmerPage = ({ onBack, currentUser }) => {
         {/* Sélection de l'éleveur */}
         <div className="bg-white rounded-xl p-6 shadow-lg">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            👤 Choisir l'Éleveur
+            <User className="text-green-600" size={24} />
+            Choisir l'Éleveur
           </h2>
           
           <div className="grid gap-3">
@@ -122,13 +124,13 @@ const RateFarmerPage = ({ onBack, currentUser }) => {
                     <p className="text-sm text-gray-500">{farmer.localisation}</p>
                     {farmer.rating_average > 0 && (
                       <div className="flex items-center gap-1 mt-1">
-                        <span className="text-yellow-400">⭐</span>
+                        <Star className="text-yellow-400 fill-current" size={16} />
                         <span className="text-sm">{farmer.rating_average}/5 ({farmer.rating_count} avis)</span>
                       </div>
                     )}
                   </div>
                   {selectedFarmer?.id === farmer.id && (
-                    <div className="text-green-600 text-xl">✓</div>
+                    <div className="text-green-600">✓</div>
                   )}
                 </div>
               </button>
@@ -146,7 +148,8 @@ const RateFarmerPage = ({ onBack, currentUser }) => {
             {/* Produit concerné */}
             <div className="mb-6">
               <label className="block text-lg font-semibold text-gray-700 mb-2">
-                📦 Produit acheté (optionnel)
+                <Package className="inline mr-2" size={20} />
+                Produit acheté (optionnel)
               </label>
               <input
                 type="text"
@@ -167,11 +170,12 @@ const RateFarmerPage = ({ onBack, currentUser }) => {
                   <button
                     key={star}
                     onClick={() => setRating(star)}
-                    className="transition-transform hover:scale-110 text-3xl"
+                    className="transition-transform hover:scale-110"
                   >
-                    <span className={star <= rating ? 'text-yellow-400' : 'text-gray-300'}>
-                      ⭐
-                    </span>
+                    <Star
+                      size={40}
+                      className={star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+                    />
                   </button>
                 ))}
               </div>
@@ -215,7 +219,8 @@ const RateFarmerPage = ({ onBack, currentUser }) => {
                 </>
               ) : (
                 <>
-                  📨 Envoyer l'Évaluation
+                  <Send size={20} />
+                  Envoyer l'Évaluation
                 </>
               )}
             </button>
