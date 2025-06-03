@@ -52,6 +52,7 @@ const MyPoultryStockPage = ({ currentUser, onNavigate }) => {
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: colors.background }}>
+      {/* VERSION SIMPLIFIÉE ULTRA V2.0 */}
       {/* Header ultra-simple */}
       <div className="px-4 py-6" style={{ backgroundColor: colors.surface }}>
         <div className="max-w-md mx-auto">
