@@ -273,11 +273,25 @@ export const useMessages = (currentUser) => {
     loadConversations();
   }, [loadConversations]);
 
+  // Handle polling based on connection mode
+  useEffect(() => {
+    if (fallbackMode && isConnected && currentUser) {
+      startMessagePolling();
+    } else {
+      stopMessagePolling();
+    }
+
+    return () => {
+      stopMessagePolling();
+    };
+  }, [fallbackMode, isConnected, currentUser, startMessagePolling, stopMessagePolling]);
+
   return {
     conversations,
     messages,
     loading,
     error,
+    fallbackMode,
     loadConversations,
     loadMessages,
     sendMessage,
