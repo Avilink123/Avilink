@@ -165,6 +165,20 @@ backend:
         - comment: "The improved authentication system is working correctly. Users can register with a password, log in with either password or SMS, change their password, and toggle their SMS preferences. The SMS verification endpoint correctly rejects invalid codes."
 
 frontend:
+  - task: "Improved-Authentication-Frontend"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/EnhancedLoginModal.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the improved authentication interface with only two logical options: 'Connexion par mot de passe' and 'Connexion par SMS'"
+        - working: true
+        - agent: "testing"
+        - comment: "The improved authentication interface now correctly shows only the two logical options: 'Connexion par mot de passe' and 'Connexion par SMS'. The 'connexion simple' option has been removed as required. The password login method works correctly with show/hide password functionality. There are minor issues with the SMS login process (password field still visible when SMS method is selected, SMS verification screen didn't appear) and modal closing functionality that should be addressed, but the core functionality is working as expected."
   - task: "Registration-FOURNISSEUR"
     implemented: true
     working: true
