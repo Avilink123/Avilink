@@ -340,10 +340,10 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
                 placeholder={selectedConversation.isSupport ? "Décrivez votre problème..." : "Tapez votre message..."}
                 className="flex-1 p-3 rounded-xl border"
                 style={{ backgroundColor: colors.card }}
-                onKeyPress={(e) => e.key === 'Enter' && handleEnvoyerMessage()}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
               />
               <button
-                onClick={handleEnvoyerMessage}
+                onClick={handleSendMessage}
                 className="px-4 py-3 rounded-xl text-white font-bold"
                 style={{ backgroundColor: selectedConversation.isSupport ? '#4caf50' : colors.primary }}
               >
