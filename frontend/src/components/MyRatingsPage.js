@@ -98,7 +98,7 @@ const MyRatingsPage = ({ onBack, currentUser }) => {
                 {/* Note moyenne */}
                 <div className="text-center mb-6">
                   <div className="flex items-center justify-center gap-2 mb-2">
-                    <Star className="text-yellow-400 fill-current" size={32} />
+                    <span className="text-yellow-400 text-2xl">⭐</span>
                     <span className="text-3xl font-bold text-gray-800">
                       {ratingsSummary.note_moyenne}
                     </span>
