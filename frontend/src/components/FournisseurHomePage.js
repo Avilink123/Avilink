@@ -120,6 +120,14 @@ const FournisseurHomePage = ({ currentUser, onNavigate }) => {
       color: colors.warning
     },
     {
+      id: 'mes-evaluations',
+      title: 'Mes évaluations',
+      subtitle: 'Avis des éleveurs sur mes produits',
+      icon: '⭐📊',
+      action: () => onNavigate('my-ratings'),
+      color: colors.primary
+    },
+    {
       id: 'contact-support',
       title: 'Contact Support',
       subtitle: 'Équipe spécialisée fournisseurs',
