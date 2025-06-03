@@ -380,11 +380,14 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
             ← 
           </button>
           <h1 className="text-2xl font-bold text-center" style={{ color: colors.text }}>
-            💬 Mes Messages
+            💬 Messages Temps Réel
           </h1>
-          <p className="text-center mt-2" style={{ color: colors.textSecondary }}>
-            Parlez avec vos clients, fournisseurs et notre équipe
-          </p>
+          <div className="flex items-center justify-center mt-2 space-x-2">
+            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+            <p className="text-center text-sm" style={{ color: colors.textSecondary }}>
+              {isConnected ? '🟢 Connecté - Messages instantanés' : '🔴 Mode hors ligne'}
+            </p>
+          </div>
         </div>
       </div>
 
