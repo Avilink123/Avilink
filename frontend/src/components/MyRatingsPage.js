@@ -180,8 +180,7 @@ const MyRatingsPage = ({ onBack, currentUser }) => {
                   {rating.produit_concerne && (
                     <div className="mb-2">
                       <span className="inline-flex items-center gap-1 text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                        <Package size={14} />
-                        {rating.produit_concerne}
+                        📦 {rating.produit_concerne}
                       </span>
                     </div>
                   )}
