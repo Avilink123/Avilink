@@ -9,7 +9,7 @@ const API = `${BACKEND_URL}/api`;
 
 const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
   const [isRegistering, setIsRegistering] = useState(false);
-  const [loginMethod, setLoginMethod] = useState('simple'); // 'simple', 'password', 'sms'
+  const [loginMethod, setLoginMethod] = useState('password'); // 'password', 'sms'
   const [showPassword, setShowPassword] = useState(false);
   const [awaitingSms, setAwaitingSms] = useState(false);
   const [smsData, setSmsData] = useState(null);
