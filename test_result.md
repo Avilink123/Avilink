@@ -406,6 +406,9 @@ backend:
         - working: true
         - agent: "testing"
         - comment: "Most of the messaging API endpoints are working correctly. Users can create conversations, retrieve their conversations, get messages from a conversation, send messages, and mark messages as read. The user presence endpoint also works correctly. However, the 'Get Online Users' endpoint is not working properly, likely because there are no active WebSocket connections in the test environment."
+        - working: true
+        - agent: "testing"
+        - comment: "Created a dedicated test script to thoroughly test the messaging API. Confirmed that all messaging endpoints work correctly: creating conversations, sending messages, retrieving messages, and marking messages as read. The user presence endpoint works correctly, but the 'Get Online Users' endpoint returns an empty list, which is expected since there are no active WebSocket connections in the test environment."
 
   - task: "WebSocket-Support"
     implemented: true
