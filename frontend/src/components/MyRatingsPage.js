@@ -131,7 +131,7 @@ const MyRatingsPage = ({ onBack, currentUser }) => {
               </>
             ) : (
               <div className="text-center py-8">
-                <Star className="text-gray-300 mx-auto mb-4" size={48} />
+                <span className="text-gray-300 text-5xl block mb-4">⭐</span>
                 <p className="text-gray-600 text-lg">Aucune évaluation reçue pour le moment</p>
                 <p className="text-gray-500 text-sm">
                   Les {currentUser.role === 'aviculteur' ? 'acheteurs' : 'éleveurs'} pourront vous noter après leurs achats
