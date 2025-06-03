@@ -345,7 +345,7 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
         </div>
 
         {/* Zone de saisie */}
-        <div className="fixed bottom-0 left-0 right-0 p-4" style={{ backgroundColor: colors.surface }}>
+        <div className="fixed bottom-16 left-0 right-0 p-4 z-20" style={{ backgroundColor: colors.surface }}>
           <div className="max-w-md mx-auto">
             {selectedConversation.isSupport && (
               <div className="text-center mb-2">
@@ -360,13 +360,15 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder={selectedConversation.isSupport ? "Décrivez votre problème..." : "Tapez votre message..."}
-                className="flex-1 p-3 rounded-xl border"
+                className="flex-1 p-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500"
                 style={{ backgroundColor: colors.card }}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                autoFocus
               />
               <button
                 onClick={handleSendMessage}
-                className="px-4 py-3 rounded-xl text-white font-bold"
+                disabled={!newMessage.trim()}
+                className="px-4 py-3 rounded-xl text-white font-bold transition-colors disabled:opacity-50"
                 style={{ backgroundColor: selectedConversation.isSupport ? '#4caf50' : colors.primary }}
               >
                 ➤
