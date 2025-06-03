@@ -101,8 +101,7 @@ const RateFarmerPage = ({ onBack, currentUser }) => {
         {/* Sélection de l'éleveur */}
         <div className="bg-white rounded-xl p-6 shadow-lg">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <User className="text-green-600" size={24} />
-            Choisir l'Éleveur
+            👤 Choisir l'Éleveur
           </h2>
           
           <div className="grid gap-3">
