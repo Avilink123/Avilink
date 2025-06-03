@@ -104,6 +104,22 @@ const AcheteurHomePage = ({ currentUser, onNavigate }) => {
       color: colors.success
     },
     {
+      id: 'noter-eleveur',
+      title: 'Noter un éleveur',
+      subtitle: 'Évaluer la qualité du service',
+      icon: '⭐📝',
+      action: () => onNavigate('rate-farmer'),
+      color: colors.primary
+    },
+    {
+      id: 'mes-evaluations',
+      title: 'Mes évaluations',
+      subtitle: 'Voir mes avis donnés',
+      icon: '📊⭐',
+      action: () => onNavigate('my-ratings'),
+      color: colors.success
+    },
+    {
       id: 'contact-support',
       title: 'Contact Support',
       icon: '📞🆘',
