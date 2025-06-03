@@ -199,8 +199,7 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
             {/* Nouveau mot de passe */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                <Lock className="inline w-4 h-4 mr-1" />
-                {hasPassword ? 'Nouveau mot de passe' : 'Mot de passe'}
+                🔒 {hasPassword ? 'Nouveau mot de passe' : 'Mot de passe'}
               </label>
               <div className="relative">
                 <input
@@ -214,9 +213,9 @@ const PasswordSettingsPage = ({ onBack, currentUser }) => {
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg"
                 >
-                  {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showNewPassword ? '🙈' : '👁️'}
                 </button>
               </div>
             </div>
