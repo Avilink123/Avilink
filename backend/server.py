@@ -999,6 +999,257 @@ async def get_financial_summary(user_id: str, days: int = 30):
         principales_depenses=sorted([{"categorie": k, "montant": v} for k, v in cat_depenses.items()], key=lambda x: x["montant"], reverse=True)[:5]
     )
 
+# ROUTES POUR SYSTÈME DE MESSAGERIE EN TEMPS RÉEL
+
+# WebSocket endpoint pour la messagerie en temps réel
+@app.websocket("/ws/{user_id}")
+async def websocket_endpoint(websocket: WebSocket, user_id: str):
+    # Récupérer les infos utilisateur
+    try:
+        user = await get_current_user(user_id)
+        await manager.connect(websocket, user_id, user.nom)
+        
+        try:
+            while True:
+                # Écouter les messages du client
+                data = await websocket.receive_text()
+                message_data = json.loads(data)
+                
+                # Traiter différents types de messages
+                if message_data.get("type") == "ping":
+                    # Garder la connexion active
+                    await websocket.send_text(json.dumps({"type": "pong"}))
+                
+                elif message_data.get("type") == "typing":
+                    # Diffuser l'indication de frappe
+                    typing_message = {
+                        "type": "typing",
+                        "user_id": user_id,
+                        "user_nom": user.nom,
+                        "conversation_id": message_data.get("conversation_id"),
+                        "is_typing": message_data.get("is_typing", True)
+                    }
+                    # Envoyer à tous les participants de la conversation
+                    conversation = await db.conversations.find_one({"id": message_data.get("conversation_id")})
+                    if conversation:
+                        await manager.broadcast_to_conversation(conversation["participants"], typing_message)
+                
+        except WebSocketDisconnect:
+            manager.disconnect(user_id)
+            await manager.broadcast_user_presence(user_id, "offline")
+            
+    except HTTPException:
+        await websocket.close(code=1000)
+
+# Récupérer les conversations d'un utilisateur
+@api_router.get("/conversations", response_model=List[Conversation])
+async def get_user_conversations(user_id: str = Query(...)):
+    """Récupérer toutes les conversations d'un utilisateur"""
+    try:
+        user = await get_current_user(user_id)
+        
+        # Récupérer les conversations où l'utilisateur est participant
+        conversations = await db.conversations.find({
+            "participants": user_id
+        }).sort("updated_at", -1).limit(50).to_list(50)
+        
+        return [Conversation(**conv) for conv in conversations]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la récupération des conversations: {str(e)}")
+
+# Créer une nouvelle conversation
+@api_router.post("/conversations", response_model=Conversation)
+async def create_conversation(conversation_data: ConversationCreate, sender_id: str = Query(...)):
+    """Créer une nouvelle conversation entre deux utilisateurs"""
+    try:
+        sender = await get_current_user(sender_id)
+        recipient = await get_current_user(conversation_data.participant_id)
+        
+        # Vérifier si une conversation existe déjà entre ces deux utilisateurs
+        existing_conversation = await db.conversations.find_one({
+            "type": "direct",
+            "participants": {"$all": [sender_id, conversation_data.participant_id], "$size": 2}
+        })
+        
+        if existing_conversation:
+            return Conversation(**existing_conversation)
+        
+        # Créer une nouvelle conversation
+        conversation = Conversation(
+            type=ConversationType.DIRECT,
+            participants=[sender_id, conversation_data.participant_id],
+            participants_details=[
+                {"id": sender_id, "nom": sender.nom, "role": sender.role},
+                {"id": conversation_data.participant_id, "nom": recipient.nom, "role": recipient.role}
+            ],
+            unread_count={sender_id: 0, conversation_data.participant_id: 0}
+        )
+        
+        await db.conversations.insert_one(conversation.dict())
+        
+        # Si un message initial est fourni, l'envoyer
+        if conversation_data.initial_message:
+            message_data = MessageCreate(
+                conversation_id=conversation.id,
+                recipient_id=conversation_data.participant_id,
+                content=conversation_data.initial_message
+            )
+            await send_message(message_data, sender_id)
+        
+        return conversation
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la création de la conversation: {str(e)}")
+
+# Récupérer les messages d'une conversation
+@api_router.get("/conversations/{conversation_id}/messages", response_model=List[Message])
+async def get_conversation_messages(conversation_id: str, user_id: str = Query(...), limit: int = 50, offset: int = 0):
+    """Récupérer les messages d'une conversation"""
+    try:
+        user = await get_current_user(user_id)
+        
+        # Vérifier que l'utilisateur est participant de la conversation
+        conversation = await db.conversations.find_one({"id": conversation_id})
+        if not conversation or user_id not in conversation["participants"]:
+            raise HTTPException(status_code=403, detail="Accès non autorisé à cette conversation")
+        
+        # Récupérer les messages
+        messages = await db.messages.find({
+            "conversation_id": conversation_id
+        }).sort("timestamp", -1).skip(offset).limit(limit).to_list(limit)
+        
+        # Inverser l'ordre pour avoir les plus anciens en premier
+        messages.reverse()
+        
+        return [Message(**msg) for msg in messages]
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la récupération des messages: {str(e)}")
+
+# Envoyer un message
+@api_router.post("/messages", response_model=Message)
+async def send_message(message_data: MessageCreate, sender_id: str = Query(...)):
+    """Envoyer un message dans une conversation"""
+    try:
+        sender = await get_current_user(sender_id)
+        recipient = await get_current_user(message_data.recipient_id)
+        
+        # Vérifier que la conversation existe
+        conversation = await db.conversations.find_one({"id": message_data.conversation_id})
+        if not conversation or sender_id not in conversation["participants"]:
+            raise HTTPException(status_code=403, detail="Accès non autorisé à cette conversation")
+        
+        # Créer le message
+        message = Message(
+            conversation_id=message_data.conversation_id,
+            sender_id=sender_id,
+            sender_nom=sender.nom,
+            recipient_id=message_data.recipient_id,
+            recipient_nom=recipient.nom,
+            content=message_data.content
+        )
+        
+        await db.messages.insert_one(message.dict())
+        
+        # Mettre à jour la conversation
+        await db.conversations.update_one(
+            {"id": message_data.conversation_id},
+            {
+                "$set": {
+                    "last_message": message_data.content,
+                    "last_message_timestamp": message.timestamp,
+                    "last_message_sender": sender_id,
+                    "updated_at": datetime.utcnow()
+                },
+                "$inc": {f"unread_count.{message_data.recipient_id}": 1}
+            }
+        )
+        
+        # Envoyer le message en temps réel via WebSocket
+        websocket_message = {
+            "type": "new_message",
+            "message": message.dict(),
+            "conversation_id": message_data.conversation_id
+        }
+        
+        # Marquer comme délivré si le destinataire est en ligne
+        if await manager.send_personal_message(message_data.recipient_id, websocket_message):
+            message.status = MessageStatus.DELIVERED
+            await db.messages.update_one({"id": message.id}, {"$set": {"status": "delivered"}})
+        
+        return message
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de l'envoi du message: {str(e)}")
+
+# Marquer les messages comme lus
+@api_router.post("/conversations/{conversation_id}/mark-read")
+async def mark_messages_as_read(conversation_id: str, user_id: str = Query(...)):
+    """Marquer tous les messages non lus d'une conversation comme lus"""
+    try:
+        user = await get_current_user(user_id)
+        
+        # Vérifier l'accès à la conversation
+        conversation = await db.conversations.find_one({"id": conversation_id})
+        if not conversation or user_id not in conversation["participants"]:
+            raise HTTPException(status_code=403, detail="Accès non autorisé à cette conversation")
+        
+        # Marquer les messages comme lus
+        await db.messages.update_many(
+            {
+                "conversation_id": conversation_id,
+                "recipient_id": user_id,
+                "status": {"$ne": "read"}
+            },
+            {"$set": {"status": "read"}}
+        )
+        
+        # Réinitialiser le compteur de messages non lus
+        await db.conversations.update_one(
+            {"id": conversation_id},
+            {"$set": {f"unread_count.{user_id}": 0}}
+        )
+        
+        # Notifier l'expéditeur que les messages ont été lus
+        read_notification = {
+            "type": "messages_read",
+            "conversation_id": conversation_id,
+            "reader_id": user_id,
+            "reader_nom": user.nom
+        }
+        
+        # Envoyer à tous les autres participants
+        for participant_id in conversation["participants"]:
+            if participant_id != user_id:
+                await manager.send_personal_message(participant_id, read_notification)
+        
+        return {"message": "Messages marqués comme lus"}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors du marquage des messages: {str(e)}")
+
+# Récupérer les utilisateurs en ligne
+@api_router.get("/users/online", response_model=List[UserPresence])
+async def get_online_users():
+    """Récupérer la liste des utilisateurs actuellement en ligne"""
+    return manager.get_online_users()
+
+# Récupérer le statut de présence d'un utilisateur
+@api_router.get("/users/{user_id}/presence", response_model=UserPresence)
+async def get_user_presence(user_id: str):
+    """Récupérer le statut de présence d'un utilisateur spécifique"""
+    if user_id in manager.user_presence:
+        return manager.user_presence[user_id]
+    else:
+        # Utilisateur hors ligne, récupérer depuis la base de données
+        user = await get_current_user(user_id)
+        return UserPresence(
+            user_id=user_id,
+            user_nom=user.nom,
+            status="offline",
+            last_seen=datetime.utcnow()
+        )
+
 # ROUTES POUR SYSTÈME DE FEEDBACK BIDIRECTIONNEL
 
 @api_router.post("/ratings", response_model=Rating)
