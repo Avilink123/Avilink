@@ -280,13 +280,18 @@ async def get_current_user(user_id: str) -> User:
         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
     return User(**user_data)
 
-# Routes pour les utilisateurs
+# Routes pour les utilisateurs - Authentification améliorée
 @api_router.post("/users/register", response_model=User)
 async def register_user(user_data: UserCreate):
     # Vérifier si le téléphone existe déjà
     existing_user = await db.users.find_one({"telephone": user_data.telephone})
     if existing_user:
         raise HTTPException(status_code=400, detail="Ce numéro de téléphone est déjà enregistré")
+    
+    # Si un mot de passe est fourni, le hasher (simulation)
+    if user_data.password:
+        # En production, utiliser bcrypt pour hasher le mot de passe
+        user_data.password = f"hashed_{user_data.password}"
     
     user = User(**user_data.dict())
     await db.users.insert_one(user.dict())
@@ -299,7 +304,125 @@ async def login_user(login_data: UserLogin):
         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
     
     user = User(**user_data)
+    
+    # Connexion par mot de passe
+    if login_data.password and not login_data.use_sms:
+        if not user.password:
+            raise HTTPException(status_code=400, detail="Aucun mot de passe configuré pour ce compte")
+        
+        # Vérifier le mot de passe (simulation)
+        if user.password != f"hashed_{login_data.password}":
+            raise HTTPException(status_code=401, detail="Mot de passe incorrect")
+        
+        return {"message": "Connexion réussie", "user": user, "token": user.id, "method": "password"}
+    
+    # Connexion par SMS
+    elif login_data.use_sms:
+        # Générer et envoyer un code SMS (simulation)
+        import random
+        import string
+        sms_code = ''.join(random.choices(string.digits, k=6))
+        sms_expires = datetime.utcnow() + timedelta(minutes=10)
+        
+        # Sauvegarder le code SMS
+        await db.users.update_one(
+            {"id": user.id},
+            {"$set": {
+                "sms_code": sms_code,
+                "sms_code_expires": sms_expires
+            }}
+        )
+        
+        # En production, envoyer le SMS via API (Twilio, etc.)
+        logger.info(f"Code SMS généré pour {user.telephone}: {sms_code}")
+        
+        return {
+            "message": "Code SMS envoyé", 
+            "require_sms_verification": True,
+            "user_id": user.id,
+            "method": "sms"
+        }
+    
+    # Connexion simple (ancien système)
+    else:
+        return {"message": "Connexion réussie", "user": user, "token": user.id, "method": "simple"}
+
+@api_router.post("/users/verify-sms")
+async def verify_sms_code(verification_data: dict):
+    """Vérifier le code SMS pour finaliser la connexion"""
+    user_id = verification_data.get("user_id")
+    sms_code = verification_data.get("sms_code")
+    
+    if not user_id or not sms_code:
+        raise HTTPException(status_code=400, detail="user_id et sms_code requis")
+    
+    user_data = await db.users.find_one({"id": user_id})
+    if not user_data:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+    
+    user = User(**user_data)
+    
+    # Vérifier le code SMS
+    if not user.sms_code or user.sms_code != sms_code:
+        raise HTTPException(status_code=401, detail="Code SMS incorrect")
+    
+    # Vérifier l'expiration
+    if not user.sms_code_expires or user.sms_code_expires < datetime.utcnow():
+        raise HTTPException(status_code=401, detail="Code SMS expiré")
+    
+    # Nettoyer le code SMS
+    await db.users.update_one(
+        {"id": user_id},
+        {"$unset": {
+            "sms_code": "",
+            "sms_code_expires": ""
+        }}
+    )
+    
     return {"message": "Connexion réussie", "user": user, "token": user.id}
+
+@api_router.post("/users/set-password")
+async def set_password(password_data: dict, user_id: str = Query(...)):
+    """Configurer ou modifier le mot de passe d'un utilisateur"""
+    new_password = password_data.get("new_password")
+    current_password = password_data.get("current_password")
+    
+    if not new_password:
+        raise HTTPException(status_code=400, detail="new_password requis")
+    
+    user = await get_current_user(user_id)
+    
+    # Si l'utilisateur a déjà un mot de passe, vérifier l'ancien
+    if user.password and current_password:
+        if user.password != f"hashed_{current_password}":
+            raise HTTPException(status_code=401, detail="Mot de passe actuel incorrect")
+    
+    # Hasher et sauvegarder le nouveau mot de passe
+    hashed_password = f"hashed_{new_password}"
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"password": hashed_password}}
+    )
+    
+    return {"message": "Mot de passe configuré avec succès"}
+
+@api_router.post("/users/toggle-sms")
+async def toggle_sms_preference(user_id: str = Query(...)):
+    """Activer/désactiver la préférence SMS pour un utilisateur"""
+    user = await get_current_user(user_id)
+    
+    new_sms_preference = not user.use_sms
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"use_sms": new_sms_preference}}
+    )
+    
+    return {
+        "message": f"Préférence SMS {'activée' if new_sms_preference else 'désactivée'}",
+        "use_sms": new_sms_preference
+    }
 
 @api_router.get("/users/{user_id}", response_model=User)
 async def get_user(user_id: str):
