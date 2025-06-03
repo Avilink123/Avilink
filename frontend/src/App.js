@@ -1700,9 +1700,9 @@ function App() {
         return <VeterinaireContactsPage currentUser={currentUser} onNavigate={setCurrentPage} />;
       
       case 'calculateur':
-        // Page calculateur - Acheteurs uniquement
-        if (!currentUser || currentUser.role !== 'acheteur') {
-          alert('Accès restreint : Cette section est réservée aux acheteurs');
+        // Page calculateur - Éleveurs et Acheteurs
+        if (!currentUser || (currentUser.role !== 'acheteur' && currentUser.role !== 'aviculteur')) {
+          alert('Accès restreint : Cette section est réservée aux éleveurs et acheteurs');
           setCurrentPage('home');
           return <AccessibleHomePage currentUser={currentUser} onNavigate={setCurrentPage} />;
         }
