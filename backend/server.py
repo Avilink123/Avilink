@@ -233,6 +233,46 @@ class FinancialSummary(BaseModel):
     principales_depenses: List[dict]
     principales_revenus: List[dict]
 
+# Modèles pour système de feedback bidirectionnel
+class RatingType(str, Enum):
+    BUYER_TO_FARMER = "buyer_to_farmer"  # Acheteur → Éleveur
+    FARMER_TO_SUPPLIER = "farmer_to_supplier"  # Éleveur → Fournisseur
+
+class Rating(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    type_rating: RatingType
+    evaluateur_id: str  # ID de celui qui donne la note
+    evaluateur_nom: str  # Nom de celui qui donne la note  
+    evalué_id: str  # ID de celui qui reçoit la note
+    evalué_nom: str  # Nom de celui qui reçoit la note
+    note: int = Field(..., ge=1, le=5)  # Note de 1 à 5 étoiles
+    commentaire: Optional[str] = None
+    transaction_id: Optional[str] = None  # Si lié à une transaction spécifique
+    produit_concerne: Optional[str] = None  # Nom du produit concerné
+    criteres: Optional[dict] = None  # Détails des critères (qualité, service, prix, etc.)
+    date_evaluation: datetime = Field(default_factory=datetime.utcnow)
+    localisation: str
+    
+class RatingCreate(BaseModel):
+    type_rating: RatingType
+    evaluateur_id: str
+    evalué_id: str
+    note: int = Field(..., ge=1, le=5)
+    commentaire: Optional[str] = None
+    transaction_id: Optional[str] = None
+    produit_concerne: Optional[str] = None
+    criteres: Optional[dict] = None
+    localisation: str
+
+class RatingSummary(BaseModel):
+    user_id: str
+    user_nom: str
+    user_role: UserRole
+    note_moyenne: float
+    nombre_evaluations: int
+    repartition_notes: dict  # {1: 0, 2: 1, 3: 5, 4: 12, 5: 8}
+    derniers_commentaires: List[dict]
+    
 # Auth helpers
 async def get_current_user(user_id: str) -> User:
     user_data = await db.users.find_one({"id": user_id})
