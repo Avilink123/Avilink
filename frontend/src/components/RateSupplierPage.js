@@ -146,8 +146,7 @@ const RateSupplierPage = ({ onBack, currentUser }) => {
             {/* Produit concerné */}
             <div className="mb-6">
               <label className="block text-lg font-semibold text-gray-700 mb-2">
-                <Package className="inline mr-2" size={20} />
-                Aliment acheté (optionnel)
+                📦 Aliment acheté (optionnel)
               </label>
               <input
                 type="text"
