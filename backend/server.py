@@ -767,6 +767,133 @@ async def get_financial_summary(user_id: str, days: int = 30):
         principales_depenses=sorted([{"categorie": k, "montant": v} for k, v in cat_depenses.items()], key=lambda x: x["montant"], reverse=True)[:5]
     )
 
+# ROUTES POUR SYSTÈME DE FEEDBACK BIDIRECTIONNEL
+
+@api_router.post("/ratings", response_model=Rating)
+async def create_rating(rating_data: RatingCreate):
+    """Créer une nouvelle évaluation (acheteur→éleveur ou éleveur→fournisseur)"""
+    
+    # Vérifier que l'évaluateur et l'évalué existent
+    evaluateur = await get_current_user(rating_data.evaluateur_id)
+    evalué = await get_current_user(rating_data.evalué_id)
+    
+    # Vérifier les rôles appropriés selon le type d'évaluation
+    if rating_data.type_rating == RatingType.BUYER_TO_FARMER:
+        if evaluateur.role != UserRole.ACHETEUR:
+            raise HTTPException(status_code=400, detail="Seuls les acheteurs peuvent évaluer les éleveurs")
+        if evalué.role != UserRole.AVICULTEUR:
+            raise HTTPException(status_code=400, detail="Les évaluations acheteur→éleveur ne peuvent concerner que les aviculteurs")
+    
+    elif rating_data.type_rating == RatingType.FARMER_TO_SUPPLIER:
+        if evaluateur.role != UserRole.AVICULTEUR:
+            raise HTTPException(status_code=400, detail="Seuls les éleveurs peuvent évaluer les fournisseurs")
+        if evalué.role != UserRole.FOURNISSEUR:
+            raise HTTPException(status_code=400, detail="Les évaluations éleveur→fournisseur ne peuvent concerner que les fournisseurs")
+    
+    # Créer l'évaluation
+    rating_dict = rating_data.dict()
+    rating_dict.update({
+        "evaluateur_nom": evaluateur.nom,
+        "evalué_nom": evalué.nom
+    })
+    
+    rating = Rating(**rating_dict)
+    await db.ratings.insert_one(rating.dict())
+    
+    # Mettre à jour les statistiques de l'utilisateur évalué
+    await update_user_rating_stats(evalué.id)
+    
+    return rating
+
+@api_router.get("/ratings/user/{user_id}", response_model=List[Rating])
+async def get_user_ratings(user_id: str, limit: int = 50):
+    """Récupérer toutes les évaluations reçues par un utilisateur"""
+    ratings = await db.ratings.find({"evalué_id": user_id}).sort("date_evaluation", -1).limit(limit).to_list(limit)
+    return [Rating(**rating) for rating in ratings]
+
+@api_router.get("/ratings/given-by/{user_id}", response_model=List[Rating])
+async def get_ratings_given_by_user(user_id: str, limit: int = 50):
+    """Récupérer toutes les évaluations données par un utilisateur"""
+    ratings = await db.ratings.find({"evaluateur_id": user_id}).sort("date_evaluation", -1).limit(limit).to_list(limit)
+    return [Rating(**rating) for rating in ratings]
+
+@api_router.get("/ratings/summary/{user_id}", response_model=RatingSummary)
+async def get_user_rating_summary(user_id: str):
+    """Récupérer le résumé des évaluations d'un utilisateur"""
+    user = await get_current_user(user_id)
+    
+    # Récupérer toutes les évaluations reçues
+    ratings = await db.ratings.find({"evalué_id": user_id}).to_list(1000)
+    
+    if not ratings:
+        return RatingSummary(
+            user_id=user_id,
+            user_nom=user.nom,
+            user_role=user.role,
+            note_moyenne=0.0,
+            nombre_evaluations=0,
+            repartition_notes={1: 0, 2: 0, 3: 0, 4: 0, 5: 0},
+            derniers_commentaires=[]
+        )
+    
+    # Calculer les statistiques
+    notes = [r["note"] for r in ratings]
+    note_moyenne = sum(notes) / len(notes)
+    
+    # Répartition des notes
+    repartition = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+    for note in notes:
+        repartition[note] += 1
+    
+    # Derniers commentaires (non vides)
+    commentaires_recents = [
+        {
+            "evaluateur_nom": r["evaluateur_nom"],
+            "note": r["note"],
+            "commentaire": r["commentaire"],
+            "date": r["date_evaluation"],
+            "produit": r.get("produit_concerne", "")
+        }
+        for r in sorted(ratings, key=lambda x: x["date_evaluation"], reverse=True)[:10]
+        if r.get("commentaire") and r["commentaire"].strip()
+    ]
+    
+    return RatingSummary(
+        user_id=user_id,
+        user_nom=user.nom,
+        user_role=user.role,
+        note_moyenne=round(note_moyenne, 1),
+        nombre_evaluations=len(ratings),
+        repartition_notes=repartition,
+        derniers_commentaires=commentaires_recents
+    )
+
+@api_router.get("/ratings/by-type/{rating_type}")
+async def get_ratings_by_type(rating_type: RatingType, limit: int = 50):
+    """Récupérer les évaluations par type (buyer_to_farmer ou farmer_to_supplier)"""
+    ratings = await db.ratings.find({"type_rating": rating_type}).sort("date_evaluation", -1).limit(limit).to_list(limit)
+    return [Rating(**rating) for rating in ratings]
+
+async def update_user_rating_stats(user_id: str):
+    """Mettre à jour les statistiques de rating d'un utilisateur"""
+    ratings = await db.ratings.find({"evalué_id": user_id}).to_list(1000)
+    
+    if ratings:
+        notes = [r["note"] for r in ratings]
+        rating_average = sum(notes) / len(notes)
+        rating_count = len(notes)
+    else:
+        rating_average = 0.0
+        rating_count = 0
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {
+            "rating_average": round(rating_average, 1),
+            "rating_count": rating_count
+        }}
+    )
+
 # Include the router in the main app
 app.include_router(api_router)
 
