@@ -108,6 +108,14 @@
 - ✅ **Interface adaptée** - Texte change selon le rôle (production vs achat)
 - ✅ **Fonctionnalité complète** - Calculs de rentabilité pour tous les utilisateurs
 
+**📱 SIMPLIFICATION PAGES STOCK - TOUS UTILISATEURS:**
+- ✅ **MyPoultryStockPage** (ÉLEVEURS) - Interface ultra-simplifiée
+- ✅ **MyFeedProductsPage** (FOURNISSEURS) - Interface ultra-simplifiée 
+- ✅ **Focus action principale** - Gros bouton "PUBLIER UNE ANNONCE"
+- ✅ **Guide 4 étapes** - Instructions visuelles avec emojis
+- ✅ **Suppression complexité** - Plus de listes détaillées, onglets, filtres
+- ✅ **Cohérence totale** - Même expérience pour tous les rôles vendeurs
+
 **🇲🇱 ADAPTATION MALI:**
 - Interface simple avec icônes universelles (🛒, ✅, ❌, 🔔)
 - Messages clairs en français accessible
