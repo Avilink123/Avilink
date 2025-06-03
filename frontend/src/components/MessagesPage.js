@@ -243,12 +243,21 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
     window.open(`tel:${phone}`, '_self');
   };
 
+  // Handle message selection for conversation
+  const handleSelectConversation = async (conversation) => {
+    setSelectedConversation(conversation);
+    await loadMessages(conversation.id);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
         <div className="text-center">
           <div className="text-6xl mb-4">💬</div>
-          <p className="text-xl" style={{ color: colors.text }}>Chargement messages...</p>
+          <p className="text-xl" style={{ color: colors.text }}>Chargement conversations...</p>
+          <div className="mt-4">
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          </div>
         </div>
       </div>
     );
