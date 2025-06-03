@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Performance optimization utilities
 
 // Debounce function for search inputs
@@ -91,35 +93,6 @@ export class CacheWithExpiration {
     return this.cache.size;
   }
 }
-
-// Virtual scrolling for large lists
-export const useVirtualScrolling = (items, itemHeight, containerHeight) => {
-  const [startIndex, setStartIndex] = React.useState(0);
-  const [endIndex, setEndIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    const visibleCount = Math.ceil(containerHeight / itemHeight);
-    setEndIndex(Math.min(startIndex + visibleCount + 1, items.length));
-  }, [startIndex, items.length, itemHeight, containerHeight]);
-
-  const handleScroll = React.useCallback((scrollTop) => {
-    const newStartIndex = Math.floor(scrollTop / itemHeight);
-    setStartIndex(newStartIndex);
-  }, [itemHeight]);
-
-  const visibleItems = React.useMemo(() => {
-    return items.slice(startIndex, endIndex).map((item, index) => ({
-      ...item,
-      index: startIndex + index
-    }));
-  }, [items, startIndex, endIndex]);
-
-  return {
-    visibleItems,
-    totalHeight: items.length * itemHeight,
-    handleScroll
-  };
-};
 
 // Connection status checker
 export const useConnectionStatus = () => {
@@ -246,7 +219,6 @@ export default {
   throttle,
   createLazyImageObserver,
   CacheWithExpiration,
-  useVirtualScrolling,
   useConnectionStatus,
   ErrorBoundary,
   optimizeImage,
