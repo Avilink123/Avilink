@@ -345,34 +345,51 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
         </div>
 
         {/* Zone de saisie */}
-        <div className="fixed bottom-16 left-0 right-0 p-4 z-20" style={{ backgroundColor: colors.surface }}>
+        <div className="fixed bottom-16 left-0 right-0 p-4 z-20 shadow-2xl border-t-2 border-gray-200" 
+             style={{ backgroundColor: colors.surface, boxShadow: '0 -4px 12px rgba(0,0,0,0.15)' }}>
           <div className="max-w-md mx-auto">
             {selectedConversation.isSupport && (
-              <div className="text-center mb-2">
-                <p className="text-xs text-green-600 font-medium">
+              <div className="text-center mb-3 p-2 bg-green-50 rounded-lg border border-green-200">
+                <p className="text-sm text-green-700 font-medium">
                   ✨ Vous parlez avec l'équipe officielle AviMarché
                 </p>
               </div>
             )}
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder={selectedConversation.isSupport ? "Décrivez votre problème..." : "Tapez votre message..."}
-                className="flex-1 p-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500"
-                style={{ backgroundColor: colors.card }}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                autoFocus
-              />
+            <div className="flex space-x-3 items-end">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder={selectedConversation.isSupport ? "Décrivez votre problème..." : "Tapez votre message..."}
+                  className="w-full p-4 text-base rounded-2xl border-2 border-gray-300 focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-400 shadow-lg transition-all"
+                  style={{ 
+                    backgroundColor: '#ffffff',
+                    fontSize: '16px',
+                    minHeight: '56px'
+                  }}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  autoFocus
+                />
+              </div>
               <button
                 onClick={handleSendMessage}
                 disabled={!newMessage.trim()}
-                className="px-4 py-3 rounded-xl text-white font-bold transition-colors disabled:opacity-50"
-                style={{ backgroundColor: selectedConversation.isSupport ? '#4caf50' : colors.primary }}
+                className="px-6 py-4 rounded-2xl text-white font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+                style={{ 
+                  backgroundColor: selectedConversation.isSupport ? '#4caf50' : colors.primary,
+                  minHeight: '56px',
+                  minWidth: '56px'
+                }}
               >
                 ➤
               </button>
+            </div>
+            {/* Indicateur de frappe */}
+            <div className="text-center mt-2">
+              <p className="text-xs text-gray-500">
+                Appuyez sur Entrée pour envoyer • Messages en temps réel
+              </p>
             </div>
           </div>
         </div>
