@@ -48,13 +48,13 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
       color: colors.primary
     },
     {
-      id: 'valeur',
-      title: 'Valeur stock',
-      value: '185,000',
-      subtitle: 'CFA estimé',
-      icon: '💰📊',
-      action: () => onNavigate('my-poultry-stock'),
-      color: colors.success
+      id: 'calculatrice',
+      title: 'Calculatrice',
+      value: '📱',
+      subtitle: 'Outils de calcul',
+      icon: '🧮💡',
+      action: () => onNavigate('calculateur'),
+      color: colors.info
     },
     {
       id: 'veterinaire',
