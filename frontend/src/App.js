@@ -66,6 +66,15 @@ import SupplierAdvicePage from "./components/SupplierAdvicePage";
 import SupplierContactSupportPage from "./components/SupplierContactSupportPage";
 import MarketDemandPage from "./components/MarketDemandPage";
 
+// Import des nouvelles pages FEEDBACK BIDIRECTIONNEL
+import RateFarmerPage from "./components/RateFarmerPage";
+import RateSupplierPage from "./components/RateSupplierPage";
+import MyRatingsPage from "./components/MyRatingsPage";
+
+// Import des nouvelles pages AUTHENTIFICATION AMÉLIORÉE
+import EnhancedLoginModal from "./components/EnhancedLoginModal";
+import PasswordSettingsPage from "./components/PasswordSettingsPage";
+
 // Import des composants existants (temporaire)
 import FinancialTools from "./FinancialTools";
 import AdminDashboard from "./AdminDashboard";
