@@ -2022,6 +2022,33 @@ function App() {
         }
         return <PasswordSettingsPage currentUser={currentUser} onBack={() => setCurrentPage('profile')} />;
 
+      case 'notifications':
+        // Page notifications
+        if (!currentUser) {
+          alert('Vous devez être connecté pour voir les notifications');
+          setCurrentPage('register');
+          return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
+        }
+        return <NotificationsPage currentUser={currentUser} onNavigate={setCurrentPage} />;
+
+      case 'orders-received':
+        // Page commandes reçues (pour vendeurs)
+        if (!currentUser) {
+          alert('Vous devez être connecté pour voir vos commandes');
+          setCurrentPage('register');
+          return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">📦 Commandes reçues</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+
+      case 'orders-sent':
+        // Page commandes envoyées (pour acheteurs)
+        if (!currentUser) {
+          alert('Vous devez être connecté pour voir vos commandes');
+          setCurrentPage('register');
+          return <RegistrationPage onRegister={handleRegister} onNavigate={setCurrentPage} onLogin={handleLogin} />;
+        }
+        return <div className="p-4"><h2 className="text-xl font-bold">🛒 Mes commandes envoyées</h2><p>Fonctionnalité en développement...</p><button onClick={() => setCurrentPage('home')} className="mt-4 p-3 bg-green-600 text-white rounded">Retour à l'accueil</button></div>;
+
       default:
         // Pour les non-connectés : afficher la page d'inscription
         if (!currentUser) {
