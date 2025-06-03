@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Star, Clock, MessageSquare, Package, Award } from 'lucide-react';
 
 const MyRatingsPage = ({ onBack, currentUser }) => {
   const [ratingsSummary, setRatingsSummary] = useState(null);
