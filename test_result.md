@@ -290,7 +290,8 @@ frontend:
 
 ## test_plan:
   current_focus:
-    - "Backend-ACHETEUR-Integration"
+    - "Bidirectional-Feedback-System"
+    - "Improved-Authentication"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
