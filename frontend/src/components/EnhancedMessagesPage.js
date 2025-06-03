@@ -167,7 +167,7 @@ const TypingIndicator = React.memo(({ typingUsers, conversationId }) => {
 
 const EnhancedMessagesPage = ({ currentUser, onNavigate, params = {} }) => {
   const { colors } = useTheme();
-  const { isConnected, typingUsers, sendTypingIndicator } = useWebSocket();
+  const { isConnected, typingUsers, sendTypingIndicator, fallbackMode } = useWebSocket();
   const { 
     conversations, 
     messages, 
