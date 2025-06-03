@@ -294,28 +294,30 @@ const MessagesPage = ({ currentUser, onNavigate, params = {} }) => {
         {/* Messages */}
         <div className="px-4 py-4 space-y-3" style={{ minHeight: 'calc(100vh - 200px)' }}>
           <div className="max-w-md mx-auto">
-            {selectedConversation.messages.map(message => (
+            {messages[selectedConversation.id]?.map(message => (
               <div
                 key={message.id}
-                className={`mb-3 ${message.expediteur === 'Moi' ? 'text-right' : 'text-left'}`}
+                className={`mb-3 ${message.sender_id === currentUser?.id ? 'text-right' : 'text-left'}`}
               >
                 <div
                   className={`inline-block p-3 rounded-xl max-w-xs ${
-                    message.expediteur === 'Moi'
+                    message.sender_id === currentUser?.id
                       ? 'bg-blue-500 text-white'
-                      : message.expediteur === 'Support AviMarché'
+                      : message.sender_id === 'support'
                       ? 'bg-green-100 text-green-800 border border-green-200'
                       : 'bg-gray-200 text-gray-800'
                   }`}
                 >
-                  {message.expediteur === 'Support AviMarché' && (
+                  {message.sender_id === 'support' && (
                     <div className="flex items-center space-x-1 mb-1">
                       <span className="text-xs">🛡️</span>
                       <span className="text-xs font-bold">Support officiel</span>
                     </div>
                   )}
-                  <p className="text-sm">{message.texte}</p>
-                  <p className="text-xs mt-1 opacity-70">{message.heure}</p>
+                  <p className="text-sm">{message.content}</p>
+                  <p className="text-xs mt-1 opacity-70">
+                    {new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
               </div>
             ))}
