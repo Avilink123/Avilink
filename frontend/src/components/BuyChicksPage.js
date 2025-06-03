@@ -107,7 +107,7 @@ const BuyChicksPage = ({ currentUser, onNavigate }) => {
 
   const filteredProduits = produits.filter(produit => {
     if (filter === 'tous') return true;
-    return produit.type === filter;
+    return produit.sous_type === filter;
   });
 
   const handleCommander = (produit) => {
