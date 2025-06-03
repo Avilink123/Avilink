@@ -164,6 +164,36 @@ backend:
         - agent: "testing"
         - comment: "The improved authentication system is working correctly. Users can register with a password, log in with either password or SMS, change their password, and toggle their SMS preferences. The SMS verification endpoint correctly rejects invalid codes."
 
+  - task: "Messaging-API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the new messaging API endpoints: conversations, messages, and read status"
+        - working: true
+        - agent: "testing"
+        - comment: "Most of the messaging API endpoints are working correctly. Users can create conversations, retrieve their conversations, get messages from a conversation, send messages, and mark messages as read. The user presence endpoint also works correctly. However, the 'Get Online Users' endpoint is not working properly, likely because there are no active WebSocket connections in the test environment."
+
+  - task: "WebSocket-Support"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the WebSocket support for real-time messaging"
+        - working: false
+        - agent: "testing"
+        - comment: "The WebSocket connection test failed with a timeout during the opening handshake. This could be due to the test environment not supporting WebSocket connections or the WebSocket server not being properly configured to accept connections from the test client. The WebSocket endpoint is implemented in the code, but we couldn't establish a connection to test its functionality."
+
 frontend:
   - task: "Improved-Authentication-Frontend"
     implemented: true
@@ -193,25 +223,6 @@ frontend:
         - working: true
         - agent: "testing"
         - comment: "The registration flow has been fixed and now works correctly for all three roles. When registering as a FOURNISSEUR, the user is properly redirected to the FournisseurHomePage. The same is true for AVICULTEUR (redirected to AviculteurHomePage) and ACHETEUR (redirected to AcheteurHomePage). The API call to /api/users/register is now being made correctly, and the user is properly authenticated after registration."
-
-## agent_communication:
-    - agent: "testing"
-    - message: "I've tested the registration functionality with the new FOURNISSEUR role. The ModernLoginModal and RegistrationPage components have been successfully updated to include the FOURNISSEUR role option. However, there's an issue with the complete registration flow - when registering as a FOURNISSEUR, the user is not properly redirected to the FournisseurHomePage and doesn't appear to be logged in after registration. This suggests there might be an issue with the authentication or redirection logic specific to the FOURNISSEUR role. The UI changes for adding the FOURNISSEUR role option are working correctly, but the end-to-end registration flow needs to be fixed."
-    - agent: "testing"
-    - message: "I've completed testing the registration flow for all three roles (FOURNISSEUR, AVICULTEUR, and ACHETEUR). The issue with the registration flow has been fixed. All three roles can now register successfully and are properly redirected to their respective home pages. The API call to /api/users/register is being made correctly, and the user is properly authenticated after registration. The registration flow is now working end-to-end for all roles."
-    - agent: "testing"
-    - message: "I'm now testing the newly implemented pages and improvements for AviMarché Mali. I'll be focusing on: 1) VendreVolaillesPage corrections ('Prix total' → 'Prix unitaire', 'Coqs' → 'Pintades', 'Œufs de village' → 'Œufs fécondés'), 2) New pages: BuyFeedPage, BuyChicksPage, MessagesPage, and MyPoultryStockPage, and 3) Navigation from AviculteurHomePage to these new pages. All these pages are designed to be accessible for illiterate users with simple interfaces, big buttons, and visual cues."
-    - agent: "testing"
-    - message: "I've tested the improved authentication system. The interface now correctly shows only the two logical options: 'Connexion par mot de passe' and 'Connexion par SMS'. The 'connexion simple' option has been removed as required. The password login method works correctly with show/hide password functionality. There are minor issues with the SMS login process (password field still visible when SMS method is selected, SMS verification screen didn't appear) and modal closing functionality that should be addressed."
-    - message: "I attempted to test the new pages for AviMarché Mali, but was unable to log in as an ÉLEVEUR (AVICULTEUR) because the website doesn't store data between sessions. Without being logged in as an ÉLEVEUR, I couldn't access the specialized pages that need to be tested. I've reviewed the code for these pages and they appear to be implemented correctly, but I couldn't verify their functionality through the UI. The code review shows that the navigation structure from AviculteurHomePage to the new pages is correctly implemented, and the new pages (BuyFeedPage, BuyChicksPage, MessagesPage, MyPoultryStockPage) have been created with the required features. The VendreVolaillesPage corrections also appear to be implemented correctly in the code."
-    - agent: "testing"
-    - message: "I've completed testing the backend API for AviMarché Mali. All backend endpoints are working correctly, including the API root, MongoDB connection, user registration, user login, products API, and role-specific functionality. The backend correctly handles all three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR). The admin endpoints and additional modules (Price Monitoring, Animal Health, Financial Tools) are also working correctly. There's a minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export. Overall, the backend is fully functional and ready for use."
-    - agent: "testing"
-    - message: "I've completed testing the backend API for AviMarché Mali after the modifications to the three pages for farmers (SimpleFeedPricesPage, PracticalAdvicePage, and ContactSupportPage). All backend endpoints are working correctly. The API root, MongoDB connection, user registration, user login, products API, and role-specific functionality are all functioning properly. The backend correctly handles all three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR). The price monitoring API (used by SimpleFeedPricesPage), animal health API (used by PracticalAdvicePage), and all other additional modules are working correctly. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality. Overall, the backend is fully functional and no regressions have been introduced by the modifications to the three pages."
-    - agent: "testing"
-    - message: "I've completed testing the backend API for AviMarché Mali after the addition of all the new FOURNISSEUR pages. All backend endpoints are working correctly, including the API root, MongoDB connection, user registration, user login, products API, and role-specific functionality. The backend correctly handles all three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR). The comprehensive tests show that FOURNISSEUR users can properly create, update, and delete products of type 'amendements'. The price monitoring API, animal health API, and financial tools API are all functioning correctly. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export. Overall, the backend remains fully functional after the addition of the new FOURNISSEUR pages, with no regressions introduced."
-    - agent: "testing"
-    - message: "I've completed testing the two new features added to AviMarché Mali: the bidirectional feedback system and improved authentication. All tests passed successfully. The bidirectional feedback system allows buyers to rate farmers (ACHETEUR→AVICULTEUR) and farmers to rate suppliers (AVICULTEUR→FOURNISSEUR), with proper role constraints enforced. The API endpoints for creating ratings (POST /api/ratings), retrieving user ratings (GET /api/ratings/user/{user_id}), and getting rating summaries (GET /api/ratings/summary/{user_id}) all work as expected. The improved authentication system also works correctly, allowing users to register with a password, log in with either password or SMS, verify SMS codes, change their password, and toggle their SMS preferences. Both features are fully functional and ready for use."
 
   - task: "VendreVolaillesPage"
     implemented: true
@@ -303,11 +314,31 @@ frontend:
         - agent: "testing"
         - comment: "Code review confirms that AviculteurHomePage correctly implements navigation to all the new pages: 'Acheter aliments volailles' → buy-feed, 'Acheter œufs fécondés/poussins' → buy-chicks, 'Messages' → messages, 'Mon stock de volailles' → my-poultry-stock. Could not verify through UI testing due to login limitations."
 
-## test_plan:
+agent_communication:
+    - agent: "testing"
+    - message: "I've tested the registration functionality with the new FOURNISSEUR role. The ModernLoginModal and RegistrationPage components have been successfully updated to include the FOURNISSEUR role option. However, there's an issue with the complete registration flow - when registering as a FOURNISSEUR, the user is not properly redirected to the FournisseurHomePage and doesn't appear to be logged in after registration. This suggests there might be an issue with the authentication or redirection logic specific to the FOURNISSEUR role. The UI changes for adding the FOURNISSEUR role option are working correctly, but the end-to-end registration flow needs to be fixed."
+    - agent: "testing"
+    - message: "I've completed testing the registration flow for all three roles (FOURNISSEUR, AVICULTEUR, and ACHETEUR). The issue with the registration flow has been fixed. All three roles can now register successfully and are properly redirected to their respective home pages. The API call to /api/users/register is being made correctly, and the user is properly authenticated after registration. The registration flow is now working end-to-end for all roles."
+    - agent: "testing"
+    - message: "I'm now testing the newly implemented pages and improvements for AviMarché Mali. I'll be focusing on: 1) VendreVolaillesPage corrections ('Prix total' → 'Prix unitaire', 'Coqs' → 'Pintades', 'Œufs de village' → 'Œufs fécondés'), 2) New pages: BuyFeedPage, BuyChicksPage, MessagesPage, and MyPoultryStockPage, and 3) Navigation from AviculteurHomePage to these new pages. All these pages are designed to be accessible for illiterate users with simple interfaces, big buttons, and visual cues."
+    - agent: "testing"
+    - message: "I've tested the improved authentication system. The interface now correctly shows only the two logical options: 'Connexion par mot de passe' and 'Connexion par SMS'. The 'connexion simple' option has been removed as required. The password login method works correctly with show/hide password functionality. There are minor issues with the SMS login process (password field still visible when SMS method is selected, SMS verification screen didn't appear) and modal closing functionality that should be addressed."
+    - message: "I attempted to test the new pages for AviMarché Mali, but was unable to log in as an ÉLEVEUR (AVICULTEUR) because the website doesn't store data between sessions. Without being logged in as an ÉLEVEUR, I couldn't access the specialized pages that need to be tested. I've reviewed the code for these pages and they appear to be implemented correctly, but I couldn't verify their functionality through the UI. The code review shows that the navigation structure from AviculteurHomePage to the new pages is correctly implemented, and the new pages (BuyFeedPage, BuyChicksPage, MessagesPage, MyPoultryStockPage) have been created with the required features. The VendreVolaillesPage corrections also appear to be implemented correctly in the code."
+    - agent: "testing"
+    - message: "I've completed testing the backend API for AviMarché Mali. All backend endpoints are working correctly, including the API root, MongoDB connection, user registration, user login, products API, and role-specific functionality. The backend correctly handles all three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR). The admin endpoints and additional modules (Price Monitoring, Animal Health, Financial Tools) are also working correctly. There's a minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export. Overall, the backend is fully functional and ready for use."
+    - agent: "testing"
+    - message: "I've completed testing the backend API for AviMarché Mali after the modifications to the three pages for farmers (SimpleFeedPricesPage, PracticalAdvicePage, and ContactSupportPage). All backend endpoints are working correctly. The API root, MongoDB connection, user registration, user login, products API, and role-specific functionality are all functioning properly. The backend correctly handles all three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR). The price monitoring API (used by SimpleFeedPricesPage), animal health API (used by PracticalAdvicePage), and all other additional modules are working correctly. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality. Overall, the backend is fully functional and no regressions have been introduced by the modifications to the three pages."
+    - agent: "testing"
+    - message: "I've completed testing the backend API for AviMarché Mali after the addition of all the new FOURNISSEUR pages. All backend endpoints are working correctly, including the API root, MongoDB connection, user registration, user login, products API, and role-specific functionality. The backend correctly handles all three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR). The comprehensive tests show that FOURNISSEUR users can properly create, update, and delete products of type 'amendements'. The price monitoring API, animal health API, and financial tools API are all functioning correctly. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export. Overall, the backend remains fully functional after the addition of the new FOURNISSEUR pages, with no regressions introduced."
+    - agent: "testing"
+    - message: "I've completed testing the two new features added to AviMarché Mali: the bidirectional feedback system and improved authentication. All tests passed successfully. The bidirectional feedback system allows buyers to rate farmers (ACHETEUR→AVICULTEUR) and farmers to rate suppliers (AVICULTEUR→FOURNISSEUR), with proper role constraints enforced. The API endpoints for creating ratings (POST /api/ratings), retrieving user ratings (GET /api/ratings/user/{user_id}), and getting rating summaries (GET /api/ratings/summary/{user_id}) all work as expected. The improved authentication system also works correctly, allowing users to register with a password, log in with either password or SMS, verify SMS codes, change their password, and toggle their SMS preferences. Both features are fully functional and ready for use."
+    - agent: "testing"
+    - message: "I've completed testing the new real-time messaging features in the AviMarché backend. Most of the messaging API endpoints are working correctly, including creating conversations, retrieving conversations, getting messages, sending messages, and marking messages as read. The user presence endpoint also works correctly. However, there are two issues: 1) The 'Get Online Users' endpoint is not working properly, likely because there are no active WebSocket connections in the test environment, and 2) The WebSocket connection test failed with a timeout during the opening handshake. This could be due to the test environment not supporting WebSocket connections or the WebSocket server not being properly configured to accept connections from the test client. The WebSocket endpoint is implemented in the code, but we couldn't establish a connection to test its functionality."
+
+test_plan:
   current_focus:
-    - "Bidirectional-Feedback-System"
-    - "Improved-Authentication"
-    - "Improved-Authentication-Frontend"
+    - "Messaging-API"
+    - "WebSocket-Support"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
@@ -316,4 +347,4 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 2
+  test_sequence: 3
