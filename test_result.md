@@ -95,6 +95,13 @@
 - ✅ **Section enrichie** - Outils financiers et calculatrice avancée ajoutés
 - ✅ **Navigation optimisée** - Accès rapide aux outils les plus utiles
 
+**📱 SIMPLIFICATION MAJEURE - PAGE "MON STOCK":**
+- ✅ **Interface ultra-simplifiée** pour utilisateurs illettrés
+- ✅ **Focus sur l'action principale** - "PUBLIER UNE ANNONCE" en gros bouton
+- ✅ **Suppression complexité** - Plus de listes détaillées, filtres, stats
+- ✅ **Guide visuel 4 étapes** - Instructions simples avec emojis
+- ✅ **Accès support direct** - Bouton d'aide immédiatement accessible
+
 **🇲🇱 ADAPTATION MALI:**
 - Interface simple avec icônes universelles (🛒, ✅, ❌, 🔔)
 - Messages clairs en français accessible
