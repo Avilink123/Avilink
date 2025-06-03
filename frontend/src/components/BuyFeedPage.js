@@ -1,80 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import OrderModal from './OrderModal';
 
 const BuyFeedPage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
   const [aliments, setAliments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('tous');
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   useEffect(() => {
-    // Simulation données aliments pour volailles (simple pour illettrés)
+    // Simulation données aliments pour volailles (protégées)
     const mockAliments = [
       {
-        id: '1',
-        nom: 'Maïs pour volailles',
-        fournisseur: 'Mamadou Keita',
+        id: 'feed_1',
+        titre: 'Maïs pour volailles',
+        vendeur_nom: 'Mamadou Keita',
+        vendeur_id: 'vendor_1',
         prix: 300,
-        stock: 100,
+        unite: 'kg',
+        quantite_disponible: 100,
         localisation: 'Sikasso',
-        telephone: '+223 76 12 34 56',
-        type: 'cereales',
-        description: 'Maïs de qualité pour vos volailles'
+        type_produit: 'aliment',
+        sous_type: 'cereales',
+        description: 'Maïs de qualité pour vos volailles',
+        created_at: new Date().toISOString()
       },
       {
-        id: '2',
-        nom: 'Nourriture complète',
-        fournisseur: 'Fatoumata Diarra',
+        id: 'feed_2',
+        titre: 'Nourriture complète',
+        vendeur_nom: 'Fatoumata Diarra',
+        vendeur_id: 'vendor_2',
         prix: 450,
-        stock: 50,
+        unite: 'kg',
+        quantite_disponible: 50,
         localisation: 'Bamako',
-        telephone: '+223 65 43 21 98',
-        type: 'complet',
-        description: 'Nourriture complète riche en vitamines'
+        type_produit: 'aliment',
+        sous_type: 'complet',
+        description: 'Nourriture complète riche en vitamines',
+        created_at: new Date().toISOString()
       },
       {
-        id: '3',
-        nom: 'Son de blé',
-        fournisseur: 'Ibrahim Coulibaly',
+        id: 'feed_3',
+        titre: 'Son de blé',
+        vendeur_nom: 'Ibrahim Coulibaly',
+        vendeur_id: 'vendor_3',
         prix: 250,
-        stock: 200,
+        unite: 'kg',
+        quantite_disponible: 200,
         localisation: 'Ségou',
-        telephone: '+223 78 87 65 43',
-        type: 'cereales',
-        description: 'Son de blé pour bien nourrir vos poules'
+        type_produit: 'aliment',
+        sous_type: 'cereales',
+        description: 'Son de blé pour bien nourrir vos poules',
+        created_at: new Date().toISOString()
       },
       {
-        id: '4',
-        nom: 'Vitamines pour ponte',
-        fournisseur: 'Aminata Touré',
+        id: 'feed_4',
+        titre: 'Vitamines pour ponte',
+        vendeur_nom: 'Aminata Touré',
+        vendeur_id: 'vendor_4',
         prix: 800,
-        stock: 30,
+        unite: 'kg',
+        quantite_disponible: 30,
         localisation: 'Mopti',
-        telephone: '+223 69 78 45 12',
-        type: 'vitamines',
-        description: 'Aide vos poules à pondre plus d\'œufs'
+        type_produit: 'aliment',
+        sous_type: 'vitamines',
+        description: 'Aide vos poules à pondre plus d\'œufs',
+        created_at: new Date().toISOString()
       },
       {
-        id: '5',
-        nom: 'Protéines poisson',
-        fournisseur: 'Sekou Traoré',
+        id: 'feed_5',
+        titre: 'Protéines poisson',
+        vendeur_nom: 'Sekou Traoré',
+        vendeur_id: 'vendor_5',
         prix: 600,
-        stock: 80,
+        unite: 'kg',
+        quantite_disponible: 80,
         localisation: 'Kayes',
-        telephone: '+223 72 85 96 30',
-        type: 'proteines',
-        description: 'Protéines de poisson pour volailles fortes'
+        type_produit: 'aliment',
+        sous_type: 'proteines',
+        description: 'Protéines de poisson pour volailles fortes',
+        created_at: new Date().toISOString()
       },
       {
-        id: '6',
-        nom: 'Mélange complet poulets',
-        fournisseur: 'Mariam Sidibé',
+        id: 'feed_6',
+        titre: 'Mélange complet poulets',
+        vendeur_nom: 'Mariam Sidibé',
+        vendeur_id: 'vendor_6',
         prix: 400,
-        stock: 120,
+        unite: 'kg',
+        quantite_disponible: 120,
         localisation: 'Bamako',
-        telephone: '+223 77 99 88 77',
-        type: 'complet',
-        description: 'Tout ce qu\'il faut pour vos poulets'
+        type_produit: 'aliment',
+        sous_type: 'complet',
+        description: 'Tout ce qu\'il faut pour vos poulets',
+        created_at: new Date().toISOString()
       }
     ];
 
@@ -86,19 +107,21 @@ const BuyFeedPage = ({ currentUser, onNavigate }) => {
 
   const filteredAliments = aliments.filter(aliment => {
     if (filter === 'tous') return true;
-    return aliment.type === filter;
+    return aliment.sous_type === filter;
   });
 
   const handleCommander = (aliment) => {
-    alert(
-      `📞 Appeler ${aliment.fournisseur}\n\n` +
-      `🌾 ${aliment.nom}\n` +
-      `💰 ${aliment.prix} FCFA/kg\n` +
-      `📍 ${aliment.localisation}\n` +
-      `📦 Stock : ${aliment.stock} kg\n\n` +
-      `☎️ Téléphone :\n${aliment.telephone}\n\n` +
-      `💬 Dire : "Je veux acheter ${aliment.nom}"`
-    );
+    setSelectedProduct(aliment);
+    setShowOrderModal(true);
+  };
+
+  const handleOrderSuccess = (order) => {
+    setShowOrderModal(false);
+    alert(`✅ Commande envoyée avec succès !\n\nVotre commande de ${order.quantity_requested} kg de ${order.product_title} a été envoyée au fournisseur.\n\nVous recevrez une notification quand le fournisseur aura répondu.`);
+  };
+
+  const isOwner = (aliment) => {
+    return currentUser && currentUser.id === aliment.vendeur_id;
   };
 
   if (loading) {
