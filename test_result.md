@@ -134,20 +134,35 @@ backend:
         - agent: "testing"
         - comment: "The backend API is working correctly after the addition of all the new ACHETEUR pages. Comprehensive tests show that all endpoints are functioning properly, including user registration, login, product management, price monitoring, animal health, and financial tools. The API correctly enforces role-based permissions, with ACHETEUR users being prevented from creating products as expected. All three user roles (AVICULTEUR, ACHETEUR, FOURNISSEUR) are handled correctly. The minor issue with the admin stats endpoint not including the FOURNISSEUR role in the role statistics still exists, but this doesn't affect functionality and the FOURNISSEUR role is correctly included in the admin export."
 
-  - task: "Additional-Modules"
+  - task: "Bidirectional-Feedback-System"
     implemented: true
     working: true
     file: "/app/backend/server.py"
     stuck_count: 0
-    priority: "medium"
+    priority: "high"
     needs_retesting: false
     status_history:
         - working: "NA"
         - agent: "testing"
-        - comment: "Testing additional modules: Price Monitoring, Animal Health, and Financial Tools"
+        - comment: "Testing the new bidirectional feedback system: POST /api/ratings, GET /api/ratings/user/{user_id}, GET /api/ratings/summary/{user_id}, and role constraints"
         - working: true
         - agent: "testing"
-        - comment: "Additional modules are working correctly. Price Monitoring API allows getting and reporting prices. Animal Health API allows getting diseases, reporting symptoms, and recording vaccinations. Financial Tools API allows adding transactions and getting financial summaries."
+        - comment: "The bidirectional feedback system is working correctly. Buyers can rate farmers (ACHETEUR→AVICULTEUR), farmers can rate suppliers (AVICULTEUR→FOURNISSEUR), and the system correctly enforces role constraints. The API endpoints for creating ratings, retrieving user ratings, and getting rating summaries all work as expected."
+
+  - task: "Improved-Authentication"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Testing the improved authentication system: password login, SMS login, SMS verification, password management, and SMS preferences"
+        - working: true
+        - agent: "testing"
+        - comment: "The improved authentication system is working correctly. Users can register with a password, log in with either password or SMS, change their password, and toggle their SMS preferences. The SMS verification endpoint correctly rejects invalid codes."
 
 frontend:
   - task: "Registration-FOURNISSEUR"
