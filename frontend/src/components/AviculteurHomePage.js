@@ -70,6 +70,20 @@ const AviculteurHomePage = ({ currentUser, onNavigate }) => {
   // Section 3: Tendance - CONTENU EXACT DEMANDÉ
   const tendance = [
     {
+      id: 'calculatrice-detaillee',
+      title: 'Calculatrice avancée - Rentabilité et coûts',
+      icon: '🧮💰',
+      action: () => onNavigate('calculateur'),
+      color: colors.info
+    },
+    {
+      id: 'outils-financiers',
+      title: 'Outils financiers - Suivi revenus et dépenses',
+      icon: '📊💼',
+      action: () => onNavigate('financial-tools'),
+      color: colors.success
+    },
+    {
       id: 'prix-volailles',
       title: 'Suivi des prix de volailles sur le marché',
       icon: '📊🐔',
