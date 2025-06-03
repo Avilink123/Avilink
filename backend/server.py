@@ -274,6 +274,113 @@ class RatingSummary(BaseModel):
     nombre_evaluations: int
     repartition_notes: dict  # {1: 0, 2: 1, 3: 5, 4: 12, 5: 8}
     derniers_commentaires: List[dict]
+
+# Modèles pour système de messagerie en temps réel
+class MessageStatus(str, Enum):
+    SENT = "sent"
+    DELIVERED = "delivered"
+    READ = "read"
+
+class ConversationType(str, Enum):
+    DIRECT = "direct"  # Entre 2 utilisateurs
+    SUPPORT = "support"  # Avec le support
+
+class Message(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    conversation_id: str
+    sender_id: str
+    sender_nom: str
+    recipient_id: str
+    recipient_nom: str
+    content: str
+    status: MessageStatus = MessageStatus.SENT
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    edited: bool = False
+    edited_at: Optional[datetime] = None
+
+class MessageCreate(BaseModel):
+    conversation_id: str
+    recipient_id: str
+    content: str
+
+class Conversation(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    type: ConversationType = ConversationType.DIRECT
+    participants: List[str]  # Liste des IDs des participants
+    participants_details: List[dict] = []  # Détails des participants (nom, rôle, etc.)
+    title: Optional[str] = None
+    last_message: Optional[str] = None
+    last_message_timestamp: Optional[datetime] = None
+    last_message_sender: Optional[str] = None
+    unread_count: Dict[str, int] = {}  # {user_id: count} pour chaque participant
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ConversationCreate(BaseModel):
+    participant_id: str
+    initial_message: Optional[str] = None
+
+class UserPresence(BaseModel):
+    user_id: str
+    user_nom: str
+    status: str = "online"  # online, offline, away
+    last_seen: datetime = Field(default_factory=datetime.utcnow)
+
+# Gestionnaire des connexions WebSocket
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: Dict[str, WebSocket] = {}
+        self.user_presence: Dict[str, UserPresence] = {}
+
+    async def connect(self, websocket: WebSocket, user_id: str, user_nom: str):
+        await websocket.accept()
+        self.active_connections[user_id] = websocket
+        self.user_presence[user_id] = UserPresence(user_id=user_id, user_nom=user_nom)
+        
+        # Notifier les autres utilisateurs qu'un utilisateur est en ligne
+        await self.broadcast_user_presence(user_id, "online")
+        logger.info(f"User {user_nom} ({user_id}) connected via WebSocket")
+
+    def disconnect(self, user_id: str):
+        if user_id in self.active_connections:
+            del self.active_connections[user_id]
+        if user_id in self.user_presence:
+            self.user_presence[user_id].status = "offline"
+            self.user_presence[user_id].last_seen = datetime.utcnow()
+        logger.info(f"User {user_id} disconnected from WebSocket")
+
+    async def send_personal_message(self, user_id: str, message: dict):
+        if user_id in self.active_connections:
+            try:
+                await self.active_connections[user_id].send_text(json.dumps(message))
+                return True
+            except:
+                # Connexion fermée, nettoyer
+                self.disconnect(user_id)
+        return False
+
+    async def broadcast_to_conversation(self, conversation_participants: List[str], message: dict):
+        for participant_id in conversation_participants:
+            await self.send_personal_message(participant_id, message)
+
+    async def broadcast_user_presence(self, user_id: str, status: str):
+        presence_message = {
+            "type": "user_presence",
+            "user_id": user_id,
+            "status": status,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        # Envoyer à tous les utilisateurs connectés
+        for connected_user_id in list(self.active_connections.keys()):
+            if connected_user_id != user_id:  # Ne pas envoyer à soi-même
+                await self.send_personal_message(connected_user_id, presence_message)
+
+    def get_online_users(self) -> List[UserPresence]:
+        return [presence for presence in self.user_presence.values() if presence.status == "online"]
+
+# Instance globale du gestionnaire de connexions
+manager = ConnectionManager()
     
 # Auth helpers
 async def get_current_user(user_id: str) -> User:
