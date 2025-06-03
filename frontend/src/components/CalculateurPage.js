@@ -52,10 +52,13 @@ const CalculateurPage = ({ currentUser, onNavigate }) => {
             ← Retour à l'accueil
           </button>
           <h1 className="text-2xl font-bold mb-2" style={{ color: colors.text }}>
-            🧮 Calculateur d'Achat
+            🧮 Calculateur Aviculture
           </h1>
           <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Calculez vos coûts d'achat et estimez vos bénéfices
+            {currentUser?.role === 'aviculteur' 
+              ? 'Calculez vos coûts de production et estimez vos bénéfices'
+              : 'Calculez vos coûts d\'achat et estimez vos bénéfices'
+            }
           </p>
         </div>
       </div>
