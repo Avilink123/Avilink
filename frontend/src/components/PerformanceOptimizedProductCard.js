@@ -145,7 +145,7 @@ const PerformanceOptimizedProductCard = memo(({
           {!isOwner && (
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
               <button
-                onClick={handleContact}
+                onClick={handleOrder}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors"
                 title="Commander ce produit"
               >
@@ -162,6 +162,15 @@ const PerformanceOptimizedProductCard = memo(({
           )}
         </div>
       </div>
+      
+      {/* Order Modal */}
+      <OrderModal
+        isOpen={showOrderModal}
+        onClose={() => setShowOrderModal(false)}
+        product={product}
+        currentUser={currentUser}
+        onOrderSuccess={handleOrderSuccess}
+      />
     </div>
   );
 });
