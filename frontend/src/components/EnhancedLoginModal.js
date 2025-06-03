@@ -308,24 +308,6 @@ const EnhancedLoginModal = ({ isOpen, onClose, onLogin }) => {
                   <div className="space-y-2">
                     <button
                       type="button"
-                      onClick={() => setLoginMethod('simple')}
-                      className={`w-full p-3 border rounded-lg text-left transition-colors ${
-                        loginMethod === 'simple' 
-                          ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        📞
-                        <div>
-                          <div className="font-medium">Connexion simple</div>
-                          <div className="text-xs text-gray-500">Avec votre numéro de téléphone uniquement</div>
-                        </div>
-                      </div>
-                    </button>
-
-                    <button
-                      type="button"
                       onClick={() => setLoginMethod('password')}
                       className={`w-full p-3 border rounded-lg text-left transition-colors ${
                         loginMethod === 'password' 
