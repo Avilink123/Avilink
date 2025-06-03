@@ -389,6 +389,271 @@ def test_acheteur_functionality(logged_in_users):
     
     return all_success
 
+# 9. Test Bidirectional Feedback System
+def test_feedback_system(logged_in_users):
+    all_success = True
+    
+    # We need at least an ACHETEUR and an AVICULTEUR for buyer_to_farmer ratings
+    # And an AVICULTEUR and a FOURNISSEUR for farmer_to_supplier ratings
+    if "acheteur" not in logged_in_users or "aviculteur" not in logged_in_users:
+        log_test("Feedback System - Buyer to Farmer", False, "Missing required users (ACHETEUR and AVICULTEUR) for testing")
+        all_success = False
+    else:
+        # Test buyer_to_farmer rating
+        try:
+            acheteur = logged_in_users["acheteur"]
+            aviculteur = logged_in_users["aviculteur"]
+            
+            rating_data = {
+                "type_rating": "buyer_to_farmer",
+                "evaluateur_id": acheteur["user"]["id"],
+                "evalué_id": aviculteur["user"]["id"],
+                "note": 4,
+                "commentaire": "Très bons produits, livraison rapide",
+                "produit_concerne": "Poulets de chair",
+                "localisation": "Bamako"
+            }
+            
+            response = requests.post(f"{API_URL}/ratings", json=rating_data)
+            
+            if response.status_code == 200 and "id" in response.json():
+                log_test("Feedback System - Buyer to Farmer", True, "Successfully created buyer to farmer rating", response)
+            else:
+                log_test("Feedback System - Buyer to Farmer", False, "Failed to create buyer to farmer rating", response)
+                all_success = False
+        except Exception as e:
+            log_test("Feedback System - Buyer to Farmer", False, f"Error creating buyer to farmer rating: {str(e)}")
+            all_success = False
+    
+    # Test farmer_to_supplier rating if we have the required users
+    if "aviculteur" not in logged_in_users or "fournisseur" not in logged_in_users:
+        log_test("Feedback System - Farmer to Supplier", False, "Missing required users (AVICULTEUR and FOURNISSEUR) for testing")
+        all_success = False
+    else:
+        try:
+            aviculteur = logged_in_users["aviculteur"]
+            fournisseur = logged_in_users["fournisseur"]
+            
+            rating_data = {
+                "type_rating": "farmer_to_supplier",
+                "evaluateur_id": aviculteur["user"]["id"],
+                "evalué_id": fournisseur["user"]["id"],
+                "note": 5,
+                "commentaire": "Excellente qualité d'aliments, prix compétitifs",
+                "produit_concerne": "Aliments pour volailles",
+                "localisation": "Bamako"
+            }
+            
+            response = requests.post(f"{API_URL}/ratings", json=rating_data)
+            
+            if response.status_code == 200 and "id" in response.json():
+                log_test("Feedback System - Farmer to Supplier", True, "Successfully created farmer to supplier rating", response)
+            else:
+                log_test("Feedback System - Farmer to Supplier", False, "Failed to create farmer to supplier rating", response)
+                all_success = False
+        except Exception as e:
+            log_test("Feedback System - Farmer to Supplier", False, f"Error creating farmer to supplier rating: {str(e)}")
+            all_success = False
+    
+    # Test wrong role combinations (should fail)
+    if "acheteur" in logged_in_users and "fournisseur" in logged_in_users:
+        try:
+            acheteur = logged_in_users["acheteur"]
+            fournisseur = logged_in_users["fournisseur"]
+            
+            rating_data = {
+                "type_rating": "buyer_to_farmer",
+                "evaluateur_id": acheteur["user"]["id"],
+                "evalué_id": fournisseur["user"]["id"],  # Wrong role for this type
+                "note": 3,
+                "commentaire": "Test invalid role combination",
+                "localisation": "Bamako"
+            }
+            
+            response = requests.post(f"{API_URL}/ratings", json=rating_data)
+            
+            if response.status_code != 200:
+                log_test("Feedback System - Invalid Role Combination", True, "Correctly rejected invalid role combination", response)
+            else:
+                log_test("Feedback System - Invalid Role Combination", False, "Incorrectly accepted invalid role combination", response)
+                all_success = False
+        except Exception as e:
+            log_test("Feedback System - Invalid Role Combination", False, f"Error testing invalid role combination: {str(e)}")
+            all_success = False
+    
+    # Test get user ratings
+    if "aviculteur" in logged_in_users:
+        try:
+            aviculteur = logged_in_users["aviculteur"]
+            
+            response = requests.get(f"{API_URL}/ratings/user/{aviculteur['user']['id']}")
+            
+            if response.status_code == 200 and isinstance(response.json(), list):
+                log_test("Feedback System - Get User Ratings", True, "Successfully retrieved user ratings", response)
+            else:
+                log_test("Feedback System - Get User Ratings", False, "Failed to retrieve user ratings", response)
+                all_success = False
+        except Exception as e:
+            log_test("Feedback System - Get User Ratings", False, f"Error retrieving user ratings: {str(e)}")
+            all_success = False
+    
+    # Test get rating summary
+    if "aviculteur" in logged_in_users:
+        try:
+            aviculteur = logged_in_users["aviculteur"]
+            
+            response = requests.get(f"{API_URL}/ratings/summary/{aviculteur['user']['id']}")
+            
+            if response.status_code == 200 and "note_moyenne" in response.json():
+                log_test("Feedback System - Get Rating Summary", True, "Successfully retrieved rating summary", response)
+            else:
+                log_test("Feedback System - Get Rating Summary", False, "Failed to retrieve rating summary", response)
+                all_success = False
+        except Exception as e:
+            log_test("Feedback System - Get Rating Summary", False, f"Error retrieving rating summary: {str(e)}")
+            all_success = False
+    
+    return all_success
+
+# 10. Test Improved Authentication
+def test_improved_authentication():
+    all_success = True
+    
+    # Test user registration with password
+    try:
+        phone = f"7{random.randint(1000000, 9999999)}"
+        user_data = {
+            "nom": "Test Auth User",
+            "telephone": phone,
+            "role": "aviculteur",
+            "localisation": "Test Location",
+            "password": "testpassword123",
+            "use_sms": False
+        }
+        
+        response = requests.post(f"{API_URL}/users/register", json=user_data)
+        
+        if response.status_code == 200 and "id" in response.json():
+            log_test("Improved Auth - Register with Password", True, "Successfully registered user with password", response)
+            user_id = response.json()["id"]
+        else:
+            log_test("Improved Auth - Register with Password", False, "Failed to register user with password", response)
+            all_success = False
+            return all_success  # Can't continue without a user
+    except Exception as e:
+        log_test("Improved Auth - Register with Password", False, f"Error registering user with password: {str(e)}")
+        all_success = False
+        return all_success  # Can't continue without a user
+    
+    # Test login with password
+    try:
+        login_data = {
+            "telephone": phone,
+            "password": "testpassword123",
+            "use_sms": False
+        }
+        
+        response = requests.post(f"{API_URL}/users/login", json=login_data)
+        
+        if response.status_code == 200 and "token" in response.json() and response.json()["method"] == "password":
+            log_test("Improved Auth - Login with Password", True, "Successfully logged in with password", response)
+        else:
+            log_test("Improved Auth - Login with Password", False, "Failed to log in with password", response)
+            all_success = False
+    except Exception as e:
+        log_test("Improved Auth - Login with Password", False, f"Error logging in with password: {str(e)}")
+        all_success = False
+    
+    # Test login with SMS
+    try:
+        login_data = {
+            "telephone": phone,
+            "use_sms": True
+        }
+        
+        response = requests.post(f"{API_URL}/users/login", json=login_data)
+        
+        if response.status_code == 200 and "require_sms_verification" in response.json() and response.json()["method"] == "sms":
+            log_test("Improved Auth - Request SMS Code", True, "Successfully requested SMS code", response)
+            
+            # We can't actually verify the SMS code in a test environment since we don't receive the SMS
+            # But we can check that the endpoint exists and returns the expected format
+            verification_data = {
+                "user_id": response.json()["user_id"],
+                "sms_code": "123456"  # This will fail, but we're just testing the endpoint
+            }
+            
+            verify_response = requests.post(f"{API_URL}/users/verify-sms", json=verification_data)
+            
+            if verify_response.status_code == 401:  # Expected to fail with wrong code
+                log_test("Improved Auth - Verify SMS Code", True, "SMS verification endpoint exists and correctly rejects invalid codes", verify_response)
+            else:
+                log_test("Improved Auth - Verify SMS Code", False, "SMS verification endpoint not working as expected", verify_response)
+                all_success = False
+        else:
+            log_test("Improved Auth - Request SMS Code", False, "Failed to request SMS code", response)
+            all_success = False
+    except Exception as e:
+        log_test("Improved Auth - Request SMS Code", False, f"Error requesting SMS code: {str(e)}")
+        all_success = False
+    
+    # Test set password
+    try:
+        password_data = {
+            "new_password": "newpassword456",
+            "current_password": "testpassword123"
+        }
+        
+        response = requests.post(f"{API_URL}/users/set-password?user_id={user_id}", json=password_data)
+        
+        if response.status_code == 200 and "message" in response.json():
+            log_test("Improved Auth - Set Password", True, "Successfully changed password", response)
+            
+            # Verify we can log in with the new password
+            login_data = {
+                "telephone": phone,
+                "password": "newpassword456",
+                "use_sms": False
+            }
+            
+            login_response = requests.post(f"{API_URL}/users/login", json=login_data)
+            
+            if login_response.status_code == 200 and "token" in login_response.json():
+                log_test("Improved Auth - Login with New Password", True, "Successfully logged in with new password", login_response)
+            else:
+                log_test("Improved Auth - Login with New Password", False, "Failed to log in with new password", login_response)
+                all_success = False
+        else:
+            log_test("Improved Auth - Set Password", False, "Failed to change password", response)
+            all_success = False
+    except Exception as e:
+        log_test("Improved Auth - Set Password", False, f"Error changing password: {str(e)}")
+        all_success = False
+    
+    # Test toggle SMS preference
+    try:
+        response = requests.post(f"{API_URL}/users/toggle-sms?user_id={user_id}")
+        
+        if response.status_code == 200 and "use_sms" in response.json():
+            log_test("Improved Auth - Toggle SMS Preference", True, "Successfully toggled SMS preference", response)
+            
+            # Toggle back
+            toggle_response = requests.post(f"{API_URL}/users/toggle-sms?user_id={user_id}")
+            
+            if toggle_response.status_code == 200 and "use_sms" in toggle_response.json() and toggle_response.json()["use_sms"] != response.json()["use_sms"]:
+                log_test("Improved Auth - Toggle SMS Preference Again", True, "Successfully toggled SMS preference again", toggle_response)
+            else:
+                log_test("Improved Auth - Toggle SMS Preference Again", False, "Failed to toggle SMS preference again", toggle_response)
+                all_success = False
+        else:
+            log_test("Improved Auth - Toggle SMS Preference", False, "Failed to toggle SMS preference", response)
+            all_success = False
+    except Exception as e:
+        log_test("Improved Auth - Toggle SMS Preference", False, f"Error toggling SMS preference: {str(e)}")
+        all_success = False
+    
+    return all_success
+
 # Main test function
 def run_tests():
     print("\n===== TESTING AVIMARCHÉ MALI BACKEND API =====\n")
@@ -434,6 +699,16 @@ def run_tests():
     acheteur_success = test_acheteur_functionality(logged_in_users)
     if not acheteur_success:
         print("\n⚠️ ACHETEUR Functionality test had some failures.")
+    
+    # Test Bidirectional Feedback System
+    feedback_success = test_feedback_system(logged_in_users)
+    if not feedback_success:
+        print("\n⚠️ Bidirectional Feedback System test had some failures.")
+    
+    # Test Improved Authentication
+    auth_success = test_improved_authentication()
+    if not auth_success:
+        print("\n⚠️ Improved Authentication test had some failures.")
     
     # Print summary
     print("\n===== TEST SUMMARY =====")
