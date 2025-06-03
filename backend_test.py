@@ -725,5 +725,203 @@ def run_tests():
     else:
         print(f"\n⚠️ {test_results['failure']} tests failed. See above for details.")
 
+# 11. Test Messaging API
+def test_messaging_api(logged_in_users):
+    all_success = True
+    
+    # We need at least two users to test messaging
+    if len(logged_in_users) < 2:
+        log_test("Messaging API", False, "Need at least two users to test messaging")
+        return False
+    
+    # Get two users for testing
+    users = list(logged_in_users.values())
+    user1 = users[0]
+    user2 = users[1]
+    
+    # Test creating a conversation
+    try:
+        conversation_data = {
+            "participant_id": user2["user"]["id"],
+            "initial_message": "Hello, this is a test message!"
+        }
+        
+        response = requests.post(f"{API_URL}/conversations?sender_id={user1['token']}", json=conversation_data)
+        
+        if response.status_code == 200 and "id" in response.json():
+            log_test("Messaging API - Create Conversation", True, "Successfully created conversation", response)
+            conversation_id = response.json()["id"]
+        else:
+            log_test("Messaging API - Create Conversation", False, "Failed to create conversation", response)
+            all_success = False
+            return all_success  # Can't continue without a conversation
+    except Exception as e:
+        log_test("Messaging API - Create Conversation", False, f"Error creating conversation: {str(e)}")
+        all_success = False
+        return all_success  # Can't continue without a conversation
+    
+    # Test getting user conversations
+    try:
+        response = requests.get(f"{API_URL}/conversations?user_id={user1['token']}")
+        
+        if response.status_code == 200 and isinstance(response.json(), list) and len(response.json()) > 0:
+            log_test("Messaging API - Get User Conversations", True, "Successfully retrieved user conversations", response)
+        else:
+            log_test("Messaging API - Get User Conversations", False, "Failed to retrieve user conversations", response)
+            all_success = False
+    except Exception as e:
+        log_test("Messaging API - Get User Conversations", False, f"Error retrieving user conversations: {str(e)}")
+        all_success = False
+    
+    # Test getting conversation messages
+    try:
+        response = requests.get(f"{API_URL}/conversations/{conversation_id}/messages?user_id={user1['token']}")
+        
+        if response.status_code == 200 and isinstance(response.json(), list):
+            log_test("Messaging API - Get Conversation Messages", True, "Successfully retrieved conversation messages", response)
+        else:
+            log_test("Messaging API - Get Conversation Messages", False, "Failed to retrieve conversation messages", response)
+            all_success = False
+    except Exception as e:
+        log_test("Messaging API - Get Conversation Messages", False, f"Error retrieving conversation messages: {str(e)}")
+        all_success = False
+    
+    # Test sending a message
+    try:
+        message_data = {
+            "conversation_id": conversation_id,
+            "recipient_id": user2["user"]["id"],
+            "content": "This is another test message!"
+        }
+        
+        response = requests.post(f"{API_URL}/messages?sender_id={user1['token']}", json=message_data)
+        
+        if response.status_code == 200 and "id" in response.json():
+            log_test("Messaging API - Send Message", True, "Successfully sent message", response)
+            message_id = response.json()["id"]
+        else:
+            log_test("Messaging API - Send Message", False, "Failed to send message", response)
+            all_success = False
+    except Exception as e:
+        log_test("Messaging API - Send Message", False, f"Error sending message: {str(e)}")
+        all_success = False
+    
+    # Test marking messages as read
+    try:
+        response = requests.post(f"{API_URL}/conversations/{conversation_id}/mark-read?user_id={user2['token']}")
+        
+        if response.status_code == 200 and "message" in response.json():
+            log_test("Messaging API - Mark Messages as Read", True, "Successfully marked messages as read", response)
+        else:
+            log_test("Messaging API - Mark Messages as Read", False, "Failed to mark messages as read", response)
+            all_success = False
+    except Exception as e:
+        log_test("Messaging API - Mark Messages as Read", False, f"Error marking messages as read: {str(e)}")
+        all_success = False
+    
+    # Test getting online users
+    try:
+        response = requests.get(f"{API_URL}/users/online")
+        
+        if response.status_code == 200 and isinstance(response.json(), list):
+            log_test("Messaging API - Get Online Users", True, "Successfully retrieved online users", response)
+        else:
+            log_test("Messaging API - Get Online Users", False, "Failed to retrieve online users", response)
+            all_success = False
+    except Exception as e:
+        log_test("Messaging API - Get Online Users", False, f"Error retrieving online users: {str(e)}")
+        all_success = False
+    
+    # Test getting user presence
+    try:
+        response = requests.get(f"{API_URL}/users/{user1['user']['id']}/presence")
+        
+        if response.status_code == 200 and "user_id" in response.json():
+            log_test("Messaging API - Get User Presence", True, "Successfully retrieved user presence", response)
+        else:
+            log_test("Messaging API - Get User Presence", False, "Failed to retrieve user presence", response)
+            all_success = False
+    except Exception as e:
+        log_test("Messaging API - Get User Presence", False, f"Error retrieving user presence: {str(e)}")
+        all_success = False
+    
+    return all_success
+
+# 12. Test WebSocket Connection
+async def websocket_test(user_id, user_name, message_queue):
+    """Async function to test WebSocket connection"""
+    try:
+        uri = f"{WS_URL}/{user_id}"
+        async with websockets.connect(uri) as websocket:
+            # Send a ping message
+            ping_message = json.dumps({"type": "ping"})
+            await websocket.send(ping_message)
+            
+            # Wait for pong response
+            response = await websocket.recv()
+            response_data = json.loads(response)
+            
+            if response_data.get("type") == "pong":
+                message_queue.append(("WebSocket - Ping/Pong", True, "Successfully received pong response"))
+            else:
+                message_queue.append(("WebSocket - Ping/Pong", False, f"Unexpected response to ping: {response}"))
+            
+            # Wait for any incoming messages for a short time
+            try:
+                response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
+                message_queue.append(("WebSocket - Received Message", True, f"Received message: {response}"))
+            except asyncio.TimeoutError:
+                # This is expected if no messages are sent
+                pass
+            
+            # Send a typing indicator
+            typing_message = json.dumps({
+                "type": "typing",
+                "conversation_id": "test_conversation",
+                "is_typing": True
+            })
+            await websocket.send(typing_message)
+            message_queue.append(("WebSocket - Typing Indicator", True, "Successfully sent typing indicator"))
+            
+            # Wait a bit to see if we get any responses
+            await asyncio.sleep(1)
+            
+    except Exception as e:
+        message_queue.append(("WebSocket Connection", False, f"Error in WebSocket connection: {str(e)}"))
+        return False
+
+def test_websocket_connection(logged_in_users):
+    """Test WebSocket connection and basic functionality"""
+    if not logged_in_users:
+        log_test("WebSocket Connection", False, "No users available for testing")
+        return False
+    
+    all_success = True
+    user = list(logged_in_users.values())[0]
+    user_id = user["user"]["id"]
+    user_name = user["user"]["nom"]
+    
+    # Create a message queue to collect results from the async function
+    message_queue = []
+    
+    # Run the async WebSocket test
+    try:
+        asyncio.run(websocket_test(user_id, user_name, message_queue))
+        
+        # Process the results
+        for name, success, message in message_queue:
+            log_test(name, success, message)
+            if not success:
+                all_success = False
+        
+        if not message_queue:
+            log_test("WebSocket Connection", False, "No WebSocket test results received")
+            all_success = False
+    except Exception as e:
+        log_test("WebSocket Connection", False, f"Error running WebSocket test: {str(e)}")
+        all_success = False
+    
+    return all_success
+
 if __name__ == "__main__":
     run_tests()
