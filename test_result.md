@@ -411,9 +411,9 @@ backend:
     implemented: true
     working: false
     file: "/app/backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
         - agent: "testing"
@@ -421,6 +421,9 @@ backend:
         - working: false
         - agent: "testing"
         - comment: "The WebSocket connection test failed with a timeout during the opening handshake. This could be due to the test environment not supporting WebSocket connections or the WebSocket server not being properly configured to accept connections from the test client. The WebSocket endpoint is implemented in the code, but we couldn't establish a connection to test its functionality."
+        - working: false
+        - agent: "testing"
+        - comment: "Created a dedicated WebSocket test script to thoroughly test the WebSocket functionality. The WebSocket connection still fails with a timeout during the opening handshake. The code implementation in server.py looks correct, but the WebSocket server might not be properly configured in the test environment or there might be network restrictions preventing WebSocket connections. The WebSocket endpoint at /ws/{user_id} is implemented but cannot be connected to from the test environment."
 
   - task: "Order-System"
     implemented: true
