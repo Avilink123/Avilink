@@ -1780,7 +1780,7 @@ function App() {
           setCurrentPage('home');
           return <AccessibleHomePage currentUser={currentUser} onNavigate={handleNavigate} />;
         }
-        return <MessagesPage currentUser={currentUser} onNavigate={handleNavigate} params={pageParams} />;
+        return <EnhancedMessagesPage currentUser={currentUser} onNavigate={handleNavigate} params={pageParams} />;
 
       case 'buyer-orders':
         // Page mes commandes acheteurs - Acheteurs uniquement
