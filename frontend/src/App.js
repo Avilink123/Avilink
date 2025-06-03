@@ -2074,44 +2074,46 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <div className="App">
-          {/* Interface Accessible UNIQUEMENT (Orange Money style) */}
-          <AccessibleHeader
-            currentUser={currentUser}
-            onNavigate={setCurrentPage}
-            onLogout={handleLogout}
-          />
-          
-          {renderAccessibleContent()}
-          
-          <BottomNavigation
-            currentPage={currentPage}
-            onNavigate={setCurrentPage}
-            currentUser={currentUser}
-          />
-          
-          <EnhancedLoginModal
-            isOpen={showLoginModal}
-            onClose={() => setShowLoginModal(false)}
-            onLogin={handleLogin}
-          />
-          
-          {/* Footer */}
-          <footer className="bg-gray-800 text-white py-8">
-            <div className="container mx-auto px-4 text-center">
-              <div className="flex justify-center items-center space-x-2 mb-4">
-                <span className="text-2xl">🐔</span>
-                <span className="text-xl font-bold">AviMarché Mali</span>
+        <WebSocketProvider currentUser={currentUser}>
+          <div className="App">
+            {/* Interface Accessible UNIQUEMENT (Orange Money style) */}
+            <AccessibleHeader
+              currentUser={currentUser}
+              onNavigate={setCurrentPage}
+              onLogout={handleLogout}
+            />
+            
+            {renderAccessibleContent()}
+            
+            <BottomNavigation
+              currentPage={currentPage}
+              onNavigate={setCurrentPage}
+              currentUser={currentUser}
+            />
+            
+            <EnhancedLoginModal
+              isOpen={showLoginModal}
+              onClose={() => setShowLoginModal(false)}
+              onLogin={handleLogin}
+            />
+            
+            {/* Footer */}
+            <footer className="bg-gray-800 text-white py-8">
+              <div className="container mx-auto px-4 text-center">
+                <div className="flex justify-center items-center space-x-2 mb-4">
+                  <span className="text-2xl">🐔</span>
+                  <span className="text-xl font-bold">AviMarché Mali</span>
+                </div>
+                <p className="text-gray-400">
+                  Plateforme dédiée au développement de l'aviculture malienne
+                </p>
+                <p className="text-gray-500 text-sm mt-2">
+                  © 2024 AviMarché. Connecter, Acheter, Vendre en temps réel.
+                </p>
               </div>
-              <p className="text-gray-400">
-                Plateforme dédiée au développement de l'aviculture malienne
-              </p>
-              <p className="text-gray-500 text-sm mt-2">
-                © 2024 AviMarché. Connecter, Acheter, Vendre en temps réel.
-              </p>
-            </div>
-          </footer>
-        </div>
+            </footer>
+          </div>
+        </WebSocketProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
