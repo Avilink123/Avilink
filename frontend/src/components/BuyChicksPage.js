@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import OrderModal from './OrderModal';
 
 const BuyChicksPage = ({ currentUser, onNavigate }) => {
   const { colors } = useTheme();
